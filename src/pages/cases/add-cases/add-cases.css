@@ -1,6 +1,7 @@
 .add-cases-page {
   width: 100%;
-  height: fit-content !important;
+  /* height: fit-content !important; */
+
 }
 
 .add-cases-form {
@@ -147,7 +148,7 @@
 .add-cases-grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 18px;
+  gap: 12px;
 }
 
 .add-cases-location-block {
@@ -343,4 +344,71 @@
   font-weight: 400;
   margin-top: 4px;
   color: rgba(20, 20, 20, 0.8);
+}
+
+/* ================= Add Suspects Step ================= */
+.add-suspects-screen {
+  width: 100%;
+}
+
+.add-suspects-card {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 1);
+  border-radius: 18px;
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 16px;
+}
+
+.add-suspects-card-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 14px;
+  min-width: 0;
+}
+
+.add-suspects-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.add-suspects-icon svg {
+  width: 44px;
+  height: 44px;
+  display: block;
+}
+
+.add-suspects-card-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  /* border-bottom: 1px solid rgba(226, 232, 240, 1); */
+}
+
+.add-suspects-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #141414;
+  line-height: 22px;
+}
+
+.add-suspects-subtitle {
+  font-size: 12px;
+  font-weight: 400;
+  color: #6d6d6d;
+  line-height: 16px;
+  margin-top: 2px;
+}
+
+.add-suspects-card-right {
+  flex-shrink: 0;
 }
