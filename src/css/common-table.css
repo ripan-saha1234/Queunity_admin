@@ -3,12 +3,13 @@
   margin-bottom: 5%;
   position: relative;
   padding-bottom: 1%;
-  font-family: "League Spartan", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* font-family: "League Spartan", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif */
 }
 
 .table1-table-container {
-  /* overflow: hidden; */
-  border-radius: 0.5rem;
+  overflow: hidden;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
   position: relative;
 }
 
@@ -18,9 +19,9 @@
 }
 
 .table1 thead {
-  background-color: #332D2D;
+  background-color: #030303;
   color: #FFFFFF;
-  height: 54px;
+  height: 56px;
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
 }
@@ -30,7 +31,8 @@
   padding: 18px 15px;
   text-align: left;
   border-bottom: 1px solid #e0e0e0;
-  font-size: 15px;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .table1 td {
@@ -59,7 +61,7 @@
 .table1-action-container {
   position: relative;
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
 }
 
@@ -69,6 +71,7 @@
   cursor: pointer;
   padding: 5px;
   display: flex;
+  /* background-color: red; */
   align-items: center;
   justify-content: center;
 }
@@ -113,7 +116,7 @@
 }
 
 .table1 tbody tr:nth-child(even) {
-  background-color: #F6F7F9;
+  background-color: #ffffff;
 }
 
 .table1 tbody tr:nth-child(odd) {
@@ -137,8 +140,8 @@
 }
 
 .table1-status-container.status-inactive {
-  color: #FF4D49;
-  background-color: #FF4D4929;
+  color: #FFFFFF;
+  background-color: #FF4D49;
 }
 
 .table1-status-container.status-upcoming {

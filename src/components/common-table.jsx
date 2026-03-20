@@ -114,11 +114,7 @@ const CommonTable = ({
       return (
         <div className="table1-action-container">
           <button className="table1-three-dots-button" onClick={(e) => toggleActionMenu(rowIndex, e)}>
-            <svg width="16" height="4" viewBox="0 0 16 4" fill="none">
-              <circle cx="2" cy="2" r="2" fill="#006D70" />
-              <circle cx="8" cy="2" r="2" fill="#006D70" />
-              <circle cx="14" cy="2" r="2" fill="#006D70" />
-            </svg>
+           <img src="/three-dots-icon.svg" alt="" />
           </button>
 
           {actionMenu.isOpen && actionMenu.rowIndex === rowIndex && (
@@ -154,11 +150,11 @@ const CommonTable = ({
     if (header?.value === 'status') {
       return (
         <div
-          className={`table1-status-container ${(item[header?.value] === 'Active' || item[header?.value] === 'Completed')
+          className={`table1-status-container ${(item[header?.value] === 'Active' || item[header?.value] === 'Completed' || item[header?.value] === 'Good' || item[header?.value] === 'Closed')
             ? 'status-success'
             : item[header?.value] === 'Upcoming' || item[header?.value] === 'New'
               ? 'status-upcoming'
-              : (item[header?.value] === 'Inactive' || item[header?.value] === 'Canceled' || item[header?.value] === 'Pending')
+              : (item[header?.value] === 'Inactive' || item[header?.value] === 'Canceled' || item[header?.value] === 'Pending' || item[header?.value] === 'Open')
                 ? 'status-inactive'
                 : item[header?.value] === 'In Progress' || item[header?.value] === 'Ongoing'
                   ? 'status-progress'
@@ -202,7 +198,7 @@ const CommonTable = ({
               {
                 headers?.map((header, index) => (
                   <th key={index} className={header?.value === 'action' || header?.value === 'action2' || header?.value === 'action3' ? 'table1-action-header' : ''}>
-                    {header?.title.toUpperCase()}
+                    {header?.title}
                   </th>
                 ))
               }
@@ -227,7 +223,7 @@ const CommonTable = ({
         )}
       </div>
 
-      {totalItems > 0 && (
+      {totalPages > 1 && (
         <div className="modern-pagination">
           <div className="pagination-controls">
             <button

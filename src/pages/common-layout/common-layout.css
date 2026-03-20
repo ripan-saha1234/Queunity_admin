@@ -368,3 +368,99 @@
   outline: none;
   border-color: #006D70;
 }
+
+/* Wizard header controls (progress + previous/next) */
+.common-layout-header-wizard-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* column-gap: 18px;
+   */
+}
+
+.common-layout-header-wizard-progress-block {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* column-gap: 10px; */
+}
+
+.common-layout-header-wizard-progress-text {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  column-gap: 6px;
+  white-space: nowrap;
+}
+
+.common-layout-header-wizard-progress-text-muted {
+  color: #141414;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.common-layout-header-wizard-progress-text-percent {
+  color: #95c63d;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.common-layout-header-wizard-ring-wrap {
+  width: 58px;
+  height: 58px;
+  position: relative;
+}
+
+.common-layout-header-wizard-ring {
+  width: 58px;
+  height: 58px;
+}
+
+.common-layout-header-wizard-nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 8px;
+}
+
+.common-layout-header-wizard-prev-btn {
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+  line-height: 24px;
+}
+
+.common-layout-header-wizard-next-btn {
+  border: none !important;
+}
+
+/* Fix: `.common-layout-header-icon-container div` forces 50x50 on all divs. */
+.common-layout-header-wizard-container,
+.common-layout-header-wizard-container div {
+  width: auto !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  cursor: default !important;
+  overflow: visible !important;
+}
+
+.common-layout-header-wizard-ring-wrap {
+  width: 58px !important;
+  height: 58px !important;
+}
+
+/* Make wizard buttons compact to match header height */
+.common-layout-header-wizard-nav .common-button.common-layout-header-wizard-prev-btn,
+.common-layout-header-wizard-nav .common-button.common-layout-header-wizard-next-btn {
+  padding: 10px 20px !important;
+  border-radius: 10px !important;
+  line-height: 20px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+.common-layout-header-wizard-ring {
+  width: 58px !important;
+  height: 58px !important;
+}
