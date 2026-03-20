@@ -549,7 +549,7 @@ function AddCases() {
 
         {stepIndex === 0 && (
           <>
-            {/* <WizardSection
+            <WizardSection
               iconBg="#F0D9FF"
               icon={<img src="/anonymity-level-icon.svg" alt="" />}
               title="Anonymity Level"
@@ -607,9 +607,9 @@ function AddCases() {
                   }
                 />
               </div>
-            </WizardSection> */}
+            </WizardSection>
 
-            {/* <WizardSection
+            <WizardSection
               iconBg="#D6F7F4"
               icon={<img src="/privacy-level-icon.svg" alt="" />}
               title="Privacy Level"
@@ -668,7 +668,7 @@ function AddCases() {
                   </div>
                 </label>
               </div>
-            </WizardSection> */}
+            </WizardSection>
           </>
         )}
       </div>
