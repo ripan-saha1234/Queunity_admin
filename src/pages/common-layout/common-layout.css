@@ -17,7 +17,10 @@
   height: 86px;
   align-items: center;
   padding: 22px 32px 12px 32px;
-  /* background-color: #ffffff; */
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: #ffffff;
   border-bottom: 1px solid #e1e1e1;
 }
 
@@ -31,9 +34,9 @@
   margin: 0%;
   background-color: #f7f7f7;
   flex: 1;
-  height: 100vh;
+  height: 100%;
   position: sticky;
-  top: 0;
+  top: 70px;
 }
 
 .common-layout-content-container {
