@@ -5,228 +5,11 @@ import CommonSelect from "../../../components/common-select";
 import CommonButton from "../../../components/common-button";
 import InputCommon from "../../../components/input_common";
 import "./add-cases.css";
-
-function ProgressRing({ progress }) {
-  const size = 58;
-  const radius = 22;
-  const stroke = 6;
-  const normalizedRadius = radius - stroke / 2;
-  const circumference = 2 * Math.PI * normalizedRadius;
-  const dashOffset =
-    circumference - (Math.max(0, Math.min(100, progress)) / 100) * circumference;
-
-  return (
-    <div className="add-cases-progress-ring-wrap">
-      <svg width={size} height={size} viewBox="0 0 58 58" className="add-cases-progress-ring">
-        <circle
-          cx="29"
-          cy="29"
-          r={normalizedRadius}
-          fill="none"
-          stroke="#E6E6E6"
-          strokeWidth={stroke}
-        />
-        <circle
-          cx="29"
-          cy="29"
-          r={normalizedRadius}
-          fill="none"
-          stroke="#95C63D"
-          strokeWidth={stroke}
-          strokeDasharray={circumference}
-          strokeDashoffset={dashOffset}
-          strokeLinecap="round"
-          transform="rotate(-90 29 29)"
-        />
-      </svg>
-      <div className="add-cases-progress-ring-text">{progress}%</div>
-    </div>
-  );
-}
-
-function WizardSection({ iconBg, icon, title, subtitle, children }) {
-  return (
-    <section className="add-cases-section">
-      <div className="add-cases-section-header">
-        <div className="add-cases-section-icon">
-
-          {icon}
-
-        </div>
-
-        <div className="add-cases-section-header-text">
-          <h3 className="add-cases-section-title">{title}</h3>
-          {subtitle ? <p className="add-cases-section-subtitle">{subtitle}</p> : null}
-        </div>
-      </div>
-      <div className="add-cases-section-body">{children}</div>
-    </section>
-  );
-}
-
-function SectionRequired({ children }) {
-  return <div className="add-cases-required-label">{children}</div>;
-}
-
-function ChoiceRadio({ name, label, value, checked, onChange }) {
-  return (
-    <label className="add-cases-choice add-cases-choice-radio">
-      <input
-        type="radio"
-        name={name}
-        value={value}
-        checked={checked}
-        onChange={() => onChange(value)}
-      />
-      <span className="add-cases-choice-control" aria-hidden="true" />
-      <span className="add-cases-choice-label">{label}</span>
-    </label>
-  );
-}
-
-function ChoiceCheckbox({ name, label, value, checked, onChange }) {
-  return (
-    <label className="add-cases-choice add-cases-choice-checkbox">
-      <input
-        type="checkbox"
-        name={name}
-        value={value}
-        checked={checked}
-        onChange={() => onChange(value)}
-      />
-      <span className="add-cases-choice-control" aria-hidden="true" />
-      <span className="add-cases-choice-label">{label}</span>
-    </label>
-  );
-}
-
-function SuspectsIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="12" cy="12" r="10" fill="#95C63D" />
-      <path
-        d="M8.5 20c.8-2.4 6.2-2.4 7 0"
-        stroke="#ffffff"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"
-        stroke="#ffffff"
-        strokeWidth="2"
-      />
-    </svg>
-  );
-}
-
-function AddSuspectsScreen() {
-  return (
-    <div className="add-suspects-screen">
-      <div className="add-suspects-card">
-        <div className="add-suspects-card-left">
-          <div className="add-suspects-icon">
-            <img src="/suspects-icon.svg" alt="" />
-          </div>
-          <div className="add-suspects-card-text">
-            <div className="add-suspects-title">Add Suspects</div>
-            <div className="add-suspects-subtitle">0 suspect recorded</div>
-          </div>
-        </div>
-
-        <div className="add-suspects-card-right">
-          <CommonButton
-            text="Add Suspect"
-            img=""
-            backgroundColor="transparent"
-            color="#141414"
-            borderColor="#95C63D"
-            onClick={() => { }}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CircleIcon({ children }) {
-  return <span className="add-cases-circle-icon">{children}</span>;
-}
-
-function CalendarIcon({ color = "#1E90FF" }) {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M7 3v2M17 3v2M4 8h16M6.5 21h11c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-11c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2Z"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function AlertIcon({ color = "#FF7A59" }) {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M12 9v4"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12 17h.01"
-        stroke={color}
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <path
-        d="M10.3 4.6 2.6 18a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 4.6a2 2 0 0 0-3.4 0Z"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function FingerprintIcon({ color = "#AA3BFF" }) {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M7 10.5c0-2.5 2-4.5 4.5-4.5S16 8 16 10.5V15c0 2.2-1.8 4-4 4-2.2 0-4-1.8-4-4V10.5Z"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 12v3c0 4 3.1 7 7 7s7-3 7-7v-5"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function EyeIcon({ color = "#006D70" }) {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
-        stroke={color}
-        strokeWidth="2"
-      />
-    </svg>
-  );
-}
+import { WizardSection } from "../../../components/WizardSection";
+import { SectionRequired } from "../../../components/SectionRequired";
+import { ChoiceRadio } from "../../../components/ChoiceRadio";
+import { ChoiceCheckbox } from "../../../components/ChoiceCheckbox";
+import { AddSuspectsScreen } from "./AddSuspectsScreen";
 
 function AddCases() {
   // Match the screenshot default state.
@@ -418,37 +201,37 @@ function AddCases() {
                     }))
                   }
                 /> */}
-            <InputCommon
-  label="Offence Category"
-  name="offenceCategory"
-  type="select"
-  value={formData.offenceCategory}
-  onChange={(e) =>
-    setFormData((prev) => ({
-      ...prev,
-      offenceCategory: e.target.value,
-    }))
-  }
-  required
-  options={offenceCategoryOptions}
-  placeholder="Select category"
-/>
+                <InputCommon
+                  label="Offence Category"
+                  name="offenceCategory"
+                  type="select"
+                  value={formData.offenceCategory}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      offenceCategory: e.target.value,
+                    }))
+                  }
+                  required
+                  options={offenceCategoryOptions}
+                  placeholder="Select category"
+                />
 
-<InputCommon
-  label="Offence Sub-Category"
-  name="offenceSubCategory"
-  type="select"
-  value={formData.offenceSubCategory}
-  onChange={(e) =>
-    setFormData((prev) => ({
-      ...prev,
-      offenceSubCategory: e.target.value,
-    }))
-  }
-  required
-  options={offenceSubCategoryOptions}
-  placeholder="Select sub-category"
-/>
+                <InputCommon
+                  label="Offence Sub-Category"
+                  name="offenceSubCategory"
+                  type="select"
+                  value={formData.offenceSubCategory}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      offenceSubCategory: e.target.value,
+                    }))
+                  }
+                  required
+                  options={offenceSubCategoryOptions}
+                  placeholder="Select sub-category"
+                />
                 <InputCommon
                   label="Date"
                   name="incidentTime"

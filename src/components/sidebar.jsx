@@ -98,66 +98,66 @@ function Sidebar() {
   };
 
   return (
-    <aside className="sidebar">
-      <nav className="sidebar-nav">
-        <div className="sidebar-menu">
-          {topItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => handleNavClick(item.route)}
-              className={selectedButton === item.id ? "sidebar-button-active" : ""}
-            >
-              <img src={item.icon} alt="" />
-              {item.label}
-            </button>
-          ))}
 
-          <div className="sidebar-section-title">SPEAK UP</div>
-          {speakUpItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => handleNavClick(item.route)}
-              className={selectedButton === item.id ? "sidebar-button-active" : ""}
-            >
-              <img src={item.icon} alt="" />
-              {item.label}
-            </button>
-          ))}
+    <aside className="sidebar-nav">
+      <div className="sidebar-menu">
+        {topItems.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => handleNavClick(item.route)}
+            className={selectedButton === item.id ? "sidebar-button-active" : ""}
+          >
+            <img src={item.icon} alt="" />
+            {item.label}
+          </button>
+        ))}
 
-          <div className="sidebar-section-title">COMMUNITY</div>
-          {communityItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => handleNavClick(item.route)}
-              className={selectedButton === item.id ? "sidebar-button-active" : ""}
-            >
-              <img src={item.icon} alt="" />
-              {item.label}
-            </button>
-          ))}
-        </div>
+        <div className="sidebar-section-title">SPEAK UP</div>
+        {speakUpItems.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => handleNavClick(item.route)}
+            className={selectedButton === item.id ? "sidebar-button-active" : ""}
+          >
+            <img src={item.icon} alt="" />
+            {item.label}
+          </button>
+        ))}
 
-        <button
-          onClick={async () => {
-            try {
-              await logoutUser();
-            } catch (error) {
-              console.log("Logout API error:", error);
-            } finally {
-              localStorage.removeItem("industrytuner admin token");
-              localStorage.removeItem("industrytuner admin user");
-              navigate("/auth");
-            }
-          }}
-          className="sidebar-button-logout"
-        >
-          <img 
-          src="/common_icon.svg" 
+        <div className="sidebar-section-title">COMMUNITY</div>
+        {communityItems.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => handleNavClick(item.route)}
+            className={selectedButton === item.id ? "sidebar-button-active" : ""}
+          >
+            <img src={item.icon} alt="" />
+            {item.label}
+          </button>
+        ))}
+      </div>
+
+      <button
+        onClick={async () => {
+          try {
+            await logoutUser();
+          } catch (error) {
+            console.log("Logout API error:", error);
+          } finally {
+            localStorage.removeItem("industrytuner admin token");
+            localStorage.removeItem("industrytuner admin user");
+            navigate("/auth");
+          }
+        }}
+        className="sidebar-button-logout"
+      >
+        <img
+          src="/common_icon.svg"
           alt="" />
-          Logout
-        </button>
-      </nav>
+        Logout
+      </button>
     </aside>
+
   );
 }
 

@@ -8,15 +8,10 @@ function CommonLayout() {
     <div className="common-layout-container">
       <AdminHeader variant="topbar" />
       <div className="common-layout-body">
-        <div className="common-layout-sidebar">
-          <Sidebar />
-        </div>
-
-        <div className="common-layout-content-container">
+        <Sidebar />
+        <div className="common-layout-content">
           <AdminHeader variant="page" />
-          <div className="common-layout-content">
-            <Outlet />
-          </div>
+          <Outlet />
         </div>
       </div>
     </div>

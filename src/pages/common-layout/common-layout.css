@@ -42,8 +42,9 @@
 .common-layout-content-container {
   display: flex;
   flex-direction: column;
-  flex: 5;
   min-height: 0;
+  margin-left: auto;
+  width: calc(100% - 260px);
 }
 
 .common-layout-title-icon-container {
@@ -63,14 +64,14 @@
 }
 
 .common-layout-content {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
   min-height: 0;
-  overflow-y: auto;
-  /* min-height: 80vh;
-  max-height: 80vh; */
-  padding: 1% 3%;
+  row-gap: 20px;
+  margin-left: auto;
+  width: calc(100% - 240px);
+  padding: 0px 30px;
 
-  background-color: transparent;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -127,7 +128,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 32px;
+  padding: 12px 0px;
   padding-bottom: 0.5%;
 }
 
