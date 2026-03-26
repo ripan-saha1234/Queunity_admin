@@ -3,8 +3,6 @@ import { Fragment } from "react";
 import { globalContext } from "../context/context";
 import { useNavigate } from "react-router-dom";
 import "../css/breadcrums.css";
-
-
 function Breadcrums() {
   const { breadcrums } = useContext(globalContext);
   const navigate = useNavigate();

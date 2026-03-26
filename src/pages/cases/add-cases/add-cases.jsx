@@ -10,6 +10,7 @@ import { SectionRequired } from "../../../components/SectionRequired";
 import { ChoiceRadio } from "../../../components/ChoiceRadio";
 import { ChoiceCheckbox } from "../../../components/ChoiceCheckbox";
 import { AddSuspectsScreen } from "./AddSuspectsScreen";
+import { AddWitness } from "./AddWitness/AddWitness";
 
 function AddCases() {
   // Match the screenshot default state.
@@ -328,7 +329,8 @@ function AddCases() {
           </>
         )}
 
-        {stepIndex >= 1 && <AddSuspectsScreen />}
+        {stepIndex == 1 && <AddSuspectsScreen />}
+        {stepIndex == 2 && <AddWitness/>}
 
         {stepIndex === 0 && (
           <>

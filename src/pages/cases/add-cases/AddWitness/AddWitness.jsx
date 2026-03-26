@@ -1,14 +1,15 @@
 import { useNavigate } from "react-router";
-import CommonButton from "../../../components/common-button";
-import SuspectCard from "./AddSuspectForm/SuspectCard";
+import CommonButton from "../../../../components/common-button.jsx";
+import WitnessCard from "./WitnessCard.jsx";
 
-export function AddSuspectsScreen() {
+
+export function AddWitness() {
     const navigate = useNavigate()
-    const suspects = [
+    const witnessData = [
         {
             id: 1,
-            title: "Suspect #1",
-            status: "Known Suspect",
+            title: "Witness #1",
+            status: "Known Witness",
             statusClass: "statusKnown_11",
             details: [
                 { label: "Name", value: "Asasa" },
@@ -18,8 +19,8 @@ export function AddSuspectsScreen() {
         },
         {
             id: 2,
-            title: "Suspect #2",
-            status: "Unknown Suspect",
+            title: "Witness #2",
+            status: "Unknown Witness",
             statusClass: "statusUnknown_12",
             details: [
                 { label: "Physical Details", value: "Height - 140cm | Build - Slim" },
@@ -29,8 +30,8 @@ export function AddSuspectsScreen() {
         },
         {
             id: 3,
-            title: "Suspect #3",
-            status: "Known Suspect",
+            title: "Witness #1",
+            status: "Known Witness",
             statusClass: "statusKnown_11",
             details: [
                 { label: "Name", value: "Asasa" },
@@ -40,8 +41,8 @@ export function AddSuspectsScreen() {
         },
         {
             id: 4,
-            title: "Suspect #4",
-            status: "Known Suspect",
+            title: "Witness #1",
+            status: "Known Witness",
             statusClass: "statusKnown_11",
             details: [
                 { label: "Name", value: "Asasa" },
@@ -58,30 +59,30 @@ export function AddSuspectsScreen() {
                         <img src="/suspects-icon.svg" alt="" />
                     </div>
                     <div className="add-suspects-card-text">
-                        <div className="add-suspects-title">Add Suspects</div>
-                        <div className="add-suspects-subtitle">{suspects?.length } suspect recorded</div>
+                        <div className="add-suspects-title">Add Witnesses</div>
+                        <div className="add-suspects-subtitle">{witnessData?.length} Witnesses recorded</div>
                     </div>
                 </div>
 
                 <div className="add-suspects-card-right">
                     <CommonButton
-                        text="Add Suspect"
+                        text="Add Witness"
                         img=""
                         backgroundColor="transparent"
                         color="#141414"
                         borderColor="#95C63D"
-                        onClick={() => { navigate('/cases/add-suspect')}}
+                        onClick={() => {navigate('/cases/add-witness') }}
                     />
                 </div>
 
 
             </div>
             <div className="suspect_cards_Wrapper">
-                {suspects?.map((suspect) => {
-                    return <SuspectCard suspect={suspect} />
+                {witnessData?.map((witness) => {
+                    return <WitnessCard witness={witness} />
                 })}
             </div>
-           
+
         </div>
     );
 }

@@ -2,7 +2,6 @@
   width: 100%;
   /* height: fit-content !important; */
   padding-bottom: 30px;
-
 }
 
 .add-cases-form {
@@ -107,8 +106,6 @@
   cursor: not-allowed;
 }
 
-
-
 .add-cases-section-header {
   display: flex;
   flex-direction: row;
@@ -135,7 +132,7 @@
 .add-cases-section-title {
   font-size: 16px;
   font-weight: 700;
-  color: #0F172B;
+  color: #0f172b;
   line-height: 24px;
 }
 
@@ -143,7 +140,7 @@
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
-  color: #45556C;
+  color: #45556c;
 }
 
 .add-cases-grid-2 {
@@ -228,8 +225,8 @@
 }
 
 .add-cases-choice-control {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   border: 1px solid #d0d0d0;
   background: transparent;
@@ -243,8 +240,8 @@
 /* Radio: inner green dot when checked */
 .add-cases-choice-radio .add-cases-choice-control::after {
   content: "";
-  width: 6px;
-  height: 6px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: #95c63d;
   transform: scale(0);
@@ -350,14 +347,15 @@
 /* ================= Add Suspects Step ================= */
 .add-suspects-screen {
   width: 100%;
+  border: 1px solid rgba(226, 232, 240, 1);
+  border-radius: 18px;
+  padding: 18px 22px;
 }
 
 .add-suspects-card {
   width: 100%;
   background-color: #ffffff;
-  border: 1px solid rgba(226, 232, 240, 1);
-  border-radius: 18px;
-  padding: 18px 22px;
+
   display: flex;
   flex-direction: row;
   align-items: center;
