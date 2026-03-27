@@ -669,7 +669,7 @@ import "../css/common-input.css";
 const CommonInput = ({
   label,
   name,
-  value = "",
+  value,
   onChange,
   type = "text",
   required = false,
@@ -905,7 +905,6 @@ const CommonInput = ({
         <textarea
         
           name={name}
-          value={value}
           rows={rows}
           onChange={handleInputChange}
           onBlur={handleBlur}
@@ -920,7 +919,6 @@ const CommonInput = ({
         <input
           type={type}
           name={name}
-          value={value}
           onChange={handleInputChange}
           onBlur={handleBlur}
           min={min}
