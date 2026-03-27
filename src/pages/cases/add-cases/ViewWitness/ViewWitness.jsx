@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import '../ViewSuspect/ViewSuspect.css'
 import { WizardSection } from '../../../../components/WizardSection'
 import { useParams } from 'react-router'
+import { useNavigate } from 'react-router-dom'
+import usePageHeader from '../../../../hooks/use-page-header'
 import WitnessSchoolMate from './WitnessSchoolMate'
 import WitnessExternal from './WitnessExternal'
 import WitnessOtherDetails from './WitnessOtherDetails'
 
 const ViewWitness = () => {
     const { id } = useParams()
+    const navigate = useNavigate()
     const viewSuspect = [
         {
             title: 'Health',
@@ -105,6 +108,42 @@ const ViewWitness = () => {
             para: 'North'
         },
     ]
+    const headerButtons = useMemo(
+        () => [
+            {
+                type: "button",
+                text: "Back to Witness list",
+                onClick: () => navigate("/cases/add-cases"),
+                backgroundColor: "#95C63D",
+                textColor: "#141414",
+                borderColor: "#9FC53D",
+            },
+            {
+                type: "icon",
+                img: "/head-edit.svg",
+                backgroundColor: "#DBEAFE",
+                onClick: () => { },
+            },
+            {
+                type: "icon",
+                img: "/head-delete.svg",
+                backgroundColor: "#FFE2E2",
+                onClick: () => { },
+            },
+        ],
+        [navigate],
+    )
+
+    usePageHeader({
+        title: `View Witness ${id}`,
+        breadcrumbs: [
+            { title: "Cases", link: "/cases" },
+            { title: "Add Case", link: "/cases/add-cases" },
+            { title: `View Witness ${id}`, link: `/cases/view-witness/${id}` },
+        ],
+        buttons: headerButtons,
+    })
+
     return (
         <>
             <div className='view_suspect_wrapper'>
