@@ -22,7 +22,7 @@ const VehicleDetails = () => {
           </div>
         </section>
         <div className='down_arrow_wrapper'>
-          <img src={'/public/Layer_1.svg'} />
+          <img src={'/Layer_1.svg'} />
           <div style={{
             background: 'rgba(159, 197, 61, 0.16)',
             width: '28px',

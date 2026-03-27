@@ -154,7 +154,7 @@ const ViewWitness = () => {
             <div className='view_suspect_wrapper'>
                 <div className='view_suspect_heading'>
                     <div className='suspect_name_wrapper'>
-                        <img src='/public/Container (5).svg' />
+                        <img src='/Container (5).svg' />
                         <h5>Witness #{id}</h5>
                     </div>
                     {id == 2 && <p>Unknown Witness</p>}
@@ -171,7 +171,7 @@ const ViewWitness = () => {
                     }}>
                         <WizardSection
                             iconBg="#F0D9FF"
-                            icon={<img src="/public/Container (6).svg" alt="" />}
+                            icon={<img src="/Container (6).svg" alt="" />}
                             title="Physical Details"
                             subtitle="When & where it happened"
                         >
@@ -187,19 +187,19 @@ const ViewWitness = () => {
                         </div>
 
                         <div className='photos_heading'>
-                            <img src={'/public/Icon.svg'} />
+                            <img src={'/Icon.svg'} />
                             <p>Photos (3)</p>
                         </div>
 
                         <div className='photos_wrapper'>
                             {[1, 2, 3].map(() => (
                                 <div className='photos_div'>
-                                    <img src='/public/download.svg' style={{
+                                    <img src='/download.svg' style={{
                                         position: 'absolute',
                                         top: '10px',
                                         right: '10px'
                                     }} />
-                                    <img className='photo_img' src='/public/94dc08df112e1477ea1563b951d9786788581d54.jpg' />
+                                    <img className='photo_img' src='/94dc08df112e1477ea1563b951d9786788581d54.jpg' />
                                 </div>
                             ))}
 
@@ -210,7 +210,7 @@ const ViewWitness = () => {
                     }}>
                         <WizardSection
                             iconBg="#F0D9FF"
-                            icon={<img src="/public/Container (3).svg" alt="" />}
+                            icon={<img src="/Container (3).svg" alt="" />}
                             title="Vehicle Details"
                             subtitle="When & where it happened"
                         >
@@ -235,19 +235,19 @@ const ViewWitness = () => {
                         </div>
 
                         <div className='photos_heading'>
-                            <img src={'/public/Icon.svg'} />
+                            <img src={'/Icon.svg'} />
                             <p>Photos (3)</p>
                         </div>
 
                         <div className='photos_wrapper'>
                             {[1, 2].map(() => (
                                 <div className='photos_div'>
-                                    <img src='/public/download.svg' style={{
+                                    <img src='/download.svg' style={{
                                         position: 'absolute',
                                         top: '10px',
                                         right: '10px'
                                     }} />
-                                    <img className='photo_img' src='/public/c67bcce7f785c689b6d73522681c4db13204eca1.jpg' />
+                                    <img className='photo_img' src='/c67bcce7f785c689b6d73522681c4db13204eca1.jpg' />
                                 </div>
                             ))}
                         </div>
@@ -257,7 +257,7 @@ const ViewWitness = () => {
                     }}>
                         <WizardSection
                             iconBg="#F0D9FF"
-                            icon={<img src="/public/Container (7).svg" alt="" />}
+                            icon={<img src="/Container (7).svg" alt="" />}
                             title="Other Details"
                             subtitle="When & where it happened"
                         >
