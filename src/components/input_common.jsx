@@ -26,7 +26,7 @@ const InputCommon = ({
   };
 
   const inputStyle = {
-    height: "45px",
+    height: "50px",
     padding: "0 12px",
     border: "1px solid #dcdcdc",
     borderRadius: "8px",
@@ -68,7 +68,7 @@ const InputCommon = ({
         <input
           type={type}
           name={name}
-          value={value}
+          // value={value}
           onChange={onChange}
           placeholder={placeholder}
           required={required}

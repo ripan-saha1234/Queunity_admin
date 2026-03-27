@@ -64,11 +64,7 @@ const VehicleDetails = () => {
               name="vehicle_type"
               placeholder="Select vechicle type"
               value=""
-              style={{
-                height: '50px',
-                borderRadius: '8px',
-                padding: '0px 10px'
-              }}
+            
             />
           </div>
           <div className="radio_main">
