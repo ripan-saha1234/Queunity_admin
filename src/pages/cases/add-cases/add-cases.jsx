@@ -28,6 +28,10 @@ function AddCases() {
   }, [location.search, stepsCount]);
 
   const [stepIndex, setStepIndex] = useState(initialStepIndex);
+  useEffect(() => {
+    setStepIndex(initialStepIndex);
+  }, [initialStepIndex]);
+
   const progress = useMemo(() => {
     // 10% at step 0, 20% at step 1, ...
     return Math.min(100, (stepIndex + 1) * 10);
@@ -135,9 +139,20 @@ function AddCases() {
             <WizardSection
               iconBg="#FFFFFF"
               icon={<img src="/basic-details-icon.svg" alt="" />}
-              title="Basic DetailsAAA"
+              title="Basic Details"
               subtitle="Start with the basics"
             >
+              <CommonInput
+              label="Case ID"
+              name="caseId"
+              value={formData.caseId}
+              disabled={true}
+              placeholder="Case ID"
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, caseId: e.target.value }))
+              }
+              
+            />
               <CommonInput
                 label="Case Name"
                 name="caseName"
@@ -145,7 +160,7 @@ function AddCases() {
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, caseName: e.target.value }))
                 }
-                placeholder=""
+                placeholder="Case Name"
               />
             </WizardSection>
 
@@ -248,7 +263,7 @@ function AddCases() {
                 <InputCommon
                   label="Date"
                   name="incidentTime"
-                  type="time"
+                  type="date"
                   value={formData.incidentTime}
                   onChange={(e) =>
                     setFormData((prev) => ({
@@ -302,7 +317,7 @@ function AddCases() {
 
                 <div className="add-cases-location-checkbox-grid">
                   {locationDetailOptions.map((opt) => (
-                    <ChoiceCheckbox
+                    <ChoiceRadio
                       key={opt.value}
                       name="locationDetails"
                       label={opt.label}

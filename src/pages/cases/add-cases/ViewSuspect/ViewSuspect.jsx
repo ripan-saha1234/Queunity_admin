@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import './ViewSuspect.css'
 import { WizardSection } from '../../../../components/WizardSection'
 import { useParams } from 'react-router'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import usePageHeader from '../../../../hooks/use-page-header'
 import Details from './SchoolMateDetails'
 import SchoolMateDetails from './SchoolMateDetails'
@@ -11,6 +11,11 @@ import SuspectOtherDetails from './SuspectOtherDetails'
 const ViewSuspect = () => {
     const { id } = useParams()
     const navigate = useNavigate()
+    const location = useLocation()
+    const returnStep = useMemo(() => {
+        const step = Number(new URLSearchParams(location.search).get("step"))
+        return Number.isFinite(step) ? step : 1
+    }, [location.search])
     const viewSuspect = [
         {
             title: 'Health',
@@ -113,7 +118,7 @@ const ViewSuspect = () => {
             {
                 type: "button",
                 text: "Back to Suspect list",
-                onClick: () => navigate("/cases/add-cases"),
+                onClick: () => navigate(`/cases/add-cases?step=${returnStep}`),
                 backgroundColor: "#95C63D",
                 textColor: "#141414",
                 borderColor: "#9FC53D",
@@ -131,7 +136,7 @@ const ViewSuspect = () => {
                 onClick: () => { },
             },
         ],
-        [navigate],
+        [navigate, returnStep],
     )
 
     usePageHeader({

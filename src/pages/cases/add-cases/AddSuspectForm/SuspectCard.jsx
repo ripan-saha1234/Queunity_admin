@@ -17,11 +17,11 @@ const SuspectCard = ({ suspect }) => {
                     </div>
 
                     <div className={"actionsWrap_06"}>
-                        <button onClick={(()=>navigate(`/cases/view-suspect/${suspect.id}`))} className={"iconBtn_07 viewBtn_08"} title={"View"}>
+                        <button onClick={(()=>navigate(`/cases/view-suspect/${suspect.id}?step=1`))} className={"iconBtn_07 viewBtn_08"} title={"View"}>
                             <i className={"fa-regular fa-eye"}></i>
                         </button>
 
-                        <button onClick={(() => navigate(`/cases/view-suspect/${suspect.id}`))} className={"iconBtn_07 editBtn_09"} title={"Edit"}>
+                        <button onClick={(() => navigate(`/cases/view-suspect/${suspect.id}?step=1`))} className={"iconBtn_07 editBtn_09"} title={"Edit"}>
                             <i className={"fa-solid fa-pen"}></i>
                         </button>
 

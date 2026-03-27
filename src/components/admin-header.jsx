@@ -199,7 +199,7 @@ function AdminHeader({ variant = "full" }) {
                 <div className="common-layout-header-wizard-progress-block">
                   <div className="common-layout-header-wizard-progress-text">
                     <span className="common-layout-header-wizard-progress-text-muted">Your progress:</span>
-                    <span className="common-layout-header-wizard-progress-text-percent">{progressValue}%</span>
+                    {/* <span className="common-layout-header-wizard-progress-text-percent">{progressValue}%</span> */}
                   </div>
                   {renderWizardProgressRing(progressValue)}
                 </div>
@@ -238,7 +238,7 @@ function AdminHeader({ variant = "full" }) {
   const topbar = (
     <div className="common-layout-topbar">
       <img
-        src="/admin_logo.svg"
+        src="/queunity_new_logo.svg"
         alt="QueUnity"
         className="common-layout-topbar-logo"
         onError={(e) => {
