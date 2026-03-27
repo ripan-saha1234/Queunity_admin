@@ -1,0 +1,491 @@
+.common-layout-container {
+  display: flex;
+  flex-direction: column;
+  /* height: 100vh; */
+}
+
+.common-layout-body {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.common-layout-topbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 86px;
+  align-items: center;
+  padding: 22px 32px 12px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+.common-layout-topbar-logo {
+  width: 180px;
+  height: 52px;
+}
+
+.common-layout-sidebar {
+  padding: 0%;
+  margin: 0%;
+  background-color: #f7f7f7;
+  flex: 1;
+  height: 100%;
+  position: sticky;
+  top: 70px;
+}
+
+.common-layout-content-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin-left: auto;
+  width: calc(100% - 260px);
+  
+}
+
+.common-layout-title-icon-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.common-layout-icon-container {
+  display: flex;
+  flex-direction: row;
+  column-gap: 2%;
+  flex: 2;
+  justify-content: end;
+  margin-right: 3%;
+  align-items: center;
+}
+
+.common-layout-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  row-gap: 20px;
+  margin-left: auto;
+  width: calc(100% - 240px);
+  padding: 0px 30px 40px 30px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.common-layout-title {
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.common-layout-title-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 2%;
+  margin-left: 2%;
+  background-color: transparent;
+  width: 100%;
+  flex: 2.5;
+}
+
+.common-layout-title-container button {
+  background-color: #f4f4f4;
+  border: none;
+  padding: 1% 1%;
+  border-radius: 5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboard-special {
+  max-height: 80vh;
+}
+
+.common-layout-icon-button {
+  background-color: #f4f4f4;
+  border: none;
+  color: #000080;
+  padding: 2% 8%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 10%;
+  text-wrap: nowrap;
+  border-radius: 5rem;
+  font-size: 1.1vw;
+}
+
+.common-layout-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0px;
+  padding-bottom: 0.5%;
+}
+
+.common-layout-header-title-container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2vh;
+  width: 100%;
+}
+
+.common-layout-header-title-container h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #141414;
+  margin: 0%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 1%;
+}
+
+.common-layout-header-user-container {
+  display: flex;
+  flex-direction: row;
+  column-gap: 14%;
+  justify-content: center;
+  align-items: center;
+}
+
+.common-layout-header-user-container div {
+  width: 50px;
+  height: 50px;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* .common-layout-header-user-container div img {
+  width: 100%;
+} */
+
+.common-layout-header-user-container .common-layout-bell {
+  background-color: #f4f4f4;
+  width: 40px;
+  height: 40px;
+}
+
+.common-layout-header-icon-container {
+  display: flex;
+  flex-direction: row;
+  column-gap: 2%;
+  justify-content: end;
+  align-items: center;
+  padding: 0;
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+.common-layout-header-icon-container div {
+  width: 50px;
+  height: 50px;
+  border-radius: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.common-layout-header-icon-container div img {
+  width: 100%;
+}
+
+.common-layout-header-icon-container .common-layout-bell {
+  background-color: #f3f3f3;
+  width: 40px;
+  height: 40px;
+}
+
+.common-layout-header-icon-container .common-layout-header-icon-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f3f3f3;
+  border-radius: 0.5rem;
+}
+.common-layout-header-icon-container .common-layout-header-icon-button img {
+  width: 24px;
+  height: 24px;
+}
+
+.common-layout-header-icon-container
+  .common-layout-header-icon-search-container {
+  width: 250px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.common-layout-header-icon-container
+  .common-layout-header-icon-search-container
+  img {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 25px;
+  z-index: 1;
+}
+
+.common-layout-header-icon-container .common-layout-header-icon-search-input {
+  width: 100%;
+  padding: 16px 45px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background-color: transparent;
+  font-size: 12px;
+  color: rgba(20, 20, 20, 0.8);
+  font-weight: 400;
+  transition: border-color 0.3s ease;
+
+  &::placeholder {
+    color: rgba(20, 20, 20, 0.8);
+    font-size: 12px;
+    font-weight: 400;
+  }
+  &:focus {
+    outline: none;
+    border: 1px solid #9fc53d;
+    box-shadow: 0 0 0 3px rgba(159, 197, 61, 0.12);
+  }
+}
+
+.common-layout-header-icon-container
+  .common-layout-header-icon-dropdown-container {
+  width: 40px;
+  height: 40px;
+  background-color: #091e420f;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.common-layout-header-icon-container
+  .common-layout-header-icon-dropdown-container:hover {
+  background-color: #091e421a;
+}
+
+.common-layout-header-icon-container
+  .common-layout-header-icon-dropdown-container
+  img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  object-fit: contain;
+}
+
+.common-layout-header-icon-container
+  .common-layout-header-icon-dropdown-container
+  .common-layout-header-icon-dropdown-items-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0;
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 160px;
+  border: 1px solid #e1e5e9;
+  height: max-content;
+}
+
+.common-layout-header-icon-container
+  .common-layout-header-icon-dropdown-container
+  .common-layout-header-icon-dropdown-items-container
+  button {
+  background-color: transparent;
+  border: none;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+  color: #172b4d;
+  text-align: left;
+  width: 100%;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.common-layout-header-icon-container
+  .common-layout-header-icon-dropdown-container
+  .common-layout-header-icon-dropdown-items-container
+  button:hover {
+  background-color: #f4f5fa;
+}
+
+.common-layout-header-icon-container
+  .common-layout-header-icon-dropdown-container
+  .common-layout-header-icon-dropdown-items-container
+  button:first-child {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.common-layout-header-icon-container
+  .common-layout-header-icon-dropdown-container
+  .common-layout-header-icon-dropdown-items-container
+  button:last-child {
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
+.common-layout-header-title-container-sub-title {
+  padding: 0.5% 1%;
+  border-radius: 0.5rem;
+  font-size: 10px;
+  font-weight: 400;
+  text-align: center;
+  width: max-content;
+}
+
+.common-layout-header-select-container {
+  width: 180px;
+}
+
+.common-layout-header-select {
+  width: 100%;
+  padding: 16px 20px;
+  border: 1px solid #d9d9d9;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  font-size: 14px;
+  color: #0d0d0d;
+  font-weight: 400;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%230D0D0D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 45px;
+  transition: border-color 0.3s ease;
+}
+
+.common-layout-header-select:hover {
+  border-color: #006d70;
+}
+
+.common-layout-header-select:focus {
+  outline: none;
+  border-color: #006d70;
+}
+
+/* Wizard header controls (progress + previous/next) */
+.common-layout-header-wizard-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* column-gap: 18px;
+   */
+}
+
+.common-layout-header-wizard-progress-block {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* column-gap: 10px; */
+}
+
+.common-layout-header-wizard-progress-text {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  column-gap: 6px;
+  white-space: nowrap;
+}
+
+.common-layout-header-wizard-progress-text-muted {
+  color: #141414;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.common-layout-header-wizard-progress-text-percent {
+  color: #95c63d;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.common-layout-header-wizard-ring-wrap {
+  width: 58px;
+  height: 58px;
+  position: relative;
+}
+
+.common-layout-header-wizard-ring {
+  width: 58px;
+  height: 58px;
+}
+
+.common-layout-header-wizard-nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 8px;
+}
+
+.common-layout-header-wizard-prev-btn {
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+  line-height: 24px;
+}
+
+.common-layout-header-wizard-next-btn {
+  border: none !important;
+}
+
+/* Fix: `.common-layout-header-icon-container div` forces 50x50 on all divs. */
+.common-layout-header-wizard-container,
+.common-layout-header-wizard-container div {
+  width: auto !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  cursor: default !important;
+  overflow: visible !important;
+}
+
+.common-layout-header-wizard-ring-wrap {
+  width: 58px !important;
+  height: 58px !important;
+}
+
+/* Make wizard buttons compact to match header height */
+.common-layout-header-wizard-nav
+  .common-button.common-layout-header-wizard-prev-btn,
+.common-layout-header-wizard-nav
+  .common-button.common-layout-header-wizard-next-btn {
+  padding: 10px 20px !important;
+  border-radius: 10px !important;
+  line-height: 20px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+.common-layout-header-wizard-ring {
+  width: 58px !important;
+  height: 58px !important;
+}

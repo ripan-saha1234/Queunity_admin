@@ -1,0 +1,23 @@
+.breadcrums-container{
+  /* margin-top: 0.5%;
+  margin-left: 2%; */
+  font-size: 12px;
+  font-weight: 400;
+  color: #141414;
+  line-height: 20px;
+  background-color: transparent;
+}
+.breadcrums-divider{
+  color:#343434;
+  margin: 0% 0.5% 0% 0.5%;
+}
+.breadcrums{
+  cursor: pointer;
+}
+.breadcrums:hover{
+  text-decoration: underline;
+}
+.breadcrums-active{
+  color: #0D0D0D;
+  font-weight: 500;
+}
