@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import usePageHeader from "../../../hooks/use-page-header";
 import CommonInput from "../../../components/common-input";
 import CommonSelect from "../../../components/common-select";
@@ -14,8 +15,19 @@ import { AddWitness } from "./AddWitness/AddWitness";
 
 function AddCases() {
   // Match the screenshot default state.
-  const [stepIndex, setStepIndex] = useState(0);
   const stepsCount = 10;
+  const location = useLocation();
+
+  const initialStepIndex = useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    const raw = params.get("step");
+    const parsed = raw == null ? 0 : Number(raw);
+
+    if (!Number.isFinite(parsed)) return 0;
+    return Math.max(0, Math.min(stepsCount - 1, parsed));
+  }, [location.search, stepsCount]);
+
+  const [stepIndex, setStepIndex] = useState(initialStepIndex);
   const progress = useMemo(() => {
     // 10% at step 0, 20% at step 1, ...
     return Math.min(100, (stepIndex + 1) * 10);

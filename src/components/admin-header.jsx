@@ -175,7 +175,11 @@ function AdminHeader({ variant = "full" }) {
 
           if (item.type === "icon") {
             return (
-              <div className="common-layout-header-icon-button" key={index}>
+              <div
+                className="common-layout-header-icon-button"
+                key={index}
+                style={{ backgroundColor: item.backgroundColor }}
+              >
                 <img
                   src={item.img}
                   alt=""
@@ -202,7 +206,7 @@ function AdminHeader({ variant = "full" }) {
 
                 <div className="common-layout-header-wizard-nav">
                   <CommonButton
-                    text="Previous"
+                    text={item.prevText || "Previous"}
                     onClick={item.onPrev}
                     disabled={!!item.prevDisabled}
                     backgroundColor="transparent"
@@ -212,7 +216,7 @@ function AdminHeader({ variant = "full" }) {
                   />
 
                   <CommonButton
-                    text="Next"
+                    text={item.nextText || "Next"}
                     onClick={item.onNext}
                     disabled={!!item.nextDisabled}
                     backgroundColor="#95C63D"

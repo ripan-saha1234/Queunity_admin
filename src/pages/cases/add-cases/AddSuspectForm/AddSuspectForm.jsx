@@ -1,15 +1,41 @@
+import { useMemo, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import usePageHeader from "../../../../hooks/use-page-header"
 import { WizardSection } from "../../../../components/WizardSection"
 import { ChoiceRadio } from "../../../../components/ChoiceRadio"
 import './AddSuspectForm.css'
 import CommonInput from "../../../../components/common-input"
-import { useState } from "react"
 import SchoolMateForm from "./SchoolMateForm"
 import ExternalStudentForm from "./ExternalStudentForm"
 import OtherSuspectForm from "./OtherSuspectForm"
 import OtherDetailsForm from "./OtherDetailsForm"
 const AddSuspectForm = () => {
+    const navigate = useNavigate()
     const [relationship, setrelationShip] = useState('schoolmate')
     const [suspectKnown, setsuspectKnown] = useState(true)
+
+    const headerButtons = useMemo(() => ([
+        {
+            type: "wizard",
+            progress: 20,
+            prevDisabled: false,
+            nextDisabled: false,
+            prevText: "Previous",
+            nextText: "Add Suspect",
+            onPrev: () => navigate("/cases/add-cases?step=1"),
+            onNext: () => navigate("/cases/add-cases?step=2"),
+        },
+    ]), [navigate])
+
+    usePageHeader({
+        title: "Add Case",
+        breadcrumbs: [
+            { title: "Cases", link: "/cases" },
+            { title: "Add Case", link: "/cases/add-cases" },
+        ],
+        buttons: headerButtons,
+    })
+
     return (
         <>
             <div className="common_pages_wrapper">
