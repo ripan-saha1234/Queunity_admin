@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './Evidence.css'
-import AddEvidenceDescriptionModal from '../../../../Modals/EvidenceModals/AddEvidenceDescriptionModal'
+import AddEvidenceDescriptionModal from '../../../../Modals/CaseModals/AddEvidenceDescriptionModal'
 const EvidenceFileList = () => {
     const [addEvidence, setaddEvidence] = useState(false)
     return (

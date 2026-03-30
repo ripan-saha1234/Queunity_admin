@@ -1,36 +1,82 @@
-.modal_wrapper{
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(33, 33, 33, 0.6);
-    z-index: 9999;
+.modal_wrapper {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(33, 33, 33, 0.6);
+  z-index: 9999;
 }
-.modal_body{
-    width: 600px;
-    border-radius: 10px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    z-index: 999999;
-    height: fit-content;
-    padding: 30px;
-    transform: translate(-50%,-50%);
-    background-color: #fff;
-    display: flex;
+.modal_body {
+  width: 600px;
+  border-radius: 10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 999999;
+  height: fit-content;
+  padding: 30px;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+}
+.modal_head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal_head h5 {
+  font-size: 20px;
+  font-weight: medium;
+}
+.modal_head i {
+  cursor: pointer;
+}
+.case_summary_list{
+    display:flex ;
     flex-direction: column;
-    row-gap: 20px;
+    row-gap: 25px;
 }
-.modal_head{
+.case_summary_list ul li {
+  list-style: none;
+}
+.case_summary_list ul {
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+}
+.case_summary_list ul li {
+  font-size: 13px;
+  color: rgba(20, 20, 20, 1);
+  font-weight: 500;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+}
+.case_summary_list strong {
+  font-weight: 700;
+  font-size: 13px;
+  color: rgba(20, 20, 20, 1);
+}
+.options_wrapper{
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.modal_head h5{
+.options_wrapper h3{
     font-size: 20px;
-    font-weight: medium;
 }
-.modal_head i{
-    cursor: pointer;
+.options_list_wrapper{
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+}
+.option_left{
+    width: 85%;
+}
+.option_right{
+    width: 10%;
 }

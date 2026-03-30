@@ -1,0 +1,78 @@
+.submited_case_head {
+  padding: 30px 20px;
+  border-radius: 15px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 211, 243, 0.1) 0%,
+    rgba(0, 187, 167, 0.1) 100%
+  );
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.submited_email_box {
+  padding: 15px 18px;
+  border-radius: 10px;
+  background: rgba(0, 109, 112, 0.25);
+}
+.submitted_case_details_wrapper {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 30px;
+}
+.case_details_cards_wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+.case_details_card {
+  border: 1px solid rgba(225, 225, 225, 1);
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+  padding: 20px;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.case_details_card p {
+  font-size: 14px;
+  color: rgba(98, 116, 142, 1);
+  font-weight: 500;
+}
+.case_details_card .icon_image {
+  width: 40px;
+  height: 40px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.case_details_card:nth-child(2) .icon_image {
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+}
+.case_details_card:nth-child(3) .icon_image {
+  background: linear-gradient(135deg, #14b8a6 0%, #22c55e 100%);
+}
+.case_details_card:nth-child(4) .icon_image {
+  background: linear-gradient(135deg, #3b82f6 0%, #4f46e5 100%);
+}
+.case_details_card:nth-child(5) .icon_image {
+  background: linear-gradient(135deg, #06b6d4 0%, #2563eb 100%);
+}
+.case_details_card:nth-child(6) .icon_image {
+  background: linear-gradient(135deg, #fb64b6 0%, #ff2056 100%);
+}
+
+.case_details_card:nth-child(7) .icon_image {
+  background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+}
+.case_details_card:nth-child(8) .icon_image {
+  background: linear-gradient(135deg, #22c55e 0%, #6d28d9 100%);
+}

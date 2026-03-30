@@ -12,8 +12,9 @@ import { ChoiceRadio } from "../../../components/ChoiceRadio";
 import { ChoiceCheckbox } from "../../../components/ChoiceCheckbox";
 import { AddSuspectsScreen } from "./AddSuspectsScreen";
 import { AddWitness } from "./AddWitness/AddWitness";
-import Evidence from "./Evidence/Evidence";
-
+import CharityPoliceForm from "./CharityPolice/CharityPoliceForm";
+import ResolutionDesired from "./ResolutionDesired/ResolutionDesired";
+import AllEvidence from './Evidence/AllEvidence.jsx'
 function AddCases() {
   // Match the screenshot default state.
   const stepsCount = 10;
@@ -359,7 +360,9 @@ function AddCases() {
 
         {stepIndex == 1 && <AddSuspectsScreen />}
         {stepIndex == 2 && <AddWitness />}
-        {stepIndex == 3 && <Evidence />}
+        {stepIndex == 3 && <AllEvidence/>}
+        {stepIndex == 4 && <CharityPoliceForm/>}
+        {stepIndex == 5 && <ResolutionDesired/>}
 
         {stepIndex === 0 && (
           <>

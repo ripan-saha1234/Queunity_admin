@@ -7,7 +7,6 @@
 }
 
 .table1-table-container {
-  overflow: hidden;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   position: relative;
@@ -35,6 +34,12 @@
   font-weight: 400;
 }
 
+.table1 th:nth-child(1){
+  border-radius: 10px 0 0 0;
+}
+.table1 th:last-child{
+  border-radius: 0px 10px 0 0;
+}
 .table1 td {
   font-size: 14px;
   color: #0D0D0D;

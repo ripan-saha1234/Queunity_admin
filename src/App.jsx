@@ -8,6 +8,12 @@ import AddSuspectForm from './pages/cases/add-cases/AddSuspectForm/AddSuspectFor
 import ViewSuspect from './pages/cases/add-cases/ViewSuspect/ViewSuspect'
 import ViewWitness from './pages/cases/add-cases/ViewWitness/ViewWitness'
 import AddWitnessForm from './pages/cases/add-cases/AddWitness/AddWitnessForm'
+import SubmitedCase from './pages/cases/add-cases/SubmitedCase/SubmitedCase'
+import EvidenceForm from './pages/cases/add-cases/Evidence/EvidenceForm'
+import Offense from './pages/cases/Offense/Offense'
+import SingleOffense from './pages/cases/Offense/SingleOffense/SingleOffense'
+import ViewQuestion from './pages/cases/Offense/SingleOffense/ViewQuestion'
+import CreateQuestionSet from './pages/cases/Offense/SingleOffense/CreateQuestionSet'
 
 function App() {
 
@@ -23,7 +29,14 @@ function App() {
             <Route path='view-suspect/:id' element={<ViewSuspect />} />
             <Route path='add-witness' element={<AddWitnessForm />} />
             <Route path='view-witness/:id' element={<ViewWitness />} />
+            <Route path='case-submitted/:id' element={<SubmitedCase/>}/>
+            <Route path='add-evidence' element={<EvidenceForm/>}/>
           </Route>
+          <Route path='/offense' element={<Offense/>}>
+          </Route>
+          <Route path='/single-offense/:id' element={<SingleOffense />} />
+          <Route path='/view-question/:id' element={<ViewQuestion/>}/>
+          <Route path='/create-question/:id' element={<CreateQuestionSet/>}/>
         </Route>
       </Routes>
     </>

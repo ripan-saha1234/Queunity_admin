@@ -693,7 +693,10 @@ const CommonInput = ({
   min,
   max,
   dialogStyleLabel = {},
-  style: inputStyle = {},
+  style: inputStyle = {
+    height:'45px',
+    paddingLeft:'15px'
+  },
   ...rest
 }) => {
   const [isTouched, setIsTouched] = useState(false);

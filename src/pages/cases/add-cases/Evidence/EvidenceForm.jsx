@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { ChoiceRadio } from '../../../../components/ChoiceRadio'
 import NewCommonMultiFileUpload from '../../../../components/NewCommonMultiFileUpload'
 import { WizardSection } from '../../../../components/WizardSection'
 import './Evidence.css'
 import EvidenceFileList from './EvidenceFileList'
-const Evidence = () => {
+const EvidenceForm = () => {
+    const [haveEvidence,sethaveEvidence] = useState(true)
     return (
         <>
             <div className='evidence_wrapper'>
@@ -13,7 +15,7 @@ const Evidence = () => {
                     title="Evidence"
                 >
                 </WizardSection>
-               <form className='evidence_form_wrapper'>
+                <form className='evidence_form_wrapper'>
                     <div className="radio_main">
                         <label>Any Evidence? <span>*</span></label>
                         <div className="radio_buttons_wrapper">
@@ -21,22 +23,28 @@ const Evidence = () => {
                                 name="any_evidence"
                                 label="Yes"
                                 value="yes"
+                                onChange={(() => sethaveEvidence(true))}
+                                checked={haveEvidence}
                             />
                             <ChoiceRadio
                                 name="any_evidence"
                                 label="No"
                                 value="no"
+                                onChange={(() => sethaveEvidence(false))}
+                                checked={!haveEvidence}
                             />
                         </div>
                     </div>
-                    <NewCommonMultiFileUpload />
+             { haveEvidence &&    <>
+                        <NewCommonMultiFileUpload />
 
-                    <EvidenceFileList/>
-               </form>
-             
+                        <EvidenceFileList />
+             </>  }
+                </form>
+
             </div>
         </>
     )
 }
 
-export default Evidence
+export default EvidenceForm
