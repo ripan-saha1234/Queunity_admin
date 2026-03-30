@@ -12,6 +12,7 @@ import { ChoiceRadio } from "../../../components/ChoiceRadio";
 import { ChoiceCheckbox } from "../../../components/ChoiceCheckbox";
 import { AddSuspectsScreen } from "./AddSuspectsScreen";
 import { AddWitness } from "./AddWitness/AddWitness";
+import Evidence from "./Evidence/Evidence";
 
 function AddCases() {
   // Match the screenshot default state.
@@ -143,16 +144,16 @@ function AddCases() {
               subtitle="Start with the basics"
             >
               <CommonInput
-              label="Case ID"
-              name="caseId"
-              value={formData.caseId}
-              disabled={true}
-              placeholder="Case ID"
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, caseId: e.target.value }))
-              }
-              
-            />
+                label="Case ID"
+                name="caseId"
+                value={formData.caseId}
+                disabled={true}
+                placeholder="Case ID"
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, caseId: e.target.value }))
+                }
+
+              />
               <CommonInput
                 label="Case Name"
                 name="caseName"
@@ -357,7 +358,8 @@ function AddCases() {
         )}
 
         {stepIndex == 1 && <AddSuspectsScreen />}
-        {stepIndex == 2 && <AddWitness/>}
+        {stepIndex == 2 && <AddWitness />}
+        {stepIndex == 3 && <Evidence />}
 
         {stepIndex === 0 && (
           <>

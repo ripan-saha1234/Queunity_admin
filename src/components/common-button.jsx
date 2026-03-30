@@ -10,7 +10,8 @@ function CommonButton({ text = '', img = '', backgroundColor, color, borderColor
         borderRadius: '10px',
         fontSize: '14px',
         fontWeight: '600',
-        lineHeight: '24px'
+        lineHeight: '24px',
+        width:'fit-content'
       }}
       onClick={onClick}
       disabled={disabled}
