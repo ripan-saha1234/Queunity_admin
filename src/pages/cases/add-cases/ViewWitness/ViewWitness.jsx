@@ -7,7 +7,9 @@ import usePageHeader from '../../../../hooks/use-page-header'
 import WitnessSchoolMate from './WitnessSchoolMate'
 import WitnessExternal from './WitnessExternal'
 import WitnessOtherDetails from './WitnessOtherDetails'
-
+import icon from '../../../../Assets/Layer_1.svg'
+import icon2 from '../../../../Assets/Frame.svg'
+import icon3 from '../../../../Assets/regular.svg'
 const ViewWitness = () => {
     const { id } = useParams()
     const navigate = useNavigate()
@@ -164,19 +166,16 @@ const ViewWitness = () => {
                 </div>
                 {id == 1 && <WitnessSchoolMate />}
                 {id == 3 && <WitnessExternal />}
-                {id == 4 && <WitnessOtherDetails />} 
+                {id == 4 && <WitnessOtherDetails />}
                 {id == 2 && <>
                     <div style={{
                         marginTop: '25px'
                     }}>
-                        <WizardSection
-                            iconBg="#F0D9FF"
-                            icon={<img src="/Container (6).svg" alt="" />}
+                        <WizardSection iconBg="linear-gradient(135deg, #FDC700 0%, #CF8A41 100%)
+                                             "
+                            icon={<img src={icon} alt="" />}
                             title="Physical Details"
-                            subtitle="When & where it happened"
-                        >
-                        </WizardSection>
-
+                            subtitle="When & where it happened"></WizardSection>
                         <div className='physical_details_box_wrapper'>
                             {viewSuspect?.map((e) => (
                                 <div className='physical_details_box'>
@@ -208,13 +207,10 @@ const ViewWitness = () => {
                     <div style={{
                         marginTop: '25px'
                     }}>
-                        <WizardSection
-                            iconBg="#F0D9FF"
-                            icon={<img src="/Container (3).svg" alt="" />}
+                        <WizardSection iconBg=" linear-gradient(135deg, #5CEFBC 0%, #1AAF67 100%)"
+                            icon={<img src={icon2} alt="" />}
                             title="Vehicle Details"
-                            subtitle="When & where it happened"
-                        >
-                        </WizardSection>
+                            subtitle="When & where it happened"></WizardSection>
 
                         <div className='vehicle_details_box_wrapper'>
                             {viewSuspect?.map((e) => (
@@ -255,13 +251,10 @@ const ViewWitness = () => {
                     <div style={{
                         marginTop: '25px'
                     }}>
-                        <WizardSection
-                            iconBg="#F0D9FF"
-                            icon={<img src="/Container (7).svg" alt="" />}
+                        <WizardSection iconBg="linear-gradient(135deg, #62E2FF 0%, #5D78DA 100%)"
+                            icon={<img src={icon3} alt="" />}
                             title="Other Details"
-                            subtitle="When & where it happened"
-                        >
-                        </WizardSection>
+                            subtitle="When & where it happened"></WizardSection>
 
                         <div className='physical_details_box' style={{
                             gridColumn: '1/-1',
