@@ -217,7 +217,7 @@ const SubmitedCase = () => {
 
                         </div>
 
-                        <div className='case_details_card' onClick={(() => navigate('/cases/add-cases?step=1'))}>
+                        <div className='case_details_card' onClick={(() => navigate('/cases/submitted-suspect/2'))}>
                             <div className='icon_image'>
                                 <img src='/Capa_1.svg' />
                             </div>
@@ -225,7 +225,7 @@ const SubmitedCase = () => {
 
                         </div>
 
-                        <div className='case_details_card' onClick={(() => navigate('/cases/add-cases?step=2'))}>
+                        <div className='case_details_card' onClick={(() => navigate('/cases/submitted-witness/2'))}>
                             <div className='icon_image'>
                                 <img src='/Icon (4).svg' />
                             </div>
@@ -233,7 +233,7 @@ const SubmitedCase = () => {
 
                         </div>
 
-                        <div className='case_details_card' onClick={(() => navigate('/cases/add-cases?step=3'))}>
+                        <div className='case_details_card' onClick={(() => navigate('/cases/submitted-evidence/2'))}>
                             <div className='icon_image'>
                                 <img src='/Icon (6).svg' />
                             </div>

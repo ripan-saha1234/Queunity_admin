@@ -19,6 +19,7 @@ import icon from '../../../Assets/Icon (1).svg'
 import icon2 from '../../../Assets/Icon (2).svg'
 import icon3 from '../../../Assets/Icon (3).svg'
 import icon4 from '../../../Assets/Icon (4).svg'
+import EvidenceForm from "./Evidence/EvidenceForm.jsx";
 function AddCases() {
   // Steps are indexed from 0 to 5.
   const stepsCount = 6;
@@ -364,7 +365,7 @@ function AddCases() {
 
         {stepIndex == 1 && <AddSuspectsScreen />}
         {stepIndex == 2 && <AddWitness />}
-        {stepIndex == 3 && <AllEvidence/>}
+        {stepIndex == 3 && <EvidenceForm/>}
         {stepIndex == 4 && <CharityPoliceForm/>}
         {stepIndex == 5 && <ResolutionDesired/>}
 

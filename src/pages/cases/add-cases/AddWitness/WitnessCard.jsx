@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router'
 
-const WitnessCard = ({ witness }) => {
+const WitnessCard = ({ witness, noEdit, noDelete }) => {
     const navigate = useNavigate()
     return (
         <>
@@ -17,17 +17,17 @@ const WitnessCard = ({ witness }) => {
                     </div>
 
                     <div className={"actionsWrap_06"}>
-                        <button onClick={(() => navigate(`/cases/view-witness/${witness.id}?step=2`))} className={"iconBtn_07 viewBtn_08"} title={"View"}>
+                        <button onClick={(() => navigate((noEdit && noDelete) ? '' : `/cases/view-witness/${witness.id}?step=2`))} className={"iconBtn_07 viewBtn_08"} title={"View"}>
                             <i className={"fa-regular fa-eye"}></i>
                         </button>
 
-                        <button onClick={(() => navigate(`/cases/view-witness/${witness.id}?step=2`))} className={"iconBtn_07 editBtn_09"} title={"Edit"}>
+                        {!noEdit && <button onClick={(() => navigate(`/cases/view-witness/${witness.id}?step=2`))} className={"iconBtn_07 editBtn_09"} title={"Edit"}>
                             <i className={"fa-solid fa-pen"}></i>
-                        </button>
+                        </button>}
 
-                        <button className={"iconBtn_07 deleteBtn_10"} title={"Delete"}>
+                        {!noDelete && <button className={"iconBtn_07 deleteBtn_10"} title={"Delete"}>
                             <i className={"fa-regular fa-trash-can"}></i>
-                        </button>
+                        </button>}
                     </div>
                 </div>
 

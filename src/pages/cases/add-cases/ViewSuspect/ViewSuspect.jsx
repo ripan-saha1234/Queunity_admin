@@ -144,7 +144,7 @@ const ViewSuspect = () => {
         breadcrumbs: [
             { title: "Cases", link: "/cases" },
             { title: "Add Case", link: "/cases/add-cases" },
-            { title: `View Suspect ${id}`, link: `/cases/view-suspect/${id}` },
+            { title: `View Suspect ${id}`, link: location.pathname == '/cases/view-submitted-suspect/:id'?"" :` /cases/view-suspect/${id}` },
         ],
         buttons: headerButtons,
     })

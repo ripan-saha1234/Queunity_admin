@@ -1,12 +1,22 @@
 import React, { useState } from 'react'
 import CommonButton from "../../../../components/common-button.jsx";
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import EvidenceCard from './EvidenceCard.jsx';
 import './Evidence.css'
 import { WizardSection } from '../../../../components/WizardSection.jsx';
 import icon from '../../../../Assets/Icon (6).svg'
+import usePageHeader from '../../../../hooks/use-page-header.jsx';
 const AllEvidence = () => {
     const navigate = useNavigate();
+    const { id } = useParams()
+    usePageHeader({
+        title: `Evidence`,
+        breadcrumbs: [
+            { title: "Cases", link: "/cases" },
+            { title: "2025AWO77#", link: `/cases/case-submitted/${id}` },
+            { title: "Evidence", link: `/cases/submitted-evidence/${id}` },
+        ],
+    })
     const evidenceData = [
         {
             id: 1,
@@ -42,7 +52,7 @@ const AllEvidence = () => {
                 <div className="add-suspects-card">
                     <div className="add-suspects-card-left">
                         <WizardSection
-                            iconBg="linear-gradient(135deg, #06B6D4 0%, #2563EB 100%)" 
+                            iconBg="linear-gradient(135deg, #06B6D4 0%, #2563EB 100%)"
                             icon={<img src={icon} alt="" />}
                             title="Evidence"
                             subtitle={`${evidenceData.length} Evidences found`}
@@ -51,7 +61,7 @@ const AllEvidence = () => {
 
                     </div>
 
-                    <div className="add-suspects-card-right">
+                    {/* <div className="add-suspects-card-right">
                         <CommonButton
                             text="Add Evidence"
                             img=""
@@ -60,7 +70,7 @@ const AllEvidence = () => {
                             borderColor="#95C63D"
                             onClick={() => { navigate('/cases/add-evidence') }}
                         />
-                    </div>
+                    </div> */}
 
 
                 </div>

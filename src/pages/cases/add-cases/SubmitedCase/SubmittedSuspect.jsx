@@ -1,9 +1,18 @@
-import { useNavigate } from "react-router";
-import CommonButton from "../../../components/common-button";
-import SuspectCard from "./AddSuspectForm/SuspectCard";
-
-export function AddSuspectsScreen() {
-    const navigate = useNavigate()
+import { useNavigate, useParams } from "react-router";
+import CommonButton from "../../../../components/common-button.jsx";
+import SuspectCard from "../AddSuspectForm/SuspectCard.jsx";
+import usePageHeader from '../../../../hooks/use-page-header.jsx';
+const SubmittedSuspect = () => {
+    const navigate = useNavigate();
+    const { id } = useParams()
+    usePageHeader({
+        title: `Suspects`,
+        breadcrumbs: [
+            { title: "Cases", link: "/cases" },
+            { title: "2025AWO77#", link: `/cases/case-submitted/${id}` },
+            { title: "Suspects", link: `/cases/submitted-suspect/${id}` },
+        ],
+    })
     const suspects = [
         {
             id: 1,
@@ -51,37 +60,27 @@ export function AddSuspectsScreen() {
         },
     ];
     return (
-        <div className="add-suspects-screen">
-            <div className="add-suspects-card">
-                <div className="add-suspects-card-left">
-                    <div className="add-suspects-icon">
-                        <img src="/suspects-icon.svg" alt="" />
-                    </div>
-                    <div className="add-suspects-card-text">
-                        <div className="add-suspects-title">Add Suspects</div>
-                        <div className="add-suspects-subtitle">{suspects?.length} suspect recorded</div>
+        <>
+            <div className="add-suspects-screen">
+                <div className="add-suspects-card">
+                    <div className="add-suspects-card-left">
+                        <div className="add-suspects-icon">
+                            <img src="/suspects-icon.svg" alt="" />
+                        </div>
+                        <div className="add-suspects-card-text">
+                            <div className="add-suspects-title">Add Suspects</div>
+                            <div className="add-suspects-subtitle">{suspects?.length} suspect recorded</div>
+                        </div>
                     </div>
                 </div>
-
-                <div className="add-suspects-card-right">
-                    <CommonButton
-                        text="Add Suspect"
-                        img=""
-                        backgroundColor="transparent"
-                        color="#141414"
-                        borderColor="#95C63D"
-                        onClick={() => { navigate('/cases/add-suspect') }}
-                    />
+                <div className="suspect_cards_Wrapper">
+                    {suspects?.map((suspect) => {
+                        return <SuspectCard nodelete={true} noedit={true} suspect={suspect} />
+                    })}
                 </div>
-
-
             </div>
-            <div className="suspect_cards_Wrapper">
-                {suspects?.map((suspect) => {
-                    return <SuspectCard suspect={suspect} />
-                })}
-            </div>
-
-        </div>
-    );
+        </>
+    )
 }
+
+export default SubmittedSuspect

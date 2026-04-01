@@ -4,14 +4,15 @@ import NewCommonMultiFileUpload from '../../../../components/NewCommonMultiFileU
 import { WizardSection } from '../../../../components/WizardSection'
 import './Evidence.css'
 import EvidenceFileList from './EvidenceFileList'
+import icon from '../../../../Assets/Icon (8).svg'
 const EvidenceForm = () => {
     const [haveEvidence, sethaveEvidence] = useState(true)
     return (
         <>
             <div className='evidence_wrapper'>
                 <WizardSection
-                    iconBg=" linear-gradient(135deg, #06B6D4 0%, #2563EB 100%);"
-                    icon={<img src="/Container (8).svg" alt="" />}
+                    iconBg=" linear-gradient(135deg, #06B6D4 0%, #2563EB 100%)"
+                    icon={<img src={icon} alt="" />}
                     title="Evidence"
                 >
                 </WizardSection>

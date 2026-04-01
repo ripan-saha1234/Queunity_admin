@@ -1,4 +1,4 @@
-import { Outlet, Route, Routes } from 'react-router-dom'
+import { Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import Authentication from './pages/authentication/authentication'
 import CommonLayout from './pages/common-layout/common-layout'
 import AddCases from './pages/cases/add-cases/add-cases'
@@ -14,9 +14,19 @@ import Offense from './pages/cases/Offense/Offense'
 import SingleOffense from './pages/cases/Offense/SingleOffense/SingleOffense'
 import ViewQuestion from './pages/cases/Offense/SingleOffense/ViewQuestion'
 import CreateQuestionSet from './pages/cases/Offense/SingleOffense/CreateQuestionSet'
+import SubmittedSuspect from './pages/cases/add-cases/SubmitedCase/SubmittedSuspect'
+import SubmittedWitness from './pages/cases/add-cases/SubmitedCase/SubmittedWitness'
+import AllEvidence from './pages/cases/add-cases/Evidence/AllEvidence'
+import { useEffect } from 'react'
 
 function App() {
-
+  const location = useLocation()
+   useEffect(()=>{
+    window.scrollTo({
+      top:'0',
+      behavior:'instant'
+    })
+   }, [location.pathname])
   return (
     <>
       <Routes>
@@ -30,6 +40,9 @@ function App() {
             <Route path='add-witness' element={<AddWitnessForm />} />
             <Route path='view-witness/:id' element={<ViewWitness />} />
             <Route path='case-submitted/:id' element={<SubmitedCase/>}/>
+            <Route path='submitted-suspect/:id' element={<SubmittedSuspect/>}/>
+            <Route path='submitted-witness/:id' element={<SubmittedWitness />} />
+            <Route path='submitted-evidence/:id' element={<AllEvidence/>}/>
             <Route path='add-evidence' element={<EvidenceForm/>}/>
           </Route>
           <Route path='/offense' element={<Offense/>}>
