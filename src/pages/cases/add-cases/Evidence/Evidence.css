@@ -31,6 +31,8 @@
   display: flex;
   flex-direction: column;
   row-gap: 15px;
+  justify-content: flex-end;
+  align-items: end;
 }
 .evidence_name_wrapper h6 {
   font-size: 14px;

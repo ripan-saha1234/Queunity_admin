@@ -2,14 +2,14 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Montserrat", sans-serif ;
 }
 :root {
   --primary-color: #9fc53c;
   --body-color: #ffffff;
   --text-color: rgba(20, 20, 20, 1);
   --secondary-color: #ddeace;
-  --deep-color:#9ec43b
+  --deep-color: #9ec43b;
 }
 
 /* .montserrat {
@@ -49,8 +49,10 @@ p {
 }
 label {
   color: rgba(20, 20, 20, 1);
-  font-size: 14px !important;
+  font-size: 15px !important;
   font-weight: 500;
+  margin-left: 15px;
+  /* margin-bottom: 10px !important; */
 }
 label span {
   color: red;
@@ -86,11 +88,16 @@ label span {
 }
 .phone_wrapper select {
   width: fit-content;
-  height: 50%;
+  height: 50% !important;
+  min-height: 50% !important;
+  max-height: 50% !important;
   border: none;
   border-right: 1px solid #000;
   outline: none;
   padding-right: 5px;
+  padding-left: 10px;
+  width: 60px !important;
+  border-radius: 0px !important;
 }
 .phone_wrapper input {
   width: calc(100% - 60px);
@@ -100,3 +107,64 @@ label span {
   outline: none;
 }
 
+select {
+  /* Remove default browser appearance */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Add padding to the right to prevent the arrow from overlapping text */
+  /* Add custom background arrow (using an inline SVG) */
+  background-image: url("/_ChevronDownIcon_.svg");
+  background-repeat: no-repeat;
+  background-position: right 1em center; /* Position it to the right with some margin */
+  background-size: 2em; /* Adjust the size of the arrow */
+  /* Basic styling */
+  width: 100%;
+  border: 1px solid #caced1;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  background-position-x: 99%;
+}
+
+/* Optional: Hide the default arrow in Internet Explorer 10 and 11 */
+select::-ms-expand {
+  display: none;
+}
+
+input[type="time"] {
+  padding-right: 0px;
+  background-image: url("/timer.svg"); /* Replace with your icon URL */
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 15px 15px;
+  background-position-x: 98%;
+}
+
+/* Optional: Hide the default arrow in Internet Explorer 10 and 11 */
+input[type="time"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+input[type="date"] {
+  padding-right: 0px;
+  background-image: url("/calendar_month.svg"); /* Replace with your icon URL */
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 15px 15px;
+  background-position-x: 98%;
+}
+
+/* Optional: Hide the default arrow in Internet Explorer 10 and 11 */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+
+input{
+  height: 45px !important;
+  min-height: 45px !important;
+  max-height: 45px !important;
+}
+select{
+  height: 45px !important;
+  min-height: 45px !important;
+  max-height: 45px !important;
+}

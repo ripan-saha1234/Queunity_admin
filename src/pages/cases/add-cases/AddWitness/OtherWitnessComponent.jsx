@@ -1,20 +1,16 @@
 import React from 'react'
 import CommonInput from '../../../../components/common-input'
-
+import { WizardSection } from '../../../../components/WizardSection'
+import icon from '../../../../Assets/regular.svg'
 const OtherWitnessComponent = () => {
     return (
         <>
             <div className='other_Head_details_wrapper'>
                 <section className="add-cases-section">
-                    <div className="add-cases-section-header">
-                        <div className="add-cases-section-icon">
-                            <img src={'/Container (4).svg'} />
-                        </div>
-                        <div className="add-cases-section-header-text">
-                            <h3 className="add-cases-section-title">Other Details</h3>
-                            <p className="add-cases-section-subtitle">When & where it happened</p>
-                        </div>
-                    </div>
+                    <WizardSection iconBg="linear-gradient(135deg, #62E2FF 0%, #5D78DA 100%)"
+                        icon={<img src={icon} alt="" />}
+                        title="Other Details"
+                        subtitle="When & where it happened"></WizardSection>
                 </section>
                 <div className='down_arrow_wrapper'>
                     <img src={'/Layer_1.svg'} />
@@ -37,10 +33,10 @@ const OtherWitnessComponent = () => {
 
             <div className='physical_details_wrapper'>
                 <label style={{
-                    marginBottom:'10px',
-                    display:'block'
+                    marginBottom: '10px',
+                    display: 'block'
                 }}>Behavior Observed</label>
-                <CommonInput multiline placeholder='Enter details' style={{
+                <CommonInput label={'Describe actions, behavior, or anything unusual observed by witnesses or staff.'} multiline placeholder='Enter details' style={{
                     height: '80px',
                     resize: 'none'
                 }} />

@@ -2,7 +2,9 @@ export function WizardSection({ iconBg, icon, title, subtitle, children }) {
   return (
     <section className="add-cases-section">
       <div className="add-cases-section-header">
-        <div className="add-cases-section-icon">
+        <div className="add-cases-section-icon" style={{
+          background: `${iconBg}`
+        }}>
 
           {icon}
 

@@ -136,7 +136,7 @@
 .common-layout-header-title-container {
   display: flex;
   flex-direction: column;
-  row-gap: 2vh;
+  row-gap: 1vh;
   width: 100%;
 }
 

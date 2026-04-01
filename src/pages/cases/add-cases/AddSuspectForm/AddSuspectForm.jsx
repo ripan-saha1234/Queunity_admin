@@ -9,6 +9,7 @@ import SchoolMateForm from "./SchoolMateForm"
 import ExternalStudentForm from "./ExternalStudentForm"
 import OtherSuspectForm from "./OtherSuspectForm"
 import OtherDetailsForm from "./OtherDetailsForm"
+import icon from '../../../../Assets/Capa_1.svg'
 const AddSuspectForm = () => {
     const navigate = useNavigate()
     const [relationship, setrelationShip] = useState('schoolmate')
@@ -40,8 +41,8 @@ const AddSuspectForm = () => {
         <>
             <div className="common_pages_wrapper">
                 <WizardSection
-                    iconBg="#F0D9FF"
-                    icon={<img src="/Container.svg" alt="" />}
+                    iconBg="linear-gradient(135deg, #41CA13 0%, #1AA6C9 100%)"
+                    icon={<img src={icon} alt="" />}
                     title="Suspect Details"
                     subtitle="When & where it happened"
                 >

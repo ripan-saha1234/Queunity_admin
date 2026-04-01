@@ -2,7 +2,7 @@ import CommonInput from '../../../../components/common-input'
 import { ChoiceRadio } from '../../../../components/ChoiceRadio'
 import { WizardSection } from '../../../../components/WizardSection'
 import InputCommon from '../../../../components/input_common'
-
+import icon from '../../../../Assets/svg2292.svg'
 const OtherWitnessForm = () => {
     return (
         <>
@@ -64,8 +64,8 @@ const OtherWitnessForm = () => {
             </div>
 
             <WizardSection
-                iconBg="#F0D9FF"
-                icon={<img src="/Container (1).svg" alt="" />}
+                iconBg=" linear-gradient(135deg, #9150C9 0%, #BA71FE 100%)"
+                icon={<img src={icon} alt="" />}
                 title="Identifying info"
                 subtitle="When & where it happened"
             >

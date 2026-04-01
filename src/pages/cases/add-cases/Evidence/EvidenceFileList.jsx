@@ -26,13 +26,15 @@ const EvidenceFileList = () => {
                             </div>
                             <div className='cross_percentage_wrapper'>
                                 <div className='cross_icon_box' style={{
-                                    padding: '5px 3px',
+                                    padding: '5px 5px',
                                     border: '1px solid rgba(20, 20, 20, 0.17)',
                                     borderRadius: '3px',
                                     display: 'flex',
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    fontSize: '8px'
+                                    fontSize: '8px',
+                                    width:'fit-content',
+                                    cursor:'pointer'
                                 }}>
                                     <i class="fa-solid fa-xmark"></i>
                                 </div>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import CommonInput from '../../../../components/common-input'
 import NewCommonMultiFileUpload from '../../../../components/NewCommonMultiFileUpload.jsx'
+import { WizardSection } from '../../../../components/WizardSection.jsx'
+import icon from '../../../../Assets/Layer_1.svg'
 const PhysicalDetails = () => {
     const [toggle, settoggle] = useState(true)
 
@@ -8,15 +10,11 @@ const PhysicalDetails = () => {
         <>
             <div className='other_Head_details_wrapper'>
                 <section className="add-cases-section">
-                    <div className="add-cases-section-header">
-                        <div className="add-cases-section-icon">
-                            <img src={'/Container (2).svg'} />
-                        </div>
-                        <div className="add-cases-section-header-text">
-                            <h3 className="add-cases-section-title">Physical Details</h3>
-                            <p className="add-cases-section-subtitle">When & where it happened</p>
-                        </div>
-                    </div>
+                    <WizardSection iconBg="linear-gradient(135deg, #FDC700 0%, #CF8A41 100%)
+"
+                        icon={<img src={icon} alt="" />}
+                        title="Physical Details"
+                        subtitle="When & where it happened"></WizardSection>
                 </section>
                 <div className='down_arrow_wrapper'>
                     <img src={'/Layer_1.svg'} />

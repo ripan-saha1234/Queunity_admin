@@ -3,3 +3,6 @@
     flex-direction: column;
     row-gap: 20px;
 }
+.charity_police_form_wrapper .add-cases-section-header{
+    margin-bottom: 0px;
+}

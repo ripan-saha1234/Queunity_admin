@@ -18,12 +18,16 @@
 .radio_main .common-input-wrapper{
     margin-bottom:0px ;
 }
+
 .other_Head_details_wrapper{
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-bottom: 0px;
     border-bottom: 1px solid rgba(226, 232, 240, 1)
+}
+.other_Head_details_wrapper .add-cases-section-header {
+  margin-bottom: 10px !important;
 }
 .down_arrow_wrapper{
     display: flex;

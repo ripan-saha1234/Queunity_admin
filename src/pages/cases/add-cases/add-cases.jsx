@@ -15,6 +15,10 @@ import { AddWitness } from "./AddWitness/AddWitness";
 import CharityPoliceForm from "./CharityPolice/CharityPoliceForm";
 import ResolutionDesired from "./ResolutionDesired/ResolutionDesired";
 import AllEvidence from './Evidence/AllEvidence.jsx'
+import icon from '../../../Assets/Icon (1).svg'
+import icon2 from '../../../Assets/Icon (2).svg'
+import icon3 from '../../../Assets/Icon (3).svg'
+import icon4 from '../../../Assets/Icon (4).svg'
 function AddCases() {
   // Match the screenshot default state.
   const stepsCount = 10;
@@ -139,8 +143,8 @@ function AddCases() {
         {stepIndex === 0 && (
           <>
             <WizardSection
-              iconBg="#FFFFFF"
-              icon={<img src="/basic-details-icon.svg" alt="" />}
+              iconBg="linear-gradient(135deg, #51A2FF 0%, #00D3F3 100%)"
+              icon={<img src={icon} alt="" />}
               title="Basic Details"
               subtitle="Start with the basics"
             >
@@ -167,8 +171,8 @@ function AddCases() {
             </WizardSection>
 
             <WizardSection
-              iconBg="#FFE4D9"
-              icon={<img src="/incident-details-icon.svg" alt="" />}
+              iconBg=" linear-gradient(135deg, #FF8904 0%, #FF6467 100%)"
+              icon={<img src={icon2} alt="" />}
               title="Incident Details"
               subtitle="When & where it happened"
             >
@@ -367,8 +371,9 @@ function AddCases() {
         {stepIndex === 0 && (
           <>
             <WizardSection
-              iconBg="#F0D9FF"
-              icon={<img src="/anonymity-level-icon.svg" alt="" />}
+              iconBg=" linear-gradient(135deg, #C27AFF 0%, #FB64B6 100%)
+"
+              icon={<img src={icon3} alt="" />}
               title="Anonymity Level"
               subtitle="Choose your privacy"
             >
@@ -427,13 +432,17 @@ function AddCases() {
             </WizardSection>
 
             <WizardSection
-              iconBg="#D6F7F4"
-              icon={<img src="/privacy-level-icon.svg" alt="" />}
+              iconBg=" linear-gradient(135deg, #05DF72 0%, #00D492 100%)
+"
+              icon={<img src={icon4} alt="" />}
               title="Privacy Level"
               subtitle="Who can see this"
             >
               <div className="add-cases-privacy-options">
-                <label className="add-cases-privacy-radio">
+                <label className="add-cases-choice add-cases-choice-radio" style={{
+                  alignItems: 'start',
+                  gap: '10px'
+                }}>
                   <input
                     type="radio"
                     name="privacyLevel"
@@ -460,7 +469,10 @@ function AddCases() {
                   </div>
                 </label>
 
-                <label className="add-cases-privacy-radio">
+                <label className="add-cases-choice add-cases-choice-radio" style={{
+                  alignItems:'start',
+                  gap:'10px'
+                }}>
                   <input
                     type="radio"
                     name="privacyLevel"

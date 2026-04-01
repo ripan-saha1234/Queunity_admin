@@ -20,9 +20,11 @@ const InputCommon = ({
   };
 
   const labelStyle = {
-    fontSize: "14px",
+    fontSize: "15px",
     fontWeight: "500",
     color: "#333",
+    marginLeft:'15px',
+    marginBottom:'8px'
   };
 
   const inputStyle = {
