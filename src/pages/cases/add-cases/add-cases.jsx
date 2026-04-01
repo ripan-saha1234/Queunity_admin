@@ -20,8 +20,8 @@ import icon2 from '../../../Assets/Icon (2).svg'
 import icon3 from '../../../Assets/Icon (3).svg'
 import icon4 from '../../../Assets/Icon (4).svg'
 function AddCases() {
-  // Match the screenshot default state.
-  const stepsCount = 10;
+  // Steps are indexed from 0 to 5.
+  const stepsCount = 6;
   const location = useLocation();
 
   const initialStepIndex = useMemo(() => {
@@ -39,8 +39,8 @@ function AddCases() {
   }, [initialStepIndex]);
 
   const progress = useMemo(() => {
-    // 10% at step 0, 20% at step 1, ...
-    return Math.min(100, (stepIndex + 1) * 10);
+    if (stepsCount <= 0) return 0;
+    return Math.min(100, ((stepIndex + 1) / stepsCount) * 100);
   }, [stepIndex, stepsCount]);
 
   // Ensure the step content starts at the top (the scroll container is in CommonLayout).

@@ -2,10 +2,10 @@ import React, { useMemo, useState } from 'react'
 import CommonButton from '../../../../components/common-button'
 import CommonTable from '../../../../components/common-table'
 import HeadLinks from '../../../../components/HeadLinks';
-
+import { useNavigate } from 'react-router-dom';
 const SingleOffense = () => {
     const [search, setSearch] = useState("");
-
+    const navigate = useNavigate();
     const tableHeaders = useMemo(
         () => [
             { title: "Offense Name", value: "offenseName" },
@@ -65,7 +65,7 @@ const SingleOffense = () => {
                         <CommonButton text='Add Sub-Category' backgroundColor={'transparent'} borderColor={'var(--primary-color)'} />
 
 
-                        <CommonButton text='View Question' backgroundColor={'var(--primary-color)'} borderColor={'transparent'} />
+                        <CommonButton text='View Question' backgroundColor={'var(--primary-color)'} borderColor={'transparent'} onClick={() => navigate(`/view-question/2`)} />
                         <div style={{
                             width: '200px',
                             border: '1px solid rgba(217, 217, 217, 1)',
@@ -111,10 +111,13 @@ const SingleOffense = () => {
                     headers={tableHeaders}
                     handleActionClick={(action, id) => {
                         console.log("table action", action, id)
+                        if (action === "view") {
+                            navigate(`/single-offense/${id}`)
+                        }
                     }}
                     actionButtons={[
                         { label: "Edit", action: "edit" },
-                        { label: "View", action: "view" },
+                        { label: "View", action: "view", onClick: () => navigate(`/single-offense/${id}`) },
                         { label: "Delete", action: "delete" },
                     ]}
                 />

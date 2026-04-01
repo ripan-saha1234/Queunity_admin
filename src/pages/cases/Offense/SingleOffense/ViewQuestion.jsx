@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import HeadLinks from '../../../../components/HeadLinks'
 import CommonButton from '../../../../components/common-button'
-
+import { useNavigate } from 'react-router-dom';
 const ViewQuestion = () => {
     const [viewQuestion, setviequestion] = useState()
+    const navigate = useNavigate();
     return (
         <>
             <div className='offense_wrapper'>
@@ -13,7 +14,7 @@ const ViewQuestion = () => {
                         fontSize: '22px',
                         fontWeight: '600'
                     }}>Investigation Question Sets</h1>
-                    <CommonButton backgroundColor={'transparent'} borderColor={'var(--primary-color)'} text='Create Question Set' />
+                    <CommonButton backgroundColor={'transparent'} borderColor={'var(--primary-color)'} text='Create Question Set' onClick={() => navigate(`/create-question/2`)} />
                 </div>
                 {/* 
                 <p style={{

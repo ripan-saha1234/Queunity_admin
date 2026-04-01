@@ -54,12 +54,22 @@ function Sidebar() {
     communityItems,
   ]);
 
+  const routeAliases = useMemo(
+    () => ({
+      offense: ["/offense", "/single-offense", "/view-question", "/create-question"],
+    }),
+    [],
+  );
+
   const [selectedButton, setSelectedButton] = useState("");
 
   useEffect(() => {
-    const matched = allItems.find((item) => location.pathname.startsWith(item.route));
+    const matched = allItems.find((item) => {
+      const aliases = routeAliases[item.id] || [item.route];
+      return aliases.some((route) => location.pathname.startsWith(route));
+    });
     setSelectedButton(matched ? matched.id : "");
-  }, [location.pathname, allItems]);
+  }, [location.pathname, allItems, routeAliases]);
 
   const logoutUser = async () => {
     try {

@@ -55,7 +55,7 @@ function AllCases() {
   const tableData = useMemo(
     () => [
       {
-        caseId: "#ST456666",
+        caseId: "2",
         offense: "Offense 1",
         date: "27/10/2025",
         time: "10:07 AM",
@@ -113,10 +113,13 @@ function AllCases() {
         headers={tableHeaders}
         handleActionClick={(action, id) => {
           console.log("table action", action, id)
+          if (action === "view") {
+            navigate(`/cases/case-submitted/${id}`)
+          }
         }}
         actionButtons={[
           { label: "Edit", action: "edit" },
-          { label: "View", action: "view" },
+          { label: "View", action: "view" , onClick: () => navigate(`/cases/case-submitted/${id}`)},
           { label: "Delete", action: "delete" },
         ]}
       />

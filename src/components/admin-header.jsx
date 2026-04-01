@@ -14,10 +14,12 @@ function AdminHeader({ variant = "full" }) {
     const size = 58;
     const radius = 22;
     const stroke = 6;
+    const clampedProgress = Math.max(0, Math.min(100, Number(progress) || 0));
+    const displayProgress = Math.round(clampedProgress);
     const normalizedRadius = radius - stroke / 2;
     const circumference = 2 * Math.PI * normalizedRadius;
     const dashOffset =
-      circumference - (Math.max(0, Math.min(100, progress)) / 100) * circumference;
+      circumference - (clampedProgress / 100) * circumference;
 
     return (
       <div className="common-layout-header-wizard-ring-wrap">
@@ -51,7 +53,7 @@ function AdminHeader({ variant = "full" }) {
             fontWeight="600"
             fill="#95C63D"
           >
-            {progress}%
+            {displayProgress}%
           </text>
         </svg>
       </div>
