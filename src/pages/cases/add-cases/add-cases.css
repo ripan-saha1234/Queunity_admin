@@ -417,3 +417,7 @@
 .add-suspects-card-right {
   flex-shrink: 0;
 }
+
+.add-suspects-screen .add-cases-section-header{
+  margin-bottom: 0px;
+}

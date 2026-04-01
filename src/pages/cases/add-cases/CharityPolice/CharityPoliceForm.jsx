@@ -4,6 +4,8 @@ import { WizardSection } from '../../../../components/WizardSection'
 import CommonInput from '../../../../components/common-input'
 import NewCommonMultiFileUpload from '../../../../components/NewCommonMultiFileUpload'
 import { ChoiceRadio } from '../../../../components/ChoiceRadio'
+import icon from '../../../../Assets/Capa_1 (1).svg'
+import icon2 from '../../../../Assets/svg2532 (1).svg'
 const CharityPoliceForm = () => {
     const [involveCharity, setinvolveCharity] = useState('already_informed')
     const [involvePolice, setinvolvePolice] = useState('already_reported')
@@ -12,8 +14,8 @@ const CharityPoliceForm = () => {
             <div className='charity_police_wrapper'>
                 <form className='charity_police_form_wrapper'>
                     <WizardSection
-                        iconBg=" linear-gradient(135deg, #FB64B6 0%, #FF2056 100%);"
-                        icon={<img src="/Container (9).svg" alt="" />}
+                        iconBg=" linear-gradient(135deg, #FB64B6 0%, #FF2056 100%)"
+                        icon={<img src={icon} alt="" />}
                         title="Charity"
                         subtitle={'When & where it happened'}
                     >
@@ -125,8 +127,8 @@ const CharityPoliceForm = () => {
                         marginTop: '10px'
                     }}>
                         <WizardSection
-                            iconBg="  linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%);"
-                            icon={<img src="/Container (10).svg" alt="" />}
+                            iconBg="  linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%)"
+                            icon={<img src={icon2} alt="" />}
                             title="Police"
                             subtitle={'When & where it happened'}
                         >
@@ -163,7 +165,7 @@ const CharityPoliceForm = () => {
                         </div>
                     </div>
 
-                    {involvePolice != 'no' &&   <div className='four_grid_layout'>
+                    {involvePolice != 'no' && <div className='four_grid_layout'>
                         <div className="radio_main">
                             <label> Police Report Number </label>
                             <CommonInput placeholder='Enter police report number...' />

@@ -6,11 +6,44 @@ import AddOffenceModal from '../../../Modals/CaseModals/AddOffenceModal';
 import EditOffenceModal from '../../../Modals/CaseModals/EditOffenceModal';
 import HeadLinks from '../../../components/HeadLinks.jsx'
 import { useNavigate } from 'react-router-dom';
+import usePageHeader from '../../../hooks/use-page-header.jsx';
 const Offense = () => {
     const [search, setSearch] = useState("");
     const [addOffense, setaddOffense] = useState(false)
     const [editOffense, seteditOffense] = useState(false)
     const navigate = useNavigate();
+
+    const headerButtons = useMemo(
+        () => [
+            {
+                type: "button",
+                text: "Add Offense",
+                onClick: () => setaddOffense(true),
+                backgroundColor: "#95C63D",
+                textColor: "#141414",
+                borderColor: "#9FC53D",
+            },
+            {
+                type: "search",
+                name: "searchCase",
+                value: search,
+                onChange: (e) => setSearch(e.target.value),
+                inputType: "text",
+            },
+            {
+                type: "icon",
+                img: "/filter_icon.svg",
+                onClick: () => { },
+            },
+        ],
+        [navigate, search],
+    );
+
+    usePageHeader({
+        title: "Offence",
+        breadcrumbs: [{ title: "Offense", link: "/offense" }],
+        buttons: headerButtons,
+    });
     const tableHeaders = useMemo(
         () => [
             { title: "Offense Name", value: "offenseName" },
@@ -59,57 +92,7 @@ const Offense = () => {
             {addOffense && <AddOffenceModal setaddOffense={setaddOffense} />}
             {editOffense && <EditOffenceModal seteditOffence={seteditOffense} />}
             <div className='offense_wrapper'>
-                <div className='offense_header_wrapper'>
-                    <HeadLinks name={'Offence'} title1={'Offence'} link1={'/offense'} />
-
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                        gap: '10px'
-                    }}>
-                        <CommonButton onClick={(() => setaddOffense(true))} text='Add Offense' backgroundColor={'var(--primary-color)'} borderColor={'transparent'} />
-
-                        <div style={{
-                            width: '200px',
-                            border: '1px solid rgba(217, 217, 217, 1)',
-                            borderRadius: '10px',
-                            height: '45px',
-                            position: 'relative',
-                            overflow: 'hidden'
-                        }}>
-                            <i style={{
-                                position: 'absolute',
-                                top: "15px",
-                                left: '10px',
-                                color: '#404040',
-                                fontSize: '13px'
-                            }} class="fa-solid fa-magnifying-glass"></i>
-                            <input placeholder='Search..' style={{
-                                width: '100%',
-                                height: '100%',
-                                paddingLeft: "30px",
-                                borderRadius: '10px',
-                                border: 'none',
-                                outline: 'none'
-
-                            }} />
-                        </div>
-
-                        <div style={{
-                            padding: '12px 15px',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            background: 'rgba(243, 243, 243, 1)',
-                            borderRadius: '8px',
-                            height: '45px',
-                            width: 'fit-content'
-                        }}>
-                            <img src='/filter_alt.svg' />
-                        </div>
-                    </div>
-                </div>
+               
                 <CommonTable
                     tableData={filteredTableData}
                     headers={tableHeaders}
@@ -123,7 +106,7 @@ const Offense = () => {
                         }
                     }}
                     actionButtons={[
-                        { label: "Edit", action: "edit" , onClick: () => seteditOffense(true)},
+                        { label: "Edit", action: "edit", onClick: () => seteditOffense(true) },
                         { label: "View", action: "view", onClick: () => navigate(`/single-offense/${id}`) },
                         { label: "Delete", action: "delete" },
                     ]}

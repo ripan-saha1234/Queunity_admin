@@ -1,14 +1,20 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import HeadLinks from '../../../../components/HeadLinks'
 import CommonButton from '../../../../components/common-button'
 import { useNavigate } from 'react-router-dom';
+import usePageHeader from '../../../../hooks/use-page-header';
 const ViewQuestion = () => {
     const [viewQuestion, setviequestion] = useState()
     const navigate = useNavigate();
+    const [search, setSearch] = useState('')
+
+    usePageHeader({
+        title: "View Question",
+        breadcrumbs: [{ title: "Offense", link: "/offense" }, { title: "Offense 1", link: "/single-offense/1" }, { title:'View Question',link:'/view-question/1'}],
+    });
     return (
         <>
             <div className='offense_wrapper'>
-                <HeadLinks title2={'Offence 1'} title3={'View Question'} link3={'/view-question/2'} link2={'/single-offence/2'} title1={'Offence'} link1={'/offense'} name={'View Question'} />
                 <div className='questions_head_wrapper'>
                     <h1 style={{
                         fontSize: '22px',
@@ -48,7 +54,7 @@ const ViewQuestion = () => {
                                 }}>
                                     {viewQuestion == index && <i class="fa-solid fa-angle-down"></i>}
                                     {viewQuestion != index && <i style={{
-                                        color:'rgba(111, 108, 143, 1)'
+                                        color: 'rgba(111, 108, 143, 1)'
                                     }} class="fa-solid fa-angle-up"></i>}
                                 </div>
                             </div>

@@ -3,9 +3,48 @@ import CommonButton from '../../../../components/common-button'
 import CommonTable from '../../../../components/common-table'
 import HeadLinks from '../../../../components/HeadLinks';
 import { useNavigate } from 'react-router-dom';
+import usePageHeader from '../../../../hooks/use-page-header';
 const SingleOffense = () => {
     const [search, setSearch] = useState("");
     const navigate = useNavigate();
+    const headerButtons = useMemo(
+        () => [
+            {
+                type: "button",
+                text: "Add Sub-Category",
+                backgroundColor: "transparent",
+                textColor: "#141414",
+                borderColor: "#9FC53D",
+            },
+            {
+                type: "button",
+                text: "View Question",
+                backgroundColor: "#95C63D",
+                textColor: "#141414",
+                borderColor: "#9FC53D",
+                onClick:()=>navigate('/view-question/2')
+            },
+            {
+                type: "search",
+                name: "searchCase",
+                value: search,
+                onChange: (e) => setSearch(e.target.value),
+                inputType: "text",
+            },
+            {
+                type: "icon",
+                img: "/filter_icon.svg",
+                onClick: () => { },
+            },
+        ],
+        [navigate, search],
+    );
+
+    usePageHeader({
+        title: "Offence 1",
+        breadcrumbs: [{ title: "Offense", link: "/offense" }],
+        buttons: headerButtons,
+    });
     const tableHeaders = useMemo(
         () => [
             { title: "Offense Name", value: "offenseName" },
@@ -52,60 +91,7 @@ const SingleOffense = () => {
     return (
         <>
             <div className='offense_wrapper'>
-                <div className='offense_header_wrapper'>
-                    <HeadLinks name={'Offence 1'} title2={'Offence 1'} title1={'Offence'}  link1={'/offense'} />
-
-
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                        gap: '10px'
-                    }}>
-                        <CommonButton text='Add Sub-Category' backgroundColor={'transparent'} borderColor={'var(--primary-color)'} />
-
-
-                        <CommonButton text='View Question' backgroundColor={'var(--primary-color)'} borderColor={'transparent'} onClick={() => navigate(`/view-question/2`)} />
-                        <div style={{
-                            width: '200px',
-                            border: '1px solid rgba(217, 217, 217, 1)',
-                            borderRadius: '10px',
-                            height: '45px',
-                            position: 'relative',
-                            overflow: 'hidden'
-                        }}>
-                            <i style={{
-                                position: 'absolute',
-                                top: "15px",
-                                left: '10px',
-                                color: '#404040',
-                                fontSize: '13px'
-                            }} class="fa-solid fa-magnifying-glass"></i>
-                            <input placeholder='Search..' style={{
-                                width: '100%',
-                                height: '100%',
-                                paddingLeft: "30px",
-                                borderRadius: '10px',
-                                border: 'none',
-                                outline: 'none'
-
-                            }} />
-                        </div>
-
-                        <div style={{
-                            padding: '12px 15px',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            background: 'rgba(243, 243, 243, 1)',
-                            borderRadius: '8px',
-                            height: '45px',
-                            width: 'fit-content'
-                        }}>
-                            <img src='/filter_alt.svg' />
-                        </div>
-                    </div>
-                </div>
+               
                 <CommonTable
                     tableData={filteredTableData}
                     headers={tableHeaders}

@@ -3,14 +3,16 @@ import CommonButton from "../../../../components/common-button.jsx";
 import { useNavigate } from 'react-router';
 import EvidenceCard from './EvidenceCard.jsx';
 import './Evidence.css'
+import { WizardSection } from '../../../../components/WizardSection.jsx';
+import icon from '../../../../Assets/Icon (6).svg'
 const AllEvidence = () => {
     const navigate = useNavigate();
     const evidenceData = [
         {
             id: 1,
             title: "Evidence #1",
-            img:'/Image (Vehicle 2).png',
-            details:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do...'
+            img: '/Image (Vehicle 2).png',
+            details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do...'
         },
         {
             id: 2,
@@ -39,13 +41,14 @@ const AllEvidence = () => {
             <div className="add-suspects-screen">
                 <div className="add-suspects-card">
                     <div className="add-suspects-card-left">
-                        <div className="add-suspects-icon">
-                            <img src="/suspects-icon.svg" alt="" />
-                        </div>
-                        <div className="add-suspects-card-text">
-                            <div className="add-suspects-title">Add Evidence</div>
-                            <div className="add-suspects-subtitle">{evidenceData?.length} Evidences recorded</div>
-                        </div>
+                        <WizardSection
+                            iconBg="linear-gradient(135deg, #06B6D4 0%, #2563EB 100%)" 
+                            icon={<img src={icon} alt="" />}
+                            title="Evidence"
+                            subtitle={`${evidenceData.length} Evidences found`}
+                        >
+                        </WizardSection>
+
                     </div>
 
                     <div className="add-suspects-card-right">

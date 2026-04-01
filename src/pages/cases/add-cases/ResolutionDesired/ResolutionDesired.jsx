@@ -1,12 +1,14 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import './ResolutionDesired.css'
 import { WizardSection } from '../../../../components/WizardSection'
 import { ChoiceRadio } from '../../../../components/ChoiceRadio'
 import SummaryCaseModal from '../../../../Modals/CaseModals/SummaryCaseModal'
 import usePageHeader from '../../../../hooks/use-page-header'
 import { useNavigate } from 'react-router-dom'
+import icon from '../../../../Assets/Icon (7).svg'
 const ResolutionDesired = () => {
     const navigate = useNavigate()
+    const [summaryCase,setsummaryCase] = useState(false)
     const headerButtons = useMemo(() => ([
         {
             type: "wizard",
@@ -16,7 +18,7 @@ const ResolutionDesired = () => {
             prevText: "Previous",
             nextText: "Submit",
             onPrev: () => navigate("/cases/add-cases?step=4"),
-            onNext: () => navigate("/"),
+            onNext: () => setsummaryCase(true),
         },
     ]), [navigate])
     usePageHeader({
@@ -29,11 +31,12 @@ const ResolutionDesired = () => {
     })
     return (
         <>
+            {summaryCase && <SummaryCaseModal setsummaryCase={setsummaryCase}/>}
             <div className='resolution_desired_wrapper'>
                 <WizardSection
-                    iconBg=" linear-gradient(135deg, #22C55E 0%, #6D28D9 100%);
+                    iconBg=" linear-gradient(135deg, #22C55E 0%, #6D28D9 100%)
 "
-                    icon={<img src="/Container (11).svg" alt="" />}
+                    icon={<img src={icon} alt="" />}
                     title="Resolution Desired "
                     subtitle={'When & where it happened'}
                 >

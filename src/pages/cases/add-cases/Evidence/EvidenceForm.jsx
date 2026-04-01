@@ -5,7 +5,7 @@ import { WizardSection } from '../../../../components/WizardSection'
 import './Evidence.css'
 import EvidenceFileList from './EvidenceFileList'
 const EvidenceForm = () => {
-    const [haveEvidence,sethaveEvidence] = useState(true)
+    const [haveEvidence, sethaveEvidence] = useState(true)
     return (
         <>
             <div className='evidence_wrapper'>
@@ -35,11 +35,11 @@ const EvidenceForm = () => {
                             />
                         </div>
                     </div>
-             { haveEvidence &&    <>
+                    {haveEvidence && <>
                         <NewCommonMultiFileUpload />
 
                         <EvidenceFileList />
-             </>  }
+                    </>}
                 </form>
 
             </div>

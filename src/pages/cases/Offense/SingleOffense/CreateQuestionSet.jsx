@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import HeadLinks from '../../../../components/HeadLinks'
 import CommonButton from '../../../../components/common-button'
 import CommonInput from '../../../../components/common-input'
@@ -7,8 +7,12 @@ import AddMultiQuestionModal from '../../../../Modals/OffenceModals/AddMultiQues
 import AddDropdownQuestionModal from '../../../../Modals/OffenceModals/AddDropdownQuestionModal'
 import AddDescriptiveModal from '../../../../Modals/OffenceModals/AddDescriptiveModal'
 import AddUploadModal from '../../../../Modals/OffenceModals/AddUploadModal'
+import usePageHeader from '../../../../hooks/use-page-header'
+import { useNavigate } from 'react-router'
 
 const CreateQuestionSet = () => {
+    const [search, setSearch] = useState('');
+    const navigate = useNavigate()
     const [toggle, setoggle] = useState({
         singleChoice: false,
         multiChoice: false,
@@ -26,6 +30,35 @@ const CreateQuestionSet = () => {
             upload: i == 5 ? true : false
         })
     }
+
+    const headerButtons = useMemo(
+        () => [
+            {
+                type: "button",
+                text: "Cancel",
+                backgroundColor: "transparent",
+                textColor: "#141414",
+                borderColor: "transparent",
+            },
+            {
+                type: "button",
+                text: "Create",
+                backgroundColor: "#95C63D",
+                textColor: "#141414",
+                borderColor: "#9FC53D",
+                onClick: () => navigate('/view-question/2')
+            },
+            
+        
+        ],
+        [navigate, search],
+    );
+
+    usePageHeader({
+        title: "Create Question Set",
+        breadcrumbs: [{ title: "Offense", link: "/offense" }, { title: "Offense 1", link: "/single-offense/1" }, { title: "View Question", link: "/view-question/1" }, { title: " Create Question Set", link: "/create-question/1" }],
+        buttons: headerButtons,
+    });
     return (
         <>
             {toggle.singleChoice && <AddSingleQuestionModal toggleFunc={toggleFunc} />}
@@ -34,24 +67,7 @@ const CreateQuestionSet = () => {
             {toggle.descriptive && <AddDescriptiveModal toggleFunc={toggleFunc} />}
             {toggle.upload && <AddUploadModal toggleFunc={toggleFunc} />}
             <div className='offense_wrapper'>
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                }}>
-                    <HeadLinks title2={'Offence 1'} title3={'View Question'} link3={'/view-question/2'} link2={'/single-offence/2'} title1={'Offence'} link1={'/offense'} name={'Create Question Set'} link4={'/create-question/:id'} title4={'Create Question Set'} />
-
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                        gap: '15px'
-                    }}>
-                        <CommonButton text='Cancel' backgroundColor={'transparent'} borderColor={'transparent'} />
-
-                        <CommonButton text='Create' backgroundColor={'var(--primary-color)'} borderColor={'transparent'} />
-                    </div>
-                </div>
+              
 
                 <div className='radio_main' style={{
                     marginTop: '20px'
@@ -83,56 +99,56 @@ const CreateQuestionSet = () => {
                 </div>
 
                 <div className='added_question_list_wrapper'>
-                {[1,2,3].map((e,i)=>(
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        padding: '15px 15px',
-                        borderRadius: '5px',
-                        background: '#f1f4f9'
-                    }}>
+                    {[1, 2, 3].map((e, i) => (
                         <div style={{
                             display: 'flex',
-                            justifyContent: 'flex-start',
+                            justifyContent: 'space-between',
                             alignItems: 'center',
-                            gap: '10px'
+                            padding: '15px 15px',
+                            borderRadius: '5px',
+                            background: '#f1f4f9'
                         }}>
-                            <img src='/menu.svg' />
                             <div style={{
                                 display: 'flex',
                                 justifyContent: 'flex-start',
                                 alignItems: 'center',
-                                gap: '5px'
+                                gap: '10px'
                             }}>
-                                <h5 style={{
-                                    fontSize: '15px',
-                                    fontWeight: '500'
-                                }}>Question 1  </h5>
-                                <small style={{
-                                    fontSize: '12px'
-                                }}>Single Choice </small>
+                                <img src='/menu.svg' />
+                                <div style={{
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                    gap: '5px'
+                                }}>
+                                    <h5 style={{
+                                        fontSize: '15px',
+                                        fontWeight: '500'
+                                    }}>Question 1  </h5>
+                                    <small style={{
+                                        fontSize: '12px'
+                                    }}>Single Choice </small>
+                                </div>
+                            </div>
+
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'flex-start',
+                                alignItems: 'center',
+                                gap: '7px',
+                                fontSize: '13px',
+                                cursor: 'pointer'
+                            }}>
+                                <i style={{
+                                    color: 'var(--primary-color)'
+                                }} class="fa-solid fa-pen"></i>
+                                <i style={{
+                                    color: 'rgba(20, 20, 20, 1)'
+                                }} class="fa-regular fa-trash-can"></i>
                             </div>
                         </div>
+                    ))}
 
-                        <div style={{
-                            display: 'flex',
-                            justifyContent: 'flex-start',
-                            alignItems: 'center',
-                            gap: '7px',
-                            fontSize: '13px',
-                            cursor:'pointer'
-                        }}>
-                            <i style={{
-                                color: 'var(--primary-color)'
-                            }} class="fa-solid fa-pen"></i>
-                            <i style={{
-                                color: 'rgba(20, 20, 20, 1)'
-                            }} class="fa-regular fa-trash-can"></i>
-                        </div>
-                    </div>
-                ))}
-                  
 
                 </div>
 

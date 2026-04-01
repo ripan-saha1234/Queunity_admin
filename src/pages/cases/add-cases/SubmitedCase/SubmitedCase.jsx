@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import './SubmitedCase.css'
 import { WizardSection } from '../../../../components/WizardSection'
 import AnnomityLevelModal from '../../../../Modals/CaseModals/AnnomityLevelModal.jsx'
@@ -6,7 +6,42 @@ import PrivacyLevelModal from '../../../../Modals/CaseModals/PrivacyLevelModal.j
 import ViewClarityModal from '../../../../Modals/CaseModals/ViewClarityModal.jsx'
 import ViewPoliceModal from '../../../../Modals/CaseModals/ViewPoliceModal.jsx'
 import ViewResolutionModal from '../../../../Modals/CaseModals/ViewResolutionModal.jsx'
+import usePageHeader from '../../../../hooks/use-page-header.jsx'
+import { useNavigate, useParams } from 'react-router'
+import icon from '../../../../Assets/Icon (5).svg'
 const SubmitedCase = () => {
+    const { id } = useParams();
+    const navigate = useNavigate()
+    const headerButtons = useMemo(
+        () => [
+            {
+                type: "button",
+                text: "Edit",
+                // onClick: () => navigate(`/cases/add-cases?step=`),
+                backgroundColor: "transparent",
+                textColor: "rgba(111, 124, 142, 1)",
+                borderColor: "rgba(217, 217, 217, 1)",
+            },
+            {
+                type: "button",
+                text: "Update Status",
+                // onClick: () => navigate(`/cases/add-cases?step=`),
+                backgroundColor: "rgba(220, 224, 229, 1)",
+                textColor: "rgba(111, 124, 142, 1)",
+                borderColor: "transparent",
+            },
+        ],
+        [navigate],
+    )
+
+    usePageHeader({
+        title: `2025AWO77#`,
+        breadcrumbs: [
+            { title: "Cases", link: "/cases" },
+            { title: "2025AWO77#", link: `/cases/case-submitted/${id}` },
+        ],
+        buttons: headerButtons,
+    })
     const [modalIsOpen, setmodalIsOpen] = useState('')
     const detailsData = [
         {
@@ -58,11 +93,11 @@ const SubmitedCase = () => {
             }
 
             {
-                modalIsOpen == 'police' && <ViewPoliceModal setmodalIsOpen={setmodalIsOpen}/>
+                modalIsOpen == 'police' && <ViewPoliceModal setmodalIsOpen={setmodalIsOpen} />
             }
 
             {
-                modalIsOpen == 'resolution' && <ViewResolutionModal setmodalIsOpen={setmodalIsOpen}/>
+                modalIsOpen == 'resolution' && <ViewResolutionModal setmodalIsOpen={setmodalIsOpen} />
             }
             <div className='submited_case_wrapper'>
                 <div className='submited_case_head'>
@@ -140,8 +175,8 @@ const SubmitedCase = () => {
                     <div>
 
                         <WizardSection
-                            iconBg=" linear-gradient(135deg, #FF8904 0%, #FF6467 100%);"
-                            icon={<img src="/Container (12).svg" alt="" />}
+                            iconBg=" linear-gradient(135deg, #FF8904 0%, #FF6467 100%)"
+                            icon={<img src={icon} alt="" />}
                             title="Incident Details "
                             subtitle={'When & where it happened'}
                         >
@@ -182,7 +217,7 @@ const SubmitedCase = () => {
 
                         </div>
 
-                        <div className='case_details_card'>
+                        <div className='case_details_card' onClick={(() => navigate('/cases/add-cases?step=1'))}>
                             <div className='icon_image'>
                                 <img src='/Capa_1.svg' />
                             </div>
@@ -190,7 +225,7 @@ const SubmitedCase = () => {
 
                         </div>
 
-                        <div className='case_details_card'>
+                        <div className='case_details_card' onClick={(() => navigate('/cases/add-cases?step=2'))}>
                             <div className='icon_image'>
                                 <img src='/Icon (4).svg' />
                             </div>
@@ -198,7 +233,7 @@ const SubmitedCase = () => {
 
                         </div>
 
-                        <div className='case_details_card'>
+                        <div className='case_details_card' onClick={(() => navigate('/cases/add-cases?step=3'))}>
                             <div className='icon_image'>
                                 <img src='/Icon (6).svg' />
                             </div>

@@ -28,7 +28,7 @@ function AllCases() {
       {
         type: "icon",
         img: "/filter_icon.svg",
-        onClick: () => {},
+        onClick: () => { },
       },
     ],
     [navigate, search],
@@ -62,35 +62,40 @@ function AllCases() {
         status: "Open",
       },
       {
-        caseId: "#ST456666",
+        caseId: "3",
+
         offense: "Offense 1",
         date: "27/10/2025",
         time: "10:07 AM",
         status: "Closed",
       },
       {
-        caseId: "#ST456666",
+        caseId: "4",
+
         offense: "Offense 1",
         date: "27/10/2025",
         time: "10:07 AM",
         status: "Open",
       },
       {
-        caseId: "#ST456666",
+        caseId: "5",
+
         offense: "Offense 1",
         date: "27/10/2025",
         time: "10:07 AM",
         status: "Open",
       },
       {
-        caseId: "#ST456666",
+        caseId: "6",
+
         offense: "Offense 1",
         date: "27/10/2025",
         time: "10:07 AM",
         status: "Closed",
       },
       {
-        caseId: "#ST456666",
+        caseId: "7",
+
         offense: "Offense 1",
         date: "27/10/2025",
         time: "10:07 AM",
@@ -119,7 +124,7 @@ function AllCases() {
         }}
         actionButtons={[
           { label: "Edit", action: "edit" },
-          { label: "View", action: "view" , onClick: () => navigate(`/cases/case-submitted/${id}`)},
+          { label: "View", action: "view", onClick: () => navigate(`/cases/case-submitted/${id}`) },
           { label: "Delete", action: "delete" },
         ]}
       />

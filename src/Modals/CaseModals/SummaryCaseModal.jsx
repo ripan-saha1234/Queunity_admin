@@ -1,14 +1,16 @@
 import React from 'react'
 import CommonButton from '../../components/common-button'
+import { useNavigate } from 'react-router'
 
-const SummaryCaseModal = () => {
+const SummaryCaseModal = ({ setsummaryCase }) => {
+    const navigate = useNavigate()
     return (
         <>
             <div className='modal_wrapper'>
                 <div className='modal_body'>
                     <div className='modal_head'>
                         <h5>Case Summary</h5>
-                        <i class="fa-solid fa-xmark"></i>
+                        <i class="fa-solid fa-xmark" onClick={(() => setsummaryCase(false))}></i>
                     </div>
                     <div className='case_summary_list'>
                         <ul>
@@ -33,8 +35,8 @@ const SummaryCaseModal = () => {
                         alignItems: 'center',
                         gap: '15px'
                     }}>
-                        <CommonButton text='Cancel' backgroundColor={'transparent'} borderColor={'transparent'} />
-                        <CommonButton text='Yes' backgroundColor={'var(--primary-color)'} borderColor={'transparent'} />
+                        <CommonButton onClick={(() => setsummaryCase(false))} text='Cancel' backgroundColor={'transparent'} borderColor={'transparent'} />
+                        <CommonButton onClick={(() => navigate('/cases/case-submitted/2'))} text='Yes' backgroundColor={'var(--primary-color)'} borderColor={'transparent'} />
                     </div>
                 </div>
             </div>
