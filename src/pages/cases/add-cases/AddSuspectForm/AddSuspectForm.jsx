@@ -12,8 +12,8 @@ import OtherDetailsForm from "./OtherDetailsForm"
 import icon from '../../../../Assets/Capa_1.svg'
 const AddSuspectForm = () => {
     const navigate = useNavigate()
-    const [relationship, setrelationShip] = useState('schoolmate')
-    const [suspectKnown, setsuspectKnown] = useState(true)
+    const [relationship, setrelationShip] = useState('')
+    const [suspectKnown, setsuspectKnown] = useState(null)
 
     const headerButtons = useMemo(() => ([
         {
@@ -21,7 +21,7 @@ const AddSuspectForm = () => {
             progress: 20,
             prevDisabled: false,
             nextDisabled: false,
-            prevText: "Previous",
+            prevText: "Back to Suspect List",
             nextText: "Add Suspect",
             onPrev: () => navigate("/cases/add-cases?step=1"),
             onNext: () => navigate("/cases/add-cases?step=2"),
@@ -55,19 +55,19 @@ const AddSuspectForm = () => {
                                     label="Yes"
                                     value="yes"
                                     onChange={(() => setsuspectKnown(true))}
-                                    checked={suspectKnown}
+                                    checked={suspectKnown === true}
                                 />
                                 <ChoiceRadio
                                     name="suspectKnown"
                                     label="No"
                                     value="no"
                                     onChange={(() => setsuspectKnown(false))}
-                                    checked={!suspectKnown}
+                                    checked={suspectKnown === false}
                                 />
                             </div>
                         </div>
 
-                        {suspectKnown && <div className="radio_main">
+                        {suspectKnown === true && <div className="radio_main">
                             <label>Relationship <span>*</span></label>
                             <div className="radio_buttons_wrapper">
                                 <ChoiceRadio
@@ -95,7 +95,7 @@ const AddSuspectForm = () => {
                             </div>
                         </div>}
 
-                        {!suspectKnown && <OtherDetailsForm />}
+                        {suspectKnown === false && <OtherDetailsForm />}
 
                         {(relationship === 'schoolmate' && suspectKnown) && <SchoolMateForm />}
                         {(relationship === 'external_student' && suspectKnown) && <ExternalStudentForm />}

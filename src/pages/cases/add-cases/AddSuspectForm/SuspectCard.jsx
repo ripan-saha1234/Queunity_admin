@@ -1,8 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router'
 
 const SuspectCard = ({ suspect, nodelete, noedit }) => {
     const navigate = useNavigate()
+    const [menuOpen, setMenuOpen] = useState(false)
+    const readOnlyActions = nodelete && noedit
+
+    const handleView = () => {
+        navigate(`/cases/view-suspect/${suspect.id}?step=1`)
+        setMenuOpen(false)
+    }
+
+    const handleEdit = () => {
+        navigate(`/cases/view-suspect/${suspect.id}?step=1`)
+        setMenuOpen(false)
+    }
+
+    const handleDelete = () => {
+        setMenuOpen(false)
+    }
+
     return (
         <>
             <div className={"card_01"}>
@@ -17,17 +34,45 @@ const SuspectCard = ({ suspect, nodelete, noedit }) => {
                     </div>
 
                     <div className={"actionsWrap_06"}>
-                        <button onClick={(() => navigate((nodelete && noedit) ? `` : `/cases/view-suspect/${suspect.id}?step=1`))} className={"iconBtn_07 viewBtn_08"} title={"View"}>
-                            <i className={"fa-regular fa-eye"}></i>
-                        </button>
+                        {readOnlyActions ? (
+                            <button
+                                type="button"
+                                onClick={handleView}
+                                className={"iconBtn_07 viewBtn_08"}
+                                title={"View"}
+                            >
+                                <img src="/view-eye.svg" alt="" width={18} height={18} />
+                            </button>
+                        ) : (
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={() => setMenuOpen((prev) => !prev)}
+                                    className={"iconBtn_07 moreBtn_15"}
+                                    title={"More"}
+                                >
+                                    <img src="/new_three_dot.svg" alt="More actions" />
+                                </button>
 
-                        {!noedit && <button onClick={(() => navigate(`/cases/view-suspect/${suspect.id}?step=1`))} className={"iconBtn_07 editBtn_09"} title={"Edit"}>
-                            <i className={"fa-solid fa-pen"}></i>
-                        </button>}
-
-                        {!nodelete && <button className={"iconBtn_07 deleteBtn_10"} title={"Delete"}>
-                            <i className={"fa-regular fa-trash-can"}></i>
-                        </button>}
+                                {menuOpen && (
+                                    <div className="actionsMenu_16">
+                                        <button type="button" className="actionsMenuItem_17" onClick={handleView}>
+                                            View
+                                        </button>
+                                        {!noedit && (
+                                            <button type="button" className="actionsMenuItem_17" onClick={handleEdit}>
+                                                Edit
+                                            </button>
+                                        )}
+                                        {!nodelete && (
+                                            <button type="button" className="actionsMenuItem_17 delete_18" onClick={handleDelete}>
+                                                Delete
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+                            </>
+                        )}
                     </div>
                 </div>
 

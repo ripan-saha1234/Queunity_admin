@@ -52,13 +52,15 @@ function AddCases() {
 
   const [formData, setFormData] = useState({
     caseName: "Case 11489",
+    school: "",
+    incidentDetails: "",
     offenceCategory: "verbal_bullying",
     offenceSubCategory: "teasing",
     incidentDate: "2026-06-12",
     incidentTime: "21:30",
-    locationMode: "within_school",
+    locationMode: "",
     locationDetails: {
-      classroom: true,
+      classroom: false,
       cafeteria: false,
       playground: false,
       hallway: false,
@@ -69,7 +71,8 @@ function AddCases() {
       library: false,
       other: false,
     },
-    grade: "class_8",
+    description: "",
+    grade: "Grade 8",
     anonymityLevel: "complete_anonymous",
     privacyLevel: "level_1",
   });
@@ -78,6 +81,16 @@ function AddCases() {
     () => [
       { label: "Verbal Bullying", value: "verbal_bullying" },
       { label: "Physical Bullying", value: "physical_bullying" },
+    ],
+    [],
+  );
+
+  const schoolOptions = useMemo(
+    () => [
+      { label: "Green Valley Public School", value: "green_valley_public_school" },
+      { label: "Sunrise International School", value: "sunrise_international_school" },
+      { label: "Oxford Senior Secondary School", value: "oxford_senior_secondary_school" },
+      { label: "Other", value: "other" },
     ],
     [],
   );
@@ -169,6 +182,28 @@ function AddCases() {
                 }
                 placeholder="Case Name"
               />
+              <CommonSelect
+                label="Select School"
+                name="school"
+                value={formData.school}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, school: e.target.value }))
+                }
+                options={schoolOptions}
+                placeholder="Select school"
+                searchPlaceholder="Search school..."
+              />
+              {formData.school === "other" && (
+                <CommonInput
+                  label="School Name"
+                  name="schoolName"
+                  value={formData.schoolName}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, schoolName: e.target.value }))
+                  }
+                  placeholder="Enter school name"
+                />
+              )}
             </WizardSection>
 
             <WizardSection
@@ -263,7 +298,7 @@ function AddCases() {
                       offenceSubCategory: e.target.value,
                     }))
                   }
-                  required
+                
                   options={offenceSubCategoryOptions}
                   placeholder="Select sub-category"
                 />
@@ -320,45 +355,71 @@ function AddCases() {
                   />
                 </div>
 
-                <SectionRequired>Add More details</SectionRequired>
+                {formData.locationMode === "within_school" && (
+                  <>
+                    <SectionRequired>Add More details</SectionRequired>
 
-                <div className="add-cases-location-checkbox-grid">
-                  {locationDetailOptions.map((opt) => (
-                    <ChoiceRadio
-                      key={opt.value}
-                      name="locationDetails"
-                      label={opt.label}
-                      value={opt.value}
-                      checked={!!formData.locationDetails[opt.value]}
-                      onChange={(value) => {
-                        setFormData((prev) => ({
-                          ...prev,
-                          locationDetails: {
-                            ...prev.locationDetails,
-                            [value]: !prev.locationDetails[value],
-                          },
-                        }));
-                      }}
-                    />
-                  ))}
+                    <div className="add-cases-location-checkbox-grid">
+                      {locationDetailOptions.map((opt) => (
+                        <ChoiceRadio
+                          key={opt.value}
+                          name="locationDetails"
+                          label={opt.label}
+                          value={opt.value}
+                          checked={formData.locationDetails[opt.value] === true}
+                          onChange={(value) => {
+                            const nextLocationDetails = {};
+                            locationDetailOptions.forEach((detailOpt) => {
+                              nextLocationDetails[detailOpt.value] =
+                                detailOpt.value === value;
+                            });
+                            setFormData((prev) => ({
+                              ...prev,
+                              locationDetails: nextLocationDetails,
+                              description: value === "other" ? prev.description : "",
+                            }));
+                          }}
+                        />
+                      ))}
+                    </div>
+                    {formData.locationDetails.other && (
+                      <div style={{ marginTop: "20px" }}>
+                        <CommonInput
+                          label="Description"
+                          name="description"
+                          value={formData.description}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              description: e.target.value,
+                            }))
+                          }
+                          placeholder="Enter description"
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {formData.locationDetails.classroom &&
+                !formData.locationDetails.other && (
+                <div className="add-cases-grade">
+                  <CommonSelect
+                    label="Grade"
+                    name="grade"
+                    value={formData.grade}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        grade: e.target.value,
+                      }))
+                    }
+                    options={gradeOptions}
+                    placeholder="Select grade"
+                  />
                 </div>
-              </div>
-
-              <div className="add-cases-grade">
-                <CommonSelect
-                  label="Grade"
-                  name="grade"
-                  value={formData.grade}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      grade: e.target.value,
-                    }))
-                  }
-                  options={gradeOptions}
-                  placeholder="Select grade"
-                />
-              </div>
+              )}
             </WizardSection>
           </>
         )}

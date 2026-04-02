@@ -6,7 +6,7 @@ import './Evidence.css'
 import EvidenceFileList from './EvidenceFileList'
 import icon from '../../../../Assets/Icon (8).svg'
 const EvidenceForm = () => {
-    const [haveEvidence, sethaveEvidence] = useState(true)
+    const [haveEvidence, sethaveEvidence] = useState(null)
     return (
         <>
             <div className='evidence_wrapper'>
@@ -14,6 +14,7 @@ const EvidenceForm = () => {
                     iconBg=" linear-gradient(135deg, #06B6D4 0%, #2563EB 100%)"
                     icon={<img src={icon} alt="" />}
                     title="Evidence"
+                    subtitle="Basic details to identify the witness"
                 >
                 </WizardSection>
                 <form className='evidence_form_wrapper'>
@@ -25,18 +26,18 @@ const EvidenceForm = () => {
                                 label="Yes"
                                 value="yes"
                                 onChange={(() => sethaveEvidence(true))}
-                                checked={haveEvidence}
+                                checked={haveEvidence === true}
                             />
                             <ChoiceRadio
                                 name="any_evidence"
                                 label="No"
                                 value="no"
                                 onChange={(() => sethaveEvidence(false))}
-                                checked={!haveEvidence}
+                                checked={haveEvidence === false}
                             />
                         </div>
                     </div>
-                    {haveEvidence && <>
+                    {haveEvidence === true && <>
                         <NewCommonMultiFileUpload />
 
                         <EvidenceFileList />

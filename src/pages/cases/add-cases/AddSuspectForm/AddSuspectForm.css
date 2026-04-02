@@ -131,6 +131,7 @@
 }
 
 .actionsWrap_06 {
+  position: relative;
   display: flex;
   gap: 10px;
 }
@@ -148,8 +149,14 @@
 }
 
 .viewBtn_08 {
-  background: #c9f3f1;
-  color: #189ca3;
+  background: #A9EAEE;
+  /* color: #189ca3; */
+}
+
+.viewBtn_08 img {
+  display: block;
+  width: 20px;
+  height: 20px;
 }
 
 .editBtn_09 {
@@ -160,6 +167,52 @@
 .deleteBtn_10 {
   background: #ffe4e4;
   color: #ff4b4b;
+}
+
+.moreBtn_15 {
+  /* background: #eef2f7;
+  border: 1px solid #dbe3ee; */
+  background: none
+}
+
+.moreBtn_15 img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.actionsMenu_16 {
+  position: absolute;
+  top: calc(90% + 0px);
+  right: 0;
+  min-width: 120px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(15, 23, 43, 0.12);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+}
+
+.actionsMenuItem_17 {
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 13px;
+  color: #141414;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.actionsMenuItem_17:hover {
+  background: #f1f4f9;
+}
+
+.actionsMenuItem_17.delete_18 {
+  color: #dc2626;
 }
 
 .statusKnown_11 {

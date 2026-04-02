@@ -12,6 +12,7 @@ import icon from '../../../../Assets/Icon (5).svg'
 const SubmitedCase = () => {
     const { id } = useParams();
     const navigate = useNavigate()
+    const isInProgressCase = id === '3'
     const headerButtons = useMemo(
         () => [
             {
@@ -163,12 +164,12 @@ const SubmitedCase = () => {
                         alignItems: 'center',
                         gap: '5px',
                         padding: '7px 15px',
-                        background: 'rgba(0, 166, 62, 1)',
+                        background: isInProgressCase ? 'rgba(220, 38, 38, 1)' : 'rgba(0, 166, 62, 1)',
                         color: '#fff',
                         fontWeight: '600',
                         fontSize: '13px',
                         borderRadius: '15px'
-                    }}><i class="fa-regular fa-circle-check"></i> Resolved</p>
+                    }}><i class="fa-regular fa-circle-check"></i> {isInProgressCase ? 'In Progress' : 'Resolved'}</p>
                 </div>
 
                 <div className='submitted_case_details_wrapper'>
@@ -217,7 +218,7 @@ const SubmitedCase = () => {
 
                         </div>
 
-                        <div className='case_details_card' onClick={(() => navigate('/cases/submitted-suspect/2'))}>
+                        <div className='case_details_card' onClick={(() => navigate(`/cases/submitted-suspect/${id}`))}>
                             <div className='icon_image'>
                                 <img src='/Capa_1.svg' />
                             </div>
@@ -225,7 +226,7 @@ const SubmitedCase = () => {
 
                         </div>
 
-                        <div className='case_details_card' onClick={(() => navigate('/cases/submitted-witness/2'))}>
+                        <div className='case_details_card' onClick={(() => navigate(`/cases/submitted-witness/${id}`))}>
                             <div className='icon_image'>
                                 <img src='/Icon (4).svg' />
                             </div>
@@ -233,7 +234,7 @@ const SubmitedCase = () => {
 
                         </div>
 
-                        <div className='case_details_card' onClick={(() => navigate('/cases/submitted-evidence/2'))}>
+                        <div className='case_details_card' onClick={(() => navigate(`/cases/submitted-evidence/${id}`))}>
                             <div className='icon_image'>
                                 <img src='/Icon (6).svg' />
                             </div>

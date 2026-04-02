@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
 import CommonInput from '../../../../components/common-input'
-import CommonFileUpload from '../../../../components/common-file-upload.jsx'
 import NewCommonMultiFileUpload from '../../../../components/NewCommonMultiFileUpload.jsx'
-import PhysicalDetails from './PhysicalDetails.jsx'
 import InputCommon from '../../../../components/input_common.jsx'
 import { WizardSection } from '../../../../components/WizardSection.jsx'
 import icon from '../../../../Assets/Frame.svg'
-const VehicleDetails = () => {
-  const [toggle, settoggle] = useState(true)
+const VehicleDetails = ({ isOpen = false, onToggle = () => { } }) => {
+  const [toggle, settoggle] = useState(false)
 
   return (
     <>
@@ -18,10 +16,10 @@ const VehicleDetails = () => {
             title="Vehicle Details"
             subtitle="When & where it happened"></WizardSection>
         </section>
-        <div className='down_arrow_wrapper'>
+        <div className='down_arrow_wrapper' onClick={onToggle} style={{ cursor: 'pointer' }}>
           <img src={'/Layer_1.svg'} />
           <div style={{
-            background: 'rgba(159, 197, 61, 0.16)',
+            background: isOpen ? 'rgba(159, 197, 61, 0.16)' : '#e5e7eb',
             width: '28px',
             height: '28px',
             borderRadius: '5px',
@@ -31,19 +29,22 @@ const VehicleDetails = () => {
           }}>
             <i class="fa-solid fa-angle-down" style={{
               color: 'var(--deep-color)',
-              fontSize: '10px'
+              fontSize: '10px',
+              transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)',
+              transition: 'transform 0.2s ease'
             }}></i>
           </div>
         </div>
       </div>
 
-      <div className='physical_details_wrapper'>
+      {isOpen && (
+        <div className='physical_details_wrapper'>
         <div className='add_description_wrapper'>
           <h5>Want to add a description</h5>
           <div style={!toggle ? {
             flexDirection: 'row-reverse',
             transition: '0.2s linear all',
-            background: '#f1f6df'
+            background: 'grey'
           } : {}} className='description_button' onClick={(() => settoggle(!toggle))}>
             {toggle && <i class="fa-solid fa-check"></i>}
             {!toggle && <i class="fa-solid fa-x"></i>}
@@ -51,32 +52,34 @@ const VehicleDetails = () => {
           </div>
         </div>
 
-        <div className='four_grid_layout' style={{
-          marginTop: '20px'
-        }}>
-          <div className="radio_main">
-            <label>Vehicle Type</label>
-            <InputCommon
-              type='select'
-              name="vehicle_type"
-              placeholder="Select vechicle type"
-              value=""
+        {toggle && (
+          <>
+            <div className='four_grid_layout' style={{
+              marginTop: '20px'
+            }}>
+              <div className="radio_main">
+                <label>Vehicle Type</label>
+                <InputCommon
+                  type='select'
+                  name="vehicle_type"
+                  placeholder="Select vechicle type"
+                  value=""
 
-            />
-          </div>
-          <div className="radio_main">
-            <label>Color</label>
-            <CommonInput
-              name="color"
-              placeholder="Blue"
-              value=""
-              style={{
-                height: '50px',
-                borderRadius: '8px',
-                padding: '0px 10px'
-              }}
-            />
-          </div>
+                />
+              </div>
+              <div className="radio_main">
+                <label>Color</label>
+                <CommonInput
+                  name="color"
+                  placeholder="Blue"
+                  value=""
+                  style={{
+                    height: '50px',
+                    borderRadius: '8px',
+                    padding: '0px 10px'
+                  }}
+                />
+              </div>
 
           <div className="radio_main">
             <label>Brand</label>
@@ -176,29 +179,30 @@ const VehicleDetails = () => {
             />
           </div>
 
-          <div className="radio_main">
-            <label>Last seen location </label>
-            <CommonInput
-              name="last_location"
-              value=""
-              placeholder='Enter last seen location'
-              style={{
-                height: '50px',
-                borderRadius: '8px',
-                padding: '0px 10px'
-              }}
-            />
-          </div>
+              <div className="radio_main">
+                <label>Last seen location </label>
+                <CommonInput
+                  name="last_location"
+                  value=""
+                  placeholder='Enter last seen location'
+                  style={{
+                    height: '50px',
+                    borderRadius: '8px',
+                    padding: '0px 10px'
+                  }}
+                />
+              </div>
+            </div>
 
-
-        </div>
-
-        <div className="radio_main" style={{
-          marginTop: '20px'
-        }}>
-          <NewCommonMultiFileUpload />
-        </div>
+            <div className="radio_main" style={{
+              marginTop: '20px'
+            }}>
+              <NewCommonMultiFileUpload />
+            </div>
+          </>
+        )}
       </div>
+      )}
     </>
   )
 }

@@ -7,8 +7,8 @@ import { ChoiceRadio } from '../../../../components/ChoiceRadio'
 import icon from '../../../../Assets/Capa_1 (1).svg'
 import icon2 from '../../../../Assets/svg2532 (1).svg'
 const CharityPoliceForm = () => {
-    const [involveCharity, setinvolveCharity] = useState('already_informed')
-    const [involvePolice, setinvolvePolice] = useState('already_reported')
+    const [involveCharity, setinvolveCharity] = useState(null)
+    const [involvePolice, setinvolvePolice] = useState(null)
     return (
         <>
             <div className='charity_police_wrapper'>
@@ -33,14 +33,14 @@ const CharityPoliceForm = () => {
                                 onChange={(() => setinvolveCharity('already_informed'))}
                                 label="Already informed"
                                 value="already_informed"
-                                checked={involveCharity == 'already_informed'}
+                                checked={involveCharity === 'already_informed'}
                             />
                             <ChoiceRadio
                                 name="Inform now"
                                 label="Inform now"
                                 value="inform_now"
                                 onChange={(() => setinvolveCharity('inform_now'))}
-                                checked={involveCharity == 'inform_now'}
+                                checked={involveCharity === 'inform_now'}
                             />
 
                             <ChoiceRadio
@@ -48,7 +48,7 @@ const CharityPoliceForm = () => {
                                 label="Maybe later"
                                 value="Maybe later"
                                 onChange={(() => setinvolveCharity('maybe'))}
-                                checked={involveCharity == 'maybe'}
+                                checked={involveCharity === 'maybe'}
                             />
 
                             <ChoiceRadio
@@ -56,18 +56,18 @@ const CharityPoliceForm = () => {
                                 label="No"
                                 value="No"
                                 onChange={(() => setinvolveCharity('no'))}
-                                checked={involveCharity == 'no'}
+                                checked={involveCharity === 'no'}
                             />
                         </div>
                     </div>
 
-                    {involveCharity != 'inform_now' && <div className="radio_main">
+                    {involveCharity === 'already_informed' && <div className="radio_main">
                         <label>Charity Name <span>*</span></label>
                         <CommonInput placeholder='Enter charity name...' />
                     </div>}
 
 
-                    {involveCharity == 'inform_now' && <>
+                    {involveCharity === 'inform_now' && <>
                         <div className="radio_main">
                             <label>Type of charity involvement? <span>*</span></label>
                             <div className="radio_buttons_wrapper" >
@@ -142,30 +142,30 @@ const CharityPoliceForm = () => {
                             alignItems: 'start'
                         }}>
                             <ChoiceRadio
-                                name="Already reported to police"
+                                name="involvePolice"
                                 label="Already reported to police"
-                                value="Already reported to police"
+                                value="already_reported"
                                 onChange={(() => setinvolvePolice('already_reported'))}
-                                checked={involvePolice == 'already_reported'}
+                                checked={involvePolice === 'already_reported'}
                             />
                             <ChoiceRadio
-                                name="Maybe later"
+                                name="involvePolice"
                                 label="Maybe later"
-                                value="Maybe later"
+                                value="maybe"
                                 onChange={(() => setinvolvePolice('maybe'))}
-                                checked={involvePolice == 'maybe'}
+                                checked={involvePolice === 'maybe'}
                             />
                             <ChoiceRadio
-                                name="No"
+                                name="involvePolice"
                                 label="No"
-                                value="No"
+                                value="no"
                                 onChange={(() => setinvolvePolice('no'))}
-                                checked={involvePolice == 'no'}
+                                checked={involvePolice === 'no'}
                             />
                         </div>
                     </div>
 
-                    {involvePolice != 'no' && <div className='four_grid_layout'>
+                    {involvePolice === 'already_reported' && <div className='four_grid_layout'>
                         <div className="radio_main">
                             <label> Police Report Number </label>
                             <CommonInput placeholder='Enter police report number...' />
@@ -187,7 +187,7 @@ const CharityPoliceForm = () => {
                         </div>
                     </div>}
 
-                    {involvePolice != 'no' && <div className="radio_main">
+                    {involvePolice === 'already_reported' && <div className="radio_main">
                         <label> Upload police report</label>
                         <NewCommonMultiFileUpload />
                     </div>}

@@ -99,8 +99,14 @@ const CreateQuestionSet = () => {
                 </div>
 
                 <div className='added_question_list_wrapper'>
-                    {[1, 2, 3].map((e, i) => (
-                        <div style={{
+                    {[
+                        { id: 1, type: 'Single Choice' },
+                        { id: 2, type: 'Multi-Choice' },
+                        { id: 3, type: 'Descriptive' },
+                        { id: 4, type: 'Dropdown' },
+                        { id: 5, type: 'File Upload' },
+                    ].map((question) => (
+                        <div key={question.id} style={{
                             display: 'flex',
                             justifyContent: 'space-between',
                             alignItems: 'center',
@@ -124,10 +130,10 @@ const CreateQuestionSet = () => {
                                     <h5 style={{
                                         fontSize: '15px',
                                         fontWeight: '500'
-                                    }}>Question 1  </h5>
+                                    }}>{`Question ${question.id}`}</h5>
                                     <small style={{
                                         fontSize: '12px'
-                                    }}>Single Choice </small>
+                                    }}>{question.type}</small>
                                 </div>
                             </div>
 

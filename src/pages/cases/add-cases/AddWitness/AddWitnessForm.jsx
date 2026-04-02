@@ -11,8 +11,8 @@ import OtherWitnessForm from "./OtherWitnessForm"
 import WitnessOtherDetailsForm from "./WitnessOtherDetailsForm"
 const AddWitnessForm = () => {
     const navigate = useNavigate()
-    const [relationship, setrelationShip] = useState('schoolmate')
-    const [suspectKnown, setsuspectKnown] = useState(true)
+    const [relationship, setrelationShip] = useState('')
+    const [suspectKnown, setsuspectKnown] = useState(null)
 
     const headerButtons = useMemo(() => ([
         {
@@ -20,7 +20,7 @@ const AddWitnessForm = () => {
             progress: 30,
             prevDisabled: false,
             nextDisabled: false,
-            prevText: "Previous",
+            prevText: "Back to Witness List",
             nextText: "Add Witness",
             onPrev: () => navigate("/cases/add-cases?step=2"),
             onNext: () => navigate("/cases/add-cases?step=3"),
@@ -40,8 +40,8 @@ const AddWitnessForm = () => {
         <>
             <div className="common_pages_wrapper">
                 <WizardSection
-                    iconBg="#F0D9FF"
-                    icon={<img src="/Container.svg" alt="" />}
+                    iconBg="linear-gradient(135deg, #8F80FF 0%, #4361E7 100%)"
+                    icon={<img src="/wit_icon.svg" alt="" />}
                     title="Witness Details"
                     subtitle="When & where it happened"
                 >
@@ -53,20 +53,26 @@ const AddWitnessForm = () => {
                                     name="suspectKnown"
                                     label="Yes"
                                     value="yes"
-                                    onChange={(() => setsuspectKnown(true))}
-                                    checked={suspectKnown}
+                                    onChange={() => {
+                                        setsuspectKnown(true)
+                                        setrelationShip('')
+                                    }}
+                                    checked={suspectKnown === true}
                                 />
                                 <ChoiceRadio
                                     name="suspectKnown"
                                     label="No"
                                     value="no"
-                                    onChange={(() => setsuspectKnown(false))}
-                                    checked={!suspectKnown}
+                                    onChange={() => {
+                                        setsuspectKnown(false)
+                                        setrelationShip('')
+                                    }}
+                                    checked={suspectKnown === false}
                                 />
                             </div>
                         </div>
 
-                        {suspectKnown && 
+                        {suspectKnown === true && 
                         <div className="radio_main">
                             <label>Relationship <span>*</span></label>
                             <div className="radio_buttons_wrapper">
@@ -95,7 +101,7 @@ const AddWitnessForm = () => {
                             </div>
                         </div>}
 
-                        {!suspectKnown && <WitnessOtherDetailsForm />}
+                        {suspectKnown === false && <WitnessOtherDetailsForm />}
 
                         {(relationship === 'schoolmate' && suspectKnown) && <WitnessSchoolMateForm />}
                         {(relationship === 'external_student' && suspectKnown) && <WitnessExternalForm />}

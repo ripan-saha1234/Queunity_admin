@@ -43,7 +43,7 @@ function Sidebar() {
   const communityItems = useMemo(
     () => [
       { id: "charity", label: "Charity", route: "/charity", icon: "/common_icon.svg" },
-      { id: "tutors", label: "Tutors", route: "/tutors", icon: "/common_icon.svg" },
+      // { id: "tutors", label: "Tutors", route: "/tutors", icon: "/common_icon.svg" },
     ],
     [],
   );

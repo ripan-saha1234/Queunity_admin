@@ -3,8 +3,8 @@ import CommonInput from '../../../../components/common-input'
 import NewCommonMultiFileUpload from '../../../../components/NewCommonMultiFileUpload.jsx'
 import { WizardSection } from '../../../../components/WizardSection.jsx'
 import icon from '../../../../Assets/Layer_1.svg'
-const WitnessPhysicalDetails = () => {
-    const [toggle, settoggle] = useState(true)
+const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
+    const [toggle, settoggle] = useState(false)
 
     return (
         <>
@@ -16,10 +16,10 @@ const WitnessPhysicalDetails = () => {
                         title="Physical Details"
                         subtitle="When & where it happened"></WizardSection>
                 </section>
-                <div className='down_arrow_wrapper'>
+                <div className='down_arrow_wrapper' onClick={onToggle} style={{ cursor: 'pointer' }}>
                     <img src={'/Layer_1.svg'} />
                     <div style={{
-                        background: 'rgba(159, 197, 61, 0.16)',
+                        background: isOpen ? 'rgba(159, 197, 61, 0.16)' : '#e5e7eb',
                         width: '28px',
                         height: '28px',
                         borderRadius: '5px',
@@ -29,19 +29,22 @@ const WitnessPhysicalDetails = () => {
                     }}>
                         <i class="fa-solid fa-angle-down" style={{
                             color: 'var(--deep-color)',
-                            fontSize: '10px'
+                            fontSize: '10px',
+                            transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)',
+                            transition: 'transform 0.2s ease'
                         }}></i>
                     </div>
                 </div>
             </div>
 
+            {isOpen && (
             <div className='physical_details_wrapper'>
                 <div className='add_description_wrapper'>
                     <h5>Want to add a description</h5>
                     <div style={!toggle ? {
                         flexDirection: 'row-reverse',
                         transition: '0.2s linear all',
-                        background: '#f1f6df'
+                        background: 'grey'
                     } : {}} className='description_button' onClick={(() => settoggle(!toggle))}>
                         {toggle && <i class="fa-solid fa-check"></i>}
                         {!toggle && <i class="fa-solid fa-x"></i>}
@@ -49,6 +52,8 @@ const WitnessPhysicalDetails = () => {
                     </div>
                 </div>
 
+                {toggle && (
+                    <>
                 <div className='four_grid_layout' style={{
                     marginTop: '20px'
                 }}>
@@ -253,7 +258,10 @@ const WitnessPhysicalDetails = () => {
                 }}>
                     <NewCommonMultiFileUpload />
                 </div>
+                    </>
+                )}
             </div>
+            )}
         </>
     )
 }
