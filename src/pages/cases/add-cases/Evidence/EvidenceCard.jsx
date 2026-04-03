@@ -1,56 +1,66 @@
 import React, { useState } from 'react'
-import ViewEvidenceModal from '../../../../Modals/CaseModals/ViewEvidenceModal';
+import ViewEvidenceModal from '../../../../Modals/CaseModals/ViewEvidenceModal'
 
 const EvidenceCard = ({ evidence }) => {
-    const [modalIsOpen, setmodalIsOpen] = useState(false);
-    const [evidenceTitle, setevidenceTitle] = useState('')
-    return (
-        <>
-        {modalIsOpen && <ViewEvidenceModal title={evidenceTitle} setmodalIsOpen={setmodalIsOpen}/>}
-            <div className={"card_01"}>
-                <div className={"cardTop_02"}>
-                    <div className={"leftSection_03"} style={{
-                        alignItems: 'center'
-                    }}>
-                        <div className={"numberBox_04"}>{evidence.id}</div>
+  const [modalIsOpen, setmodalIsOpen] = useState(false)
+  const badgeNumber =
+    typeof evidence.displayIndex === 'number'
+      ? evidence.displayIndex
+      : typeof evidence.id === 'number'
+        ? evidence.id
+        : 1
 
-                        <div className={"titleSection_05"}>
-                            <h3>{evidence.title}</h3>
-                        </div>
-                    </div>
+  return (
+    <>
+      {modalIsOpen && (
+        <ViewEvidenceModal
+          title={evidence?.title}
+          imageSrc={evidence?.img}
+          description={evidence?.details}
+          setmodalIsOpen={setmodalIsOpen}
+        />
+      )}
+      <div className="card_01 evidence-card">
+        <div className="cardTop_02 evidence-card__top">
+          <div
+            className="leftSection_03 evidence-card__left"
+            style={{ alignItems: 'center' }}
+          >
+            <div className="numberBox_04 evidence-card__badge">{badgeNumber}</div>
 
-                    <div className={"actionsWrap_06"}>
-                        <button onClick={(() => {
-                            setevidenceTitle(evidence?.title)
-                            setmodalIsOpen(true)
-                        })} className={"iconBtn_07 viewBtn_08"} title={"View"}>
-                            <i className={"fa-regular fa-eye"}></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div className={"cardBody_13"}>
-                    <img style={{
-                        width: '100%',
-                        height: '100px',
-                        objectFit: 'cover',
-                        marginBottom: '10px'
-                    }} src={evidence?.img} />
-                    <p>
-                        <strong style={{
-                            display: 'block',
-                            fontWeight: '600'
-                        }}>Description</strong>
-                        <span style={{
-                            marginTop: '5px',
-                            display: 'block'
-                        }}>{evidence?.details}</span>
-                    </p>
-
-                </div>
+            <div className="titleSection_05">
+              <h3>{evidence.title}</h3>
             </div>
-        </>
-    )
+          </div>
+
+          <div className="actionsWrap_06">
+            <button
+              type="button"
+              onClick={() => {
+                setmodalIsOpen(true)
+              }}
+              className="iconBtn_07 viewBtn_08 evidence-card__view"
+              title="View"
+            >
+              <img src="/view-eye.svg" alt="" />
+            </button>
+          </div>
+        </div>
+
+        <div className="cardBody_13 evidence-card__body">
+          <img
+            className="evidence-card__image"
+            src={evidence?.img}
+            alt=""
+          />
+          <div className="evidence-card__description">
+            <span className="evidence-card__description-label">Description</span>
+            <p className="evidence-card__description-text">{evidence?.details}</p>
+          </div>
+        </div>
+      </div>
+    </>
+  )
 }
 
 export default EvidenceCard

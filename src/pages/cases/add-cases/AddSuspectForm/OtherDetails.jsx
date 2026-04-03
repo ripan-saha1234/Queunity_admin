@@ -10,7 +10,7 @@ const OtherDetails = ({ isOpen = false, onToggle = () => { } }) => {
                     <WizardSection iconBg="linear-gradient(135deg, #62E2FF 0%, #5D78DA 100%)"
                         icon={<img src={icon} alt="" />}
                         title="Other Details"
-                        subtitle="When & where it happened"></WizardSection>
+                        subtitle="Any other helpful information"></WizardSection>
                 </section>
                 <div className='down_arrow_wrapper' onClick={onToggle} style={{ cursor: 'pointer' }}>
                     <img src={'/Layer_1.svg'} />

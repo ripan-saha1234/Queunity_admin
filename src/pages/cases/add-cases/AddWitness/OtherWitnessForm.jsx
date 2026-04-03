@@ -67,7 +67,7 @@ const OtherWitnessForm = () => {
                 iconBg=" linear-gradient(135deg, #9150C9 0%, #BA71FE 100%)"
                 icon={<img src={icon} alt="" />}
                 title="Identifying info"
-                subtitle="When & where it happened"
+                subtitle="Basic details to identify the witness"
             >
                 <form className="suspect_form_fields_wrapper">
                     <div className="radio_main">

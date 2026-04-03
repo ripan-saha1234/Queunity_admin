@@ -6,6 +6,179 @@
   flex-direction: column;
   row-gap: 20px;
 }
+
+.evidence_list_block {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 18px;
+}
+
+.evidence_list_header_row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.evidence_list_header_text {
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+  min-width: 0;
+}
+
+.evidence_list_title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172b;
+  line-height: 1.3;
+}
+
+.evidence_list_empty {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(69, 85, 108, 0.9);
+  line-height: 1.4;
+}
+
+.evidence_list_header_actions {
+  flex-shrink: 0;
+}
+
+.evidence_upload_section {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
+/* Evidence list grid (matches submitted-case card row layout) */
+.evidence_cards_grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.evidence_cards_grid > li {
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+/* Card refinements — align with Evidence List design */
+.evidence-card.card_01 {
+  background: #F8FAFC;
+  border-radius: 16px;
+  padding: 18px 18px 16px;
+  box-shadow: none;
+  border: none;
+  height: 250px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.evidence-card__top.cardTop_02 {
+  align-items: center;
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+
+.evidence-card .leftSection_03.evidence-card__left {
+  min-width: 0;
+  flex: 1;
+}
+
+.evidence-card .titleSection_05 {
+  min-width: 0;
+  flex: 1;
+}
+
+.evidence-card .titleSection_05 h3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.evidence-card__badge.numberBox_04 {
+  box-shadow: 0 4px 12px rgba(31, 142, 241, 0.35);
+}
+
+.evidence-card__view.viewBtn_08 {
+  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  /* color: #0d9488; */
+  background: #A9EAEE;
+}
+
+.evidence-card__view.viewBtn_08:hover {
+  background: #A9EAEE;
+  /* color: #0f766e; */
+}
+
+.evidence-card__body.cardBody_13 {
+  padding: 0;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.evidence-card__image {
+  width: 100%;
+  height: 100px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  display: block;
+  background: #F1F5F9;
+}
+
+.evidence-card__description {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.evidence-card__description-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #314158;
+}
+
+.evidence-card__description-label::after {
+  content: ':';
+}
+
+.evidence-card__description-text {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #314158;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
 .evidence_file_list_Wrapper {
   padding: 10px;
   display: flex;

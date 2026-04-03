@@ -14,7 +14,7 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                     "
                         icon={<img src={icon} alt="" />}
                         title="Physical Details"
-                        subtitle="When & where it happened"></WizardSection>
+                        subtitle="Appearance or identifying features"></WizardSection>
                 </section>
                 <div className='down_arrow_wrapper' onClick={onToggle} style={{ cursor: 'pointer' }}>
                     <img src={'/Layer_1.svg'} />

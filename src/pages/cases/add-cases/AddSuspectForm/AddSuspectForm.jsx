@@ -44,7 +44,7 @@ const AddSuspectForm = () => {
                     iconBg="linear-gradient(135deg, #41CA13 0%, #1AA6C9 100%)"
                     icon={<img src={icon} alt="" />}
                     title="Suspect Details"
-                    subtitle="When & where it happened"
+                    subtitle="Who was involved"
                 >
                     <form className="suspect_form_fields_wrapper">
                         <div className="radio_main">

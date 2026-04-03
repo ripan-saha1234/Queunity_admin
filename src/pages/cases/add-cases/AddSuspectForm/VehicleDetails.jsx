@@ -14,7 +14,7 @@ const VehicleDetails = ({ isOpen = false, onToggle = () => { } }) => {
           <WizardSection iconBg=" linear-gradient(135deg, #5CEFBC 0%, #1AAF67 100%)"
             icon={<img src={icon} alt="" />}
             title="Vehicle Details"
-            subtitle="When & where it happened"></WizardSection>
+            subtitle="Vehicle-related information"></WizardSection>
         </section>
         <div className='down_arrow_wrapper' onClick={onToggle} style={{ cursor: 'pointer' }}>
           <img src={'/Layer_1.svg'} />

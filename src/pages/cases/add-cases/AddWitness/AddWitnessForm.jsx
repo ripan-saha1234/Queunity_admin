@@ -43,7 +43,7 @@ const AddWitnessForm = () => {
                     iconBg="linear-gradient(135deg, #8F80FF 0%, #4361E7 100%)"
                     icon={<img src="/wit_icon.svg" alt="" />}
                     title="Witness Details"
-                    subtitle="When & where it happened"
+                    subtitle="Who saw what happened"
                 >
                     <form className="suspect_form_fields_wrapper">
                         <div className="radio_main">

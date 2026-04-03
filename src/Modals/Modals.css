@@ -8,7 +8,7 @@
   z-index: 9999;
 }
 .modal_body {
-  width: 600px;
+  width: 700px;
   border-radius: 10px;
   position: fixed;
   top: 50%;
@@ -79,4 +79,237 @@
 }
 .option_right{
     width: 10%;
+}
+
+/* Add Evidence modal (Add Case wizard) */
+.add-evidence-modal .modal_head h5 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172b;
+  margin: 0;
+}
+
+.add-evidence-modal__close {
+  border: none;
+  background: transparent;
+  padding: 4px;
+  cursor: pointer;
+  color: #0f172b;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-evidence-modal__field {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+
+.add-evidence-modal__label {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(69, 85, 108, 0.95);
+}
+
+.add-evidence-modal__upload {
+  position: relative;
+  min-height: 168px;
+  border: 1px solid rgba(207, 214, 221, 1);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 16px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.add-evidence-modal__upload:focus {
+  outline: 2px solid rgba(149, 198, 61, 0.6);
+  outline-offset: 2px;
+}
+
+.add-evidence-modal__upload:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.add-evidence-modal__upload img {
+  width: 48px;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.add-evidence-modal__upload-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(20, 20, 20, 0.85);
+  text-align: center;
+  line-height: 1.35;
+  pointer-events: none;
+  user-select: none;
+}
+
+.add-evidence-modal__upload-title span {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.add-evidence-modal__upload-types {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(69, 85, 108, 0.9);
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.add-evidence-modal__file-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+.add-evidence-modal__file-preview {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(207, 214, 221, 1);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.add-evidence-modal__file-preview-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background:linear-gradient(135deg, #CEFAFE 0%, #DBEAFE 50%, #F3E8FF 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: rgba(37, 99, 235, 0.85);
+  border: 1px solid rgba(83, 234, 253, 1);
+  font-size: 20px;
+}
+
+.add-evidence-modal__file-preview-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.add-evidence-modal__file-preview-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1D293D;  ;
+  word-break: break-word;
+  line-height: 1.3;
+}
+
+.add-evidence-modal__file-preview-meta {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 400;
+  color: #62748E;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.add-evidence-modal__file-preview-sep {
+  color: rgba(69, 85, 108, 0.5);
+  user-select: none;
+}
+
+.add-evidence-modal__file-preview-ready {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #009966;
+  font-weight: 400;
+}
+
+.add-evidence-modal__file-preview-ready-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00BC7D;
+  flex-shrink: 0;
+}
+
+.add-evidence-modal__file-preview-remove {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius:10px;
+  border: 1px solid #E2E8F0;
+  background: #fff;
+  color: #141414;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  padding: 0;
+  line-height: 1;
+}
+
+.add-evidence-modal__file-preview-remove:hover {
+  background: rgba(243, 244, 246, 1);
+  color: #0f172b;
+}
+
+/* Visually hidden; opened via upload zone click (reliable across browsers) */
+.add-evidence-modal__file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+  bottom: 0;
+  left: 0;
+}
+
+.add-evidence-modal__textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(207, 214, 221, 1);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  line-height: 1.45;
+  color: #0f172b;
+  resize: vertical;
+  min-height: 120px;
+}
+
+.add-evidence-modal__textarea::placeholder {
+  color: rgba(69, 85, 108, 0.55);
+}
+
+.add-evidence-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
 }

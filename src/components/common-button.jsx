@@ -1,7 +1,8 @@
 import '../css/common-button.css';
-function CommonButton({ text = '', img = '', backgroundColor, color, borderColor, onClick = () => { }, className = '', disabled = false }) {
+function CommonButton({ text = '', img = '', backgroundColor, color, borderColor, onClick = () => { }, className = '', disabled = false, type = 'button' }) {
   return (
     <button
+      type={type}
       className={`common-button ${className} ${disabled ? 'disabled' : ''}`}
       style={{
         backgroundColor: backgroundColor,

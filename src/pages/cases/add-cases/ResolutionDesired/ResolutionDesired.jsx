@@ -12,7 +12,7 @@ const ResolutionDesired = () => {
 "
                     icon={<img src={icon} alt="" />}
                     title="Resolution Desired "
-                    subtitle={'When & where it happened'}
+                    subtitle={'What decision was made'}
                 >
                 </WizardSection>
 

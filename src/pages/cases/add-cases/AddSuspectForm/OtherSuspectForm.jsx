@@ -64,7 +64,7 @@ const OtherSuspectForm = () => {
 "
                 icon={<img src={icon} alt="" />}
                 title="Identifying info"
-                subtitle="When & where it happened"
+                subtitle="Basic details to help identify them"
             >
                 <form className="suspect_form_fields_wrapper">
                     <div className="radio_main">

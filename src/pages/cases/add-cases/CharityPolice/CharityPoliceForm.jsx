@@ -17,7 +17,7 @@ const CharityPoliceForm = () => {
                         iconBg=" linear-gradient(135deg, #FB64B6 0%, #FF2056 100%)"
                         icon={<img src={icon} alt="" />}
                         title="Charity"
-                        subtitle={'When & where it happened'}
+                        subtitle={' Support for those affected'}
                     >
                     </WizardSection>
 
@@ -130,7 +130,7 @@ const CharityPoliceForm = () => {
                             iconBg="  linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%)"
                             icon={<img src={icon2} alt="" />}
                             title="Police"
-                            subtitle={'When & where it happened'}
+                            subtitle={'Police involvement details'}
                         >
                         </WizardSection>
                     </div>
