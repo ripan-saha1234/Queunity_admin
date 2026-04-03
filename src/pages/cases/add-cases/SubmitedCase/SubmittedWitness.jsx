@@ -67,7 +67,7 @@ const SubmittedWitness = () => {
                             <img src="/suspects-icon.svg" alt="" />
                         </div>
                         <div className="add-suspects-card-text">
-                            <div className="add-suspects-title">Add Witnesses</div>
+                            <div className="add-suspects-title">Witnesses</div>
                             <div className="add-suspects-subtitle">{witnessData?.length} Witnesses recorded</div>
                         </div>
                     </div>

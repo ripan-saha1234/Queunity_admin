@@ -81,8 +81,8 @@ function AddCases() {
     },
     description: "",
     grade: "Grade 8",
-    anonymityLevel: "complete_anonymous",
-    privacyLevel: "level_1",
+    anonymityLevel: "",
+    privacyLevel: "",
   });
 
   const offenceCategoryOptions = useMemo(
@@ -421,7 +421,8 @@ function AddCases() {
                 )}
               </div>
 
-              {formData.locationDetails.classroom &&
+              {formData.locationMode === "within_school" &&
+                formData.locationDetails.classroom &&
                 !formData.locationDetails.other && (
                 <div className="add-cases-grade">
                   <CommonSelect

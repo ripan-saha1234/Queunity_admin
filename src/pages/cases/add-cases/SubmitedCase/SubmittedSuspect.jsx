@@ -68,7 +68,7 @@ const SubmittedSuspect = () => {
                             <img src="/suspects-icon.svg" alt="" />
                         </div>
                         <div className="add-suspects-card-text">
-                            <div className="add-suspects-title">Add Suspects</div>
+                            <div className="add-suspects-title">Suspects</div>
                             <div className="add-suspects-subtitle">{suspects?.length} suspect recorded</div>
                         </div>
                     </div>

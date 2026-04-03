@@ -212,7 +212,7 @@ function AdminHeader({ variant = "full" }) {
                     onClick={item.onPrev}
                     disabled={!!item.prevDisabled}
                     backgroundColor="transparent"
-                    color={item.prevDisabled ? "#b9b9b9" : "#b9b9b9"}
+                    color={item.prevDisabled ? "#b9b9b9" : "#0F172B"}
                     borderColor="transparent"
                     className="common-layout-header-wizard-prev-btn"
                   />
