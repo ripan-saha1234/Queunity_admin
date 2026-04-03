@@ -1,13 +1,21 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router'
 
-const SuspectCard = ({ suspect, nodelete, noedit }) => {
+const SuspectCard = ({ suspect, nodelete, noedit, submittedCaseId }) => {
     const navigate = useNavigate()
     const [menuOpen, setMenuOpen] = useState(false)
     const readOnlyActions = nodelete && noedit
 
-    const handleView = () => {
-        navigate(`/cases/view-suspect/${suspect.id}?step=1`)
+    const handleView = ({ readonly = false } = {}) => {
+        const params = new URLSearchParams({ step: '1' })
+        if (readonly) {
+            params.set('readonly', '1')
+            if (submittedCaseId != null) {
+                params.set('submittedCaseId', String(submittedCaseId))
+            }
+        }
+
+        navigate(`/cases/view-suspect/${suspect.id}?${params.toString()}`)
         setMenuOpen(false)
     }
 
@@ -37,7 +45,7 @@ const SuspectCard = ({ suspect, nodelete, noedit }) => {
                         {readOnlyActions ? (
                             <button
                                 type="button"
-                                onClick={handleView}
+                                onClick={() => handleView({ readonly: true })}
                                 className={"iconBtn_07 viewBtn_08"}
                                 title={"View"}
                             >
@@ -56,7 +64,7 @@ const SuspectCard = ({ suspect, nodelete, noedit }) => {
 
                                 {menuOpen && (
                                     <div className="actionsMenu_16">
-                                        <button type="button" className="actionsMenuItem_17" onClick={handleView}>
+                                        <button type="button" className="actionsMenuItem_17" onClick={() => handleView()}>
                                             View
                                         </button>
                                         {!noedit && (

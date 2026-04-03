@@ -18,6 +18,18 @@ const ViewWitness = () => {
         const step = Number(new URLSearchParams(location.search).get("step"))
         return Number.isFinite(step) ? step : 2
     }, [location.search])
+
+    const searchParams = new URLSearchParams(location.search)
+    const isReadOnlyView = searchParams.get('readonly') === '1'
+    const submittedCaseId = searchParams.get('submittedCaseId')
+
+    const backToWitnessListLink = submittedCaseId
+        ? `/cases/submitted-witness/${submittedCaseId}`
+        : `/cases/add-cases?step=${returnStep}`
+
+    const backToSuspectListLink = submittedCaseId
+        ? `/cases/submitted-suspect/${submittedCaseId}`
+        : `/cases/add-cases?step=1`
     const viewSuspect = [
         {
             title: 'Health',
@@ -115,12 +127,15 @@ const ViewWitness = () => {
             para: 'North'
         },
     ]
-    const headerButtons = useMemo(
-        () => [
+    const headerButtons = useMemo(() => {
+        // For eye-icon read-only opens we only want the details page header (no action buttons).
+        if (isReadOnlyView) return []
+
+        return [
             {
                 type: "button",
                 text: "Back to Witness list",
-                onClick: () => navigate(`/cases/add-cases?step=${returnStep}`),
+                onClick: () => navigate(backToWitnessListLink),
                 backgroundColor: "#95C63D",
                 textColor: "#141414",
                 borderColor: "#9FC53D",
@@ -137,9 +152,8 @@ const ViewWitness = () => {
                 backgroundColor: "#FFE2E2",
                 onClick: () => { },
             },
-        ],
-        [navigate, returnStep],
-    )
+        ]
+    }, [navigate, returnStep, isReadOnlyView, backToWitnessListLink])
 
     usePageHeader({
         title: `View Witness ${id}`,

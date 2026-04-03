@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import usePageHeader from "../../../hooks/use-page-header";
 import CommonInput from "../../../components/common-input";
 import CommonSelect from "../../../components/common-select";
@@ -20,10 +20,13 @@ import icon2 from '../../../Assets/Icon (2).svg'
 import icon3 from '../../../Assets/Icon (3).svg'
 import icon4 from '../../../Assets/Icon (4).svg'
 import EvidenceForm from "./Evidence/EvidenceForm.jsx";
+import SummaryCaseModal from "../../../Modals/CaseModals/SummaryCaseModal";
+
 function AddCases() {
   // Steps are indexed from 0 to 5.
   const stepsCount = 6;
   const location = useLocation();
+  const navigate = useNavigate();
 
   const initialStepIndex = useMemo(() => {
     const params = new URLSearchParams(location.search);
@@ -49,6 +52,11 @@ function AddCases() {
     const el = document.querySelector(".common-layout-content");
     if (el) el.scrollTop = 0;
   }, [stepIndex]);
+
+  const [summaryCaseOpen, setSummaryCaseOpen] = useState(false);
+  useEffect(() => {
+    if (stepIndex !== stepsCount - 1) setSummaryCaseOpen(false);
+  }, [stepIndex, stepsCount]);
 
   const [formData, setFormData] = useState({
     caseName: "Case 11489",
@@ -128,19 +136,27 @@ function AddCases() {
     [],
   );
 
-  const headerButtons = useMemo(
-    () => [
+  const headerButtons = useMemo(() => {
+    const isLastStep = stepIndex >= stepsCount - 1;
+    return [
       {
         type: "wizard",
         progress,
         prevDisabled: stepIndex === 0,
-        nextDisabled: stepIndex >= stepsCount - 1,
-        onPrev: () => setStepIndex((s) => Math.max(0, s - 1)),
-        onNext: () => setStepIndex((s) => Math.min(stepsCount - 1, s + 1)),
+        nextDisabled: false,
+        prevText: isLastStep ? "Previous" : undefined,
+        nextText: isLastStep ? "Submit" : undefined,
+        onPrev: () => {
+          if (isLastStep) navigate("/cases/add-cases?step=4");
+          else setStepIndex((s) => Math.max(0, s - 1));
+        },
+        onNext: () => {
+          if (isLastStep) setSummaryCaseOpen(true);
+          else setStepIndex((s) => Math.min(stepsCount - 1, s + 1));
+        },
       },
-    ],
-    [progress, stepIndex, stepsCount],
-  );
+    ];
+  }, [progress, stepIndex, stepsCount, navigate]);
 
   usePageHeader({
     title: "Add Case",
@@ -153,6 +169,9 @@ function AddCases() {
 
   return (
     <div className="add-cases-page">
+      {summaryCaseOpen && (
+        <SummaryCaseModal setsummaryCase={setSummaryCaseOpen} />
+      )}
       <div className="add-cases-form">
         {stepIndex === 0 && (
           <>

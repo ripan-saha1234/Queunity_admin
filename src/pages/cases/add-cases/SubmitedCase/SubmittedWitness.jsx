@@ -78,7 +78,14 @@ const SubmittedWitness = () => {
                 </div>
                 <div className="suspect_cards_Wrapper">
                     {witnessData?.map((witness) => {
-                        return <WitnessCard noDelete={true} noEdit={true} witness={witness} />
+                        return (
+                            <WitnessCard
+                                noDelete={true}
+                                noEdit={true}
+                                witness={witness}
+                                submittedCaseId={id}
+                            />
+                        )
                     })}
                 </div>
 

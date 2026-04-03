@@ -75,7 +75,14 @@ const SubmittedSuspect = () => {
                 </div>
                 <div className="suspect_cards_Wrapper">
                     {suspects?.map((suspect) => {
-                        return <SuspectCard nodelete={true} noedit={true} suspect={suspect} />
+                        return (
+                            <SuspectCard
+                                nodelete={true}
+                                noedit={true}
+                                suspect={suspect}
+                                submittedCaseId={id}
+                            />
+                        )
                     })}
                 </div>
             </div>
