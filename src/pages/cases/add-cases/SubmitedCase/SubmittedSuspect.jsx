@@ -1,10 +1,29 @@
+import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router";
-import CommonButton from "../../../../components/common-button.jsx";
 import SuspectCard from "../AddSuspectForm/SuspectCard.jsx";
 import usePageHeader from '../../../../hooks/use-page-header.jsx';
 const SubmittedSuspect = () => {
     const navigate = useNavigate();
     const { id } = useParams()
+
+    const backToViewCasesLink = id
+        ? `/cases/case-submitted/${id}`
+        : '/cases'
+
+    const headerButtons = useMemo(
+        () => [
+            {
+                type: 'button',
+                text: 'Back to view cases',
+                onClick: () => navigate(backToViewCasesLink),
+                backgroundColor: '#95C63D',
+                textColor: '#141414',
+                borderColor: '#9FC53D',
+            },
+        ],
+        [navigate, backToViewCasesLink],
+    )
+
     usePageHeader({
         title: `Suspects`,
         breadcrumbs: [
@@ -12,6 +31,7 @@ const SubmittedSuspect = () => {
             { title: "2025AWO77#", link: `/cases/case-submitted/${id}` },
             { title: "Suspects", link: `/cases/submitted-suspect/${id}` },
         ],
+        buttons: headerButtons,
     })
     const suspects = [
         {

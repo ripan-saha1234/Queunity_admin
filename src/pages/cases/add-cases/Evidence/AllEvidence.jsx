@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo } from 'react'
 import CommonButton from "../../../../components/common-button.jsx";
 import { useNavigate, useParams } from 'react-router';
 import EvidenceCard from './EvidenceCard.jsx';
@@ -9,6 +9,25 @@ import usePageHeader from '../../../../hooks/use-page-header.jsx';
 const AllEvidence = () => {
     const navigate = useNavigate();
     const { id } = useParams()
+
+    const backToViewCasesLink = id
+        ? `/cases/case-submitted/${id}`
+        : '/cases'
+
+    const headerButtons = useMemo(
+        () => [
+            {
+                type: 'button',
+                text: 'Back to view cases',
+                onClick: () => navigate(backToViewCasesLink),
+                backgroundColor: '#95C63D',
+                textColor: '#141414',
+                borderColor: '#9FC53D',
+            },
+        ],
+        [navigate, backToViewCasesLink],
+    )
+
     usePageHeader({
         title: `Evidence`,
         breadcrumbs: [
@@ -16,6 +35,7 @@ const AllEvidence = () => {
             { title: "2025AWO77#", link: `/cases/case-submitted/${id}` },
             { title: "Evidence", link: `/cases/submitted-evidence/${id}` },
         ],
+        buttons: headerButtons,
     })
     const evidenceData = [
         {

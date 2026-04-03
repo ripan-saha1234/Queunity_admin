@@ -30,6 +30,10 @@ const ViewWitness = () => {
     const backToSuspectListLink = submittedCaseId
         ? `/cases/submitted-suspect/${submittedCaseId}`
         : `/cases/add-cases?step=1`
+
+    const backToViewCasesLink = submittedCaseId
+        ? `/cases/case-submitted/${submittedCaseId}`
+        : '/cases'
     const viewSuspect = [
         {
             title: 'Health',
@@ -128,8 +132,18 @@ const ViewWitness = () => {
         },
     ]
     const headerButtons = useMemo(() => {
-        // For eye-icon read-only opens we only want the details page header (no action buttons).
-        if (isReadOnlyView) return []
+        if (isReadOnlyView) {
+            return [
+                {
+                    type: 'button',
+                    text: 'Back to view cases',
+                    onClick: () => navigate(backToViewCasesLink),
+                    backgroundColor: '#95C63D',
+                    textColor: '#141414',
+                    borderColor: '#9FC53D',
+                },
+            ]
+        }
 
         return [
             {
@@ -153,7 +167,7 @@ const ViewWitness = () => {
                 onClick: () => { },
             },
         ]
-    }, [navigate, returnStep, isReadOnlyView, backToWitnessListLink])
+    }, [navigate, returnStep, isReadOnlyView, backToWitnessListLink, backToViewCasesLink])
 
     usePageHeader({
         title: `View Witness ${id}`,
