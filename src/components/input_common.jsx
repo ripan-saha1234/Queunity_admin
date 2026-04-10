@@ -30,10 +30,11 @@ const InputCommon = ({
   const inputStyle = {
     height: "50px",
     padding: "0 12px",
-    border: "1px solid #dcdcdc",
+    border: "1px solid #CFD6DD",
     borderRadius: "8px",
     fontSize: "14px",
     outline: "none",
+    background:"none",
     transition: "0.2s ease",
     paddingRight: "12px",
   };

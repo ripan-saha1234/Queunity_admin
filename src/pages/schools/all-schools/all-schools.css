@@ -1,0 +1,68 @@
+.all-schools-page {
+  width: 100%;
+}
+
+.all-schools-page .table1-container {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.all-schools-page .table1 {
+  background-color: #ffffff;
+}
+
+.all-schools-page .table1 th {
+  padding: 20px 18px;
+  font-weight: 400;
+}
+
+.all-schools-page .table1 td {
+  padding: 10px 18px;
+  vertical-align: middle;
+}
+
+.all-schools-page .table1-customer-container {
+  align-items: center;
+  column-gap: 10px;
+}
+
+.all-schools-page .table1-customer-image-container {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.all-schools-page .table1-customer-name-container {
+  row-gap: 2px;
+}
+
+.all-schools-page .table1-customer-name-container h2 {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #141414;
+}
+
+.all-schools-page .table1-customer-name-container p {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(20, 20, 20, 0.8);
+}
+
+.all-schools-page .table1 td:nth-child(2),
+.all-schools-page .table1 td:nth-child(3),
+.all-schools-page .table1 td:nth-child(4) {
+  color: #555555;
+}
+
+.all-schools-page .table1 td:last-child {
+  width: 70px;
+}
+
+.all-schools-page .table1-action-container {
+  justify-content: center;
+}
+
+.all-schools-page .modern-pagination {
+  margin-top: 30px;
+}

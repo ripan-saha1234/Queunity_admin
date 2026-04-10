@@ -1,0 +1,208 @@
+.add-schools-page {
+  width: 100%;
+  padding-bottom: 40px;
+}
+
+.add-schools-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .add-schools-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.add-schools-col-left {
+  display: flex;
+  flex-direction: column;
+  row-gap: 28px;
+}
+
+.add-schools-col-left .add-cases-section {
+  margin-bottom: 0;
+}
+
+/* Same layout as Add Suspect forms (AddSuspectForm.css .radio_main) */
+.add-schools-page .radio_main {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+
+.add-schools-page .radio_main > label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  margin-left: 15px;
+}
+
+.add-schools-radio-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 28px;
+  row-gap: 12px;
+  margin-top: 4px;
+}
+
+.add-schools-plain-section {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+  margin-left: 5px;
+}
+
+.add-schools-plain-section-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172b;
+  line-height: 24px;
+}
+
+.add-schools-plain-section-body {
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+}
+
+.add-schools-card {
+  background-color: #F1F5F9;
+  border-radius: 12px;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 28px;
+}
+
+.add-schools-card-block {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
+.add-schools-card-heading {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172b;
+  line-height: 24px;
+}
+
+.add-schools-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+@media (max-width: 600px) {
+  .add-schools-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.add-schools-card .input-common-input,
+.add-schools-card .input-common-select {
+  background-color: #f9fafb;
+}
+
+.add-schools-col-left .input-common-input,
+.add-schools-col-left .input-common-select {
+  background-color: #f9fafb;
+}
+
+.add-schools-phone-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.add-schools-phone-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  margin-left: 15px;
+  margin-bottom: 8px;
+}
+
+.add-schools-phone-label-required::after {
+  content: "*";
+  color: red;
+  margin-left: 4px;
+}
+
+.add-schools-phone-composite {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  column-gap: 10px;
+}
+
+.add-schools-phone-code-wrap {
+  flex: 0 0 108px;
+  min-width: 0;
+}
+
+.add-schools-phone-code-wrap .input-common-wrapper {
+  margin-bottom: 0;
+}
+
+.add-schools-phone-code-wrap .input-common-wrapper label {
+  display: none;
+}
+
+.add-schools-phone-code-wrap .input-common-select {
+  min-height: 45px;
+  padding: 0 10px;
+  background-color: #f9fafb;
+}
+
+.add-schools-phone-number-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.add-schools-phone-number-wrap .input-common-wrapper {
+  margin-bottom: 0;
+}
+
+.add-schools-phone-number-wrap .input-common-input {
+  height: 45px;
+  padding-left: 15px;
+  background-color: #f9fafb;
+}
+
+.add-schools-principal-bottom-row {
+  align-items: end;
+}
+
+/* Header actions: Cancel + Add */
+/* .common-button.add-schools-header-btn-cancel {
+  border: none !important;
+  padding: 10px 8px !important;
+  font-weight: 500 !important;
+  box-shadow: none !important;
+  margin-right: 8px;
+}
+
+.common-button.add-schools-header-btn-cancel:hover {
+  scale: 1 !important;
+  opacity: 0.85;
+}
+
+.common-button.add-schools-header-btn-add {
+  padding: 10px 28px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  min-width: 88px;
+}
+
+.common-button.add-schools-header-btn-add:hover {
+  scale: 1.02;
+} */

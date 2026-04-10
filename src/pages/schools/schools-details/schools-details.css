@@ -1,0 +1,144 @@
+.schools-details-page {
+  width: 100%;
+  padding-bottom: 34px;
+}
+
+.schools-details-hero {
+  margin-top: 2px;
+}
+
+.schools-details-logo-box {
+  width: 159px;
+  height: 159px;
+  border-radius: 12px;
+  border: 1px solid #CBCBCB;
+  /* background-color: #f7f8fa; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.schools-details-logo-box img {
+  width: 159px;
+  height: 159px;
+  object-fit: cover;
+}
+
+.schools-details-hero h2 {
+  margin: 16px 0 0;
+  font-size: 24px;
+  line-height: 36px;
+  font-weight: 600;
+  color: #0E536C;
+}
+
+.schools-details-section {
+  margin-top: 40px;
+}
+
+.schools-details-section h3 {
+  margin: 0 0 14px;
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 600;
+  color: #141414;
+}
+
+.schools-details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.schools-details-card {
+  min-height: 92px;
+  border-radius: 10px;
+  background-color: #F1F5F9;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.schools-details-card-label {
+  margin: 0;
+  color: #141414;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+}
+
+.schools-details-card-value {
+  margin: 3px 0 0;
+  color: rgba(20, 20, 20, 0.8);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+.schools-details-cases {
+  margin-top: 36px;
+}
+
+.schools-details-cases-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.schools-details-cases-head h3 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 600;
+  color: #141414;
+}
+
+.schools-details-view-cases-btn {
+  border: 1px solid #9fc53d;
+  background-color: #95c63d;
+  color: #141414;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 10px;
+  font-size: 21px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.schools-details-case-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.schools-details-case-card {
+  border: 1px solid #E1E1E1;
+  border-radius: 16px;
+  /* background-color: #fbfbfc; */
+  min-height: 130px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.schools-details-case-label {
+  margin: 0;
+  color: rgba(20, 20, 20, 0.8);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+}
+
+.schools-details-case-value {
+  margin: 10px 0 0;
+  color: #141414;
+  font-size: 30px;
+  line-height: 36px;
+  font-weight: 600;
+}

@@ -1,0 +1,46 @@
+.view-cases-school-page {
+  width: 100%;
+}
+
+.view-cases-school-page .table1-container {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.view-cases-school-page .table1 {
+  background-color: #ffffff;
+}
+
+.view-cases-school-page .table1 th {
+  padding: 18px 14px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.view-cases-school-page .table1 td {
+  padding: 13px 14px;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(20, 20, 20, 0.8);
+}
+
+.view-cases-school-page .table1 td:nth-child(1) {
+  color: rgba(20, 20, 20, 0.75);
+}
+
+.view-cases-school-page .table1 td:nth-child(5) .table1-status-container {
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 10px;
+  line-height: 12px;
+  font-weight: 400;
+}
+
+.view-cases-school-page .table1-action-container {
+  justify-content: center;
+}
+
+.view-cases-school-page .table1 td:last-child {
+  width: 74px;
+}

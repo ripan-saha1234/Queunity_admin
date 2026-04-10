@@ -17,7 +17,17 @@ import CreateQuestionSet from './pages/cases/Offense/SingleOffense/CreateQuestio
 import SubmittedSuspect from './pages/cases/add-cases/SubmitedCase/SubmittedSuspect'
 import SubmittedWitness from './pages/cases/add-cases/SubmitedCase/SubmittedWitness'
 import AllEvidence from './pages/cases/add-cases/Evidence/AllEvidence'
+import AllSchools from './pages/schools/all-schools/all-schools'
+import AddSchools from './pages/schools/add-schools/add-schools'
+import SchoolsDetails from './pages/schools/schools-details/schools-details'
+import ViewCasesSchool from './pages/schools/view-cases-schools/view-cases-school'
+import AllCharity from './pages/charity-section/all-charity/all-charity'
+import AddCharity from './pages/charity-section/add-charity/add-charity'
+import EditCharity from './pages/charity-section/edit-charity/edit-charity'
+import CharityDetails from './pages/charity-section/chairty-details/charity-details'
+import ViewCasesChairty from './pages/charity-section/view-cases-charity/view-cases-chairty'
 import { useEffect } from 'react'
+import EditSchools from './pages/schools/edit-schools/edit-schools'
 
 function App() {
   const location = useLocation()
@@ -44,6 +54,20 @@ function App() {
             <Route path='submitted-witness/:id' element={<SubmittedWitness />} />
             <Route path='submitted-evidence/:id' element={<AllEvidence/>}/>
             <Route path='add-evidence' element={<EvidenceForm/>}/>
+          </Route>
+          <Route path='schools' element={<Outlet />}>
+            <Route index element={<AllSchools />} />
+            <Route path='add-schools' element={<AddSchools />} />
+            <Route path='edit-schools' element={<EditSchools />} />
+            <Route path='details/:id' element={<SchoolsDetails />} />
+            <Route path='details/:id/view-cases' element={<ViewCasesSchool />} />
+          </Route>
+          <Route path='charity' element={<Outlet />}>
+            <Route index element={<AllCharity />} />
+            <Route path='add-charity' element={<AddCharity />} />
+            <Route path='edit-charity' element={<EditCharity />} />
+            <Route path='details/:id' element={<CharityDetails />} />
+            <Route path='details/view-cases-charity' element={<ViewCasesChairty />} />
           </Route>
           <Route path='/offense' element={<Offense/>}>
           </Route>
