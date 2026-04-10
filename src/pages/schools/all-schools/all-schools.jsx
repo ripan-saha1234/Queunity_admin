@@ -191,6 +191,7 @@ function AllSchools() {
         tableData={filteredSchools}
         headers={tableHeaders}
         index={0}
+        specificReturn="schoolId"
         handleActionClick={(action, id) => {
           if (action === "view") {
             navigate(`/schools/details/${id}`);

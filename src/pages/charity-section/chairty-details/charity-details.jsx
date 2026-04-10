@@ -1,11 +1,21 @@
 import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Navigation, Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
 import usePageHeader from "../../../hooks/use-page-header";
 import "./charity-details.css";
 
 function CharityDetails() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id: routeId } = useParams();
+  const charityId =
+    typeof routeId === "string" &&
+    routeId.length > 0 &&
+    routeId !== "[object Object]"
+      ? routeId
+      : "1";
 
   const headerButtons = useMemo(
     () => [
@@ -28,7 +38,7 @@ function CharityDetails() {
       {
         type: "button",
         text: "View Cases",
-        onClick: () => navigate(`/charity/details/view-cases-charity`),
+        onClick: () => navigate("/charity/details/view-cases-charity"),
         backgroundColor: "#FFFFFF",
         textColor: "#141414",
         borderColor: "#9FC53D",
@@ -41,7 +51,7 @@ function CharityDetails() {
     title: "Hope Foundation",
     breadcrumbs: [
       { title: "Charity", link: "/charity" },
-      { title: "Hope Foundation", link: `/charity/details/${id || "1"}` },
+      { title: "Hope Foundation", link: `/charity/details/${charityId}` },
     ],
     buttons: headerButtons,
   });
@@ -59,6 +69,16 @@ function CharityDetails() {
     },
     { label: "Phone number", value: "+1 929 329 36456" },
     // { label: "Email", value: "bidishabh@gmail.com" },
+  ];
+  const galleryImages = [
+    "/charity-gallery1.svg",
+    "/charity-gallery1.svg",
+    "/charity-gallery1.svg",
+    "/charity-gallery1.svg",
+    "/charity-gallery1.svg",
+    "/charity-gallery1.svg",
+    "/charity-gallery1.svg",
+   
   ];
 
   return (
@@ -80,7 +100,7 @@ function CharityDetails() {
                 <div className="charity-details-documents-row">
                   <img src="/document1.svg" alt="Document 1" className="charity-details-doc-image" />
                   <img src="/document1.svg" alt="Document 2" className="charity-details-doc-image" />
-                  <img src="/document1.svg" alt="Document 3" className="charity-details-doc-image" />
+                  <img src="/document2.svg" alt="Document 3" className="charity-details-doc-image" />
                 </div>
               ) : (
                 <p className="charity-details-card-value">{item.value}</p>
@@ -95,6 +115,35 @@ function CharityDetails() {
         <div className="charity-details-mission-box">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </div>
+      </section>
+
+      <section className="charity-details-section charity-details-gallery-section">
+        <h3 className="charity-details-gallery-title">Gallery</h3>
+        <Swiper
+          modules={[Navigation, Autoplay]}
+          autoplay={{
+            delay: 2500,
+            disableOnInteraction: false,
+          }}
+          loop
+          navigation
+          spaceBetween={16}
+          breakpoints={{
+            0: { slidesPerView: 1.2 },
+            640: { slidesPerView: 2.2 },
+            900: { slidesPerView: 3.2 },
+            1200: { slidesPerView: 5 },
+          }}
+          className="charity-details-gallery-swiper"
+        >
+          {galleryImages.map((image, index) => (
+            <SwiperSlide key={`${image}-${index}`}>
+              <div className="charity-details-gallery-card">
+                <img src={image} alt={`Charity gallery ${index + 1}`} />
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </section>
     </div>
   );

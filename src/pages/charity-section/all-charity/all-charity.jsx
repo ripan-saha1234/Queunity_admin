@@ -122,6 +122,7 @@ function AllCharity() {
         tableData={filteredData}
         headers={tableHeaders}
         index={0}
+        specificReturn="charityId"
         handleActionClick={(action, id) => {
           if (action === "view") navigate(`/charity/details/${id}`);
           if (action === "edit") navigate("/charity/edit-charity");

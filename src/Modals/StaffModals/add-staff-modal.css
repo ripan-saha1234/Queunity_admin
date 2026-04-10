@@ -1,0 +1,116 @@
+.add-staff-modal.modal_body,
+.add-staff-modal {
+  width: min(640px, calc(100vw - 32px));
+  max-width: 640px;
+}
+
+.add-staff-modal .input-common-wrapper {
+  margin-bottom: 0;
+}
+
+.add-staff-modal__grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+  align-items: start;
+}
+
+@media (max-width: 600px) {
+  .add-staff-modal__grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.add-staff-modal__row-email-phone {
+  margin-top: 0;
+}
+
+.add-staff-modal__full {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.add-staff-modal__phone-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-self: start;
+}
+
+.add-staff-modal__phone-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  margin-left: 15px;
+  margin-bottom: 10px;
+  line-height: 22px;
+}
+
+.add-staff-modal__required {
+  color: red;
+  margin-left: 2px;
+}
+
+.add-staff-modal__phone-composite {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+}
+
+.add-staff-modal__phone-code-wrap {
+  flex: 0 0 100px;
+  min-width: 88px;
+}
+
+.add-staff-modal__phone-code-wrap .input-common-wrapper {
+  margin-bottom: 0;
+}
+
+.add-staff-modal__phone-code-wrap .input-common-wrapper label {
+  display: none;
+}
+
+.add-staff-modal__phone-number-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.add-staff-modal__phone-number-wrap .input-common-wrapper label {
+  display: none;
+}
+
+.add-staff-modal__upload-block {
+  margin-top: 8px;
+}
+
+.add-staff-modal__upload-zone {
+  cursor: pointer;
+}
+
+.add-staff-modal__upload-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #95c63d;
+  text-align: center;
+  line-height: 1.35;
+  pointer-events: none;
+  user-select: none;
+}
+
+.add-staff-modal__upload-hint {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(69, 85, 108, 0.9);
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.add-staff-modal__image-error {
+  margin: 0;
+  font-size: 13px;
+  color: #b91c1c;
+}

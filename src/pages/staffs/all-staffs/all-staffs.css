@@ -1,0 +1,62 @@
+.all-staffs-page {
+  width: 100%;
+}
+
+.all-staffs-page .table1-container {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.all-staffs-page .table1 {
+  background-color: #ffffff;
+}
+
+.all-staffs-page .table1 th {
+  padding: 18px 18px;
+  font-weight: 400;
+}
+
+.all-staffs-page .table1 td {
+  padding: 8px 18px;
+  vertical-align: middle;
+}
+
+.all-staffs-page .table1-customer-container {
+  align-items: flex-start;
+}
+
+.all-staffs-page .table1-customer-name-container {
+  row-gap: 2px;
+}
+
+.all-staffs-page .table1-customer-name-container h2 {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #141414;
+}
+
+.all-staffs-page .table1-customer-name-container p {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: rgba(20, 20, 20, 0.6);
+}
+
+.all-staffs-page .table1 td:nth-child(2),
+.all-staffs-page .table1 td:nth-child(3),
+.all-staffs-page .table1 td:nth-child(4) {
+  color: #555555;
+}
+
+.all-staffs-page .table1 td:last-child {
+  width: 70px;
+}
+
+.all-staffs-page .table1-action-container {
+  justify-content: center;
+}
+
+.all-staffs-page .modern-pagination {
+  margin-top: 30px;
+}
