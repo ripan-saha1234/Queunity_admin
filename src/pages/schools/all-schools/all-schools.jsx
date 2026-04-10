@@ -2,14 +2,10 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CommonTable from "../../../components/common-table";
 import usePageHeader from "../../../hooks/use-page-header";
+import ConfirmDeleteModal from "../../../Modals/StaffModals/ConfirmDeleteModal";
 import "./all-schools.css";
 
-function AllSchools() {
-  const navigate = useNavigate();
-  const [search, setSearch] = useState("");
-
-  const schoolsData = useMemo(
-    () => [
+const INITIAL_SCHOOLS = [
       {
         schoolId: "SC456666",
         companyName: {
@@ -120,15 +116,19 @@ function AllSchools() {
         email: "somaligoswami@gmail.com",
         phone: "+1 1234567890",
       },
-    ],
-    [],
-  );
+];
+
+function AllSchools() {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [schoolsList, setSchoolsList] = useState(INITIAL_SCHOOLS);
+  const [deleteSchoolId, setDeleteSchoolId] = useState("");
 
   const filteredSchools = useMemo(() => {
-    if (!search.trim()) return schoolsData;
+    if (!search.trim()) return schoolsList;
 
     const query = search.trim().toLowerCase();
-    return schoolsData.filter((school) => {
+    return schoolsList.filter((school) => {
       const schoolName = school.companyName?.name?.toLowerCase() || "";
       const principalName = school.principalName?.toLowerCase() || "";
       const email = school.email?.toLowerCase() || "";
@@ -140,7 +140,7 @@ function AllSchools() {
         phone.includes(query)
       );
     });
-  }, [search, schoolsData]);
+  }, [search, schoolsList]);
 
   const headerButtons = useMemo(
     () => [
@@ -199,6 +199,9 @@ function AllSchools() {
           if (action === "edit") {
             navigate(`/schools/edit-schools`);
           }
+          if (action === "delete") {
+            setDeleteSchoolId(id);
+          }
         }}
         actionButtons={[
           { label: "Edit", action: "edit" },
@@ -206,6 +209,18 @@ function AllSchools() {
           { label: "Delete", action: "delete" },
         ]}
       />
+
+      {deleteSchoolId ? (
+        <ConfirmDeleteModal
+          title="Delete school"
+          name={schoolsList.find((item) => item.schoolId === deleteSchoolId)?.companyName?.name}
+          onClose={() => setDeleteSchoolId("")}
+          onConfirm={() => {
+            const id = deleteSchoolId;
+            setSchoolsList((prev) => prev.filter((item) => item.schoolId !== id));
+          }}
+        />
+      ) : null}
     </div>
   );
 }

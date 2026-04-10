@@ -71,13 +71,13 @@ const InputCommon = ({
         <input
           type={type}
           name={name}
-          // value={value}
           onChange={onChange}
           placeholder={placeholder}
           required={required}
           disabled={disabled}
           className="input-common-input"
           style={inputStyle}
+          {...(value !== undefined && value !== null ? { value } : {})}
         />
       )}
     </div>

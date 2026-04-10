@@ -29,6 +29,7 @@ import ViewCasesChairty from './pages/charity-section/view-cases-charity/view-ca
 import { useEffect } from 'react'
 import EditSchools from './pages/schools/edit-schools/edit-schools'
 import AllStaffs from './pages/staffs/all-staffs/all-staffs'
+import RolesPage from './pages/staffs/roles/roles'
 
 function App() {
   const location = useLocation()
@@ -71,6 +72,7 @@ function App() {
             <Route path='details/view-cases-charity' element={<ViewCasesChairty />} />
           </Route>
           <Route path='staffs' element={<AllStaffs />} />
+          <Route path='roles' element={<RolesPage />} />
           <Route path='/offense' element={<Offense/>}>
           </Route>
           <Route path='/single-offense/:id' element={<SingleOffense />} />

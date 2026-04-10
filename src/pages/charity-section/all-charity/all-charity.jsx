@@ -2,14 +2,10 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CommonTable from "../../../components/common-table";
 import usePageHeader from "../../../hooks/use-page-header";
+import ConfirmDeleteModal from "../../../Modals/StaffModals/ConfirmDeleteModal";
 import "./all-charity.css";
 
-function AllCharity() {
-  const navigate = useNavigate();
-  const [search, setSearch] = useState("");
-
-  const charityData = useMemo(
-    () => [
+const INITIAL_CHARITIES = [
       {
         charityId: "CH456666",
         companyName: { name: "Hope Foundation", id: "#CH456666", image: "/table-img1.svg" },
@@ -52,14 +48,18 @@ function AllCharity() {
         email: "somaligoswami@gmail.com",
         phone: "+1 1234567890",
       },
-    ],
-    [],
-  );
+];
+
+function AllCharity() {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [charityList, setCharityList] = useState(INITIAL_CHARITIES);
+  const [deleteCharityId, setDeleteCharityId] = useState("");
 
   const filteredData = useMemo(() => {
-    if (!search.trim()) return charityData;
+    if (!search.trim()) return charityList;
     const query = search.trim().toLowerCase();
-    return charityData.filter((item) => {
+    return charityList.filter((item) => {
       const charityName = item.companyName?.name?.toLowerCase() || "";
       const principalName = item.principalName?.toLowerCase() || "";
       const email = item.email?.toLowerCase() || "";
@@ -71,7 +71,7 @@ function AllCharity() {
         phone.includes(query)
       );
     });
-  }, [search, charityData]);
+  }, [search, charityList]);
 
   const headerButtons = useMemo(
     () => [
@@ -126,6 +126,7 @@ function AllCharity() {
         handleActionClick={(action, id) => {
           if (action === "view") navigate(`/charity/details/${id}`);
           if (action === "edit") navigate("/charity/edit-charity");
+          if (action === "delete") setDeleteCharityId(id);
         }}
         actionButtons={[
           { label: "Edit", action: "edit" },
@@ -133,6 +134,18 @@ function AllCharity() {
           { label: "Delete", action: "delete" },
         ]}
       />
+
+      {deleteCharityId ? (
+        <ConfirmDeleteModal
+          title="Delete charity"
+          name={charityList.find((item) => item.charityId === deleteCharityId)?.companyName?.name}
+          onClose={() => setDeleteCharityId("")}
+          onConfirm={() => {
+            const id = deleteCharityId;
+            setCharityList((prev) => prev.filter((item) => item.charityId !== id));
+          }}
+        />
+      ) : null}
     </div>
   );
 }

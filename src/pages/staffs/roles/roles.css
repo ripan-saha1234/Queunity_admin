@@ -1,0 +1,35 @@
+.roles-page {
+  width: 100%;
+}
+
+.roles-page .table1-container {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.roles-page .table1 {
+  background-color: #ffffff;
+}
+
+.roles-page .table1 th {
+  padding: 18px 18px;
+  font-weight: 400;
+}
+
+.roles-page .table1 td {
+  padding: 12px 18px;
+  vertical-align: middle;
+  color: #555555;
+}
+
+.roles-page .table1 td:last-child {
+  width: 70px;
+}
+
+.roles-page .table1-action-container {
+  justify-content: center;
+}
+
+.roles-page .modern-pagination {
+  margin-top: 30px;
+}

@@ -1,9 +1,11 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CommonTable from "../../../components/common-table";
 import usePageHeader from "../../../hooks/use-page-header";
 import AddStaffModal from "../../../Modals/StaffModals/AddStaffModal";
 import EditStaffModal from "../../../Modals/StaffModals/EditStaffModal";
 import ViewStaffModal from "../../../Modals/StaffModals/ViewStaffModal";
+import ConfirmDeleteModal from "../../../Modals/StaffModals/ConfirmDeleteModal";
 import "./all-staffs.css";
 
 const ROLE_LABELS = {
@@ -86,11 +88,13 @@ const INITIAL_STAFF = [
 ];
 
 function AllStaffs() {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [staffList, setStaffList] = useState(INITIAL_STAFF);
   const [addStaffOpen, setAddStaffOpen] = useState(false);
   const [editStaffId, setEditStaffId] = useState("");
   const [viewStaffId, setViewStaffId] = useState("");
+  const [deleteStaffId, setDeleteStaffId] = useState("");
 
   const filteredData = useMemo(() => {
     if (!search.trim()) return staffList;
@@ -114,7 +118,7 @@ function AllStaffs() {
       {
         type: "button",
         text: "Roles",
-        onClick: () => {},
+        onClick: () => navigate("/roles"),
         backgroundColor: "#FFFFFF",
         textColor: "#141414",
         borderColor: "#9FC53D",
@@ -140,7 +144,7 @@ function AllStaffs() {
         onClick: () => {},
       },
     ],
-    [search],
+    [search, navigate],
   );
 
   usePageHeader({
@@ -174,6 +178,9 @@ function AllStaffs() {
           if (action === "edit") {
             setViewStaffId("");
             setEditStaffId(id);
+          }
+          if (action === "delete") {
+            setDeleteStaffId(id);
           }
         }}
       />
@@ -232,6 +239,20 @@ function AllStaffs() {
                     },
               ),
             );
+          }}
+        />
+      ) : null}
+
+      {deleteStaffId ? (
+        <ConfirmDeleteModal
+          title="Delete staff"
+          name={staffList.find((item) => item.staffId === deleteStaffId)?.companyName?.name}
+          onClose={() => setDeleteStaffId("")}
+          onConfirm={() => {
+            const id = deleteStaffId;
+            setStaffList((prev) => prev.filter((item) => item.staffId !== id));
+            setViewStaffId((v) => (v === id ? "" : v));
+            setEditStaffId((e) => (e === id ? "" : e));
           }}
         />
       ) : null}
