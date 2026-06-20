@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { clearAuth, getToken } from "../api/token";
 import "../css/sidebar.css";
 
 function Sidebar() {
@@ -73,17 +74,8 @@ function Sidebar() {
 
   const logoutUser = async () => {
     try {
-      const tokenItem = localStorage.getItem("industrytuner admin token");
-      if (!tokenItem) return false;
-
-      let token;
-      try {
-        token = JSON.parse(tokenItem);
-      } catch (parseError) {
-        token = tokenItem;
-      }
-
-      if (typeof token !== "string") return false;
+      const token = getToken();
+      if (!token) return false;
 
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/auth/logout`, {
         method: "POST",
@@ -154,8 +146,7 @@ function Sidebar() {
           } catch (error) {
             console.log("Logout API error:", error);
           } finally {
-            localStorage.removeItem("industrytuner admin token");
-            localStorage.removeItem("industrytuner admin user");
+            clearAuth();
             navigate("/auth");
           }
         }}

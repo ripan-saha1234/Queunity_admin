@@ -34,7 +34,7 @@ const InputCommon = ({
     borderRadius: "8px",
     fontSize: "14px",
     outline: "none",
-    background:"none",
+    backgroundColor: "transparent",
     transition: "0.2s ease",
     paddingRight: "12px",
   };

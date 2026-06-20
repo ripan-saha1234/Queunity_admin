@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getStoredUser, getToken } from "../api/token";
 
 
 export const globalContext = createContext();
@@ -55,36 +56,33 @@ export function GlobalContextProvider({ children }) {
   });
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('industrytuner admin user'));
+    const userData = getStoredUser();
     if (userData) {
       setUser({
         id: userData.id || null,
         name: userData.name || '',
-        firstName: userData.first_name || '',
-        lastName: userData.last_name || '',
+        firstName: userData.first_name || userData.firstName || '',
+        lastName: userData.last_name || userData.lastName || '',
         phone: userData.phone || '',
         email: userData.email || '',
         image: userData.image || '/avatar.svg',
         roles: userData.roles || [],
       });
     }
-    else {
-      console.log('user not found');
-    }
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     const path = location.pathname;
-    const token = JSON.parse(localStorage.getItem("industrytuner admin token"))
+    const token = getToken();
 
-    if(path){
-        if (path !== '/auth'){
-            if(!token) navigate("/auth")  
-        }else{
-          if(token) navigate("/dashboard")
-        }
+    if (path) {
+      if (path !== '/auth') {
+        if (!token) navigate('/auth');
+      } else if (token) {
+        navigate('/staffs');
+      }
     }
-  },[location.pathname])
+  }, [location.pathname, navigate]);
   
   return (
     <globalContext.Provider value={{

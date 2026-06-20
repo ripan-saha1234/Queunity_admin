@@ -1,9 +1,10 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { globalContext } from '../../context/context';
+import { login } from '../../api/auth';
+import { useToast } from '../../components/toast/ToastProvider';
 import './authentication.css';
 
-// Eye / EyeOff icons (inline SVG, no extra dependency)
 const EyeIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -22,14 +23,15 @@ const EyeOffIcon = () => (
 function Authentication() {
   const navigate = useNavigate();
   const { setUser } = useContext(globalContext);
+  const { showToast } = useToast();
 
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: ''
   });
 
   const [errors, setErrors] = useState({
-    email: '',
+    username: '',
     password: '',
     general: ''
   });
@@ -37,13 +39,6 @@ function Authentication() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Email validation regex
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -60,24 +55,17 @@ function Authentication() {
     }
   };
 
-  // Validate form
   const validateForm = () => {
-    const newErrors = { email: '', password: '', general: '' };
+    const newErrors = { username: '', password: '', general: '' };
     let isValid = true;
 
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-      isValid = false;
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+    if (!formData.username.trim()) {
+      newErrors.username = 'Username is required';
       isValid = false;
     }
 
     if (!formData.password) {
       newErrors.password = 'Password is required';
-      isValid = false;
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
       isValid = false;
     }
 
@@ -85,47 +73,44 @@ function Authentication() {
     return isValid;
   };
 
-  // Handle login submission
   const handleLogin = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) return;
 
     setIsLoading(true);
-    setErrors({ email: '', password: '', general: '' });
+    setErrors({ username: '', password: '', general: '' });
 
     try {
-      const staticEmail = 'teddy@gmail.com';
-      const staticPassword = '123456789';
+      const data = await login({
+        username: formData.username.trim(),
+        password: formData.password,
+      });
 
-      if (formData.email === staticEmail && formData.password === staticPassword) {
-        const staticUser = {
-          id: 1,
-          name: 'Teddy',
-          firstName: 'Teddy',
-          lastName: '',
-          email: staticEmail,
-          phone: '',
-          roles: ['admin'],
-          image: '/avatar.svg'
-        };
+      const user = {
+        id: null,
+        name: data.name,
+        firstName: data.name,
+        lastName: '',
+        email: formData.username.trim(),
+        phone: '',
+        roles: ['admin'],
+        image: '/avatar.svg',
+      };
 
-        localStorage.setItem('industrytuner admin token', JSON.stringify('static-admin-token'));
-        localStorage.setItem('industrytuner admin user', JSON.stringify(staticUser));
-        setUser(staticUser);
-        navigate('/cases');
-      } else {
-        setErrors(prev => ({
-          ...prev,
-          general: 'Invalid email or password'
-        }));
-      }
+      setUser(user);
+      showToast(data.message || 'Login successful', 'success');
+      navigate('/staffs');
     } catch (error) {
       console.error('Login error:', error);
+
+      const message = error.message || 'Network error. Please check your connection and try again.';
+
       setErrors(prev => ({
         ...prev,
-        general: 'Network error. Please check your connection and try again.'
+        general: message,
       }));
+      showToast(message, 'error');
     } finally {
       setIsLoading(false);
     }
@@ -135,16 +120,14 @@ function Authentication() {
     <div className="authentication-container">
       <div className="authentication-container-content">
 
-        {/* Header: title + logo */}
         <div className="authentication-container-content-header">
           <div>
-            <h1>Hello Teddy!</h1>
+            <h1>Hello Admin!</h1>
             <h2>Welcome Back</h2>
           </div>
           <img src="/queunity_logo.svg" alt="logo" />
         </div>
 
-        {/* General error */}
         {errors.general && (
           <div className="authentication-error-message">
             {errors.general}
@@ -152,28 +135,26 @@ function Authentication() {
         )}
 
         <form onSubmit={handleLogin}>
-          {/* Email */}
           <div className="authentication-container-content-input">
-            <label htmlFor="email">
-              Email<span className="required-star">*</span>
+            <label htmlFor="username">
+              Username<span className="required-star">*</span>
             </label>
             <div className="authentication-input-wrapper">
               <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
                 onChange={handleChange}
-                placeholder="Enter your email"
-                className={errors.email ? 'authentication-input-error-border' : ''}
+                placeholder="Enter your username"
+                className={errors.username ? 'authentication-input-error-border' : ''}
               />
             </div>
-            {errors.email && (
-              <span className="authentication-input-error">{errors.email}</span>
+            {errors.username && (
+              <span className="authentication-input-error">{errors.username}</span>
             )}
           </div>
 
-          {/* Password */}
           <div className="authentication-container-content-input">
             <label htmlFor="password">Password</label>
             <div className="authentication-input-wrapper">
