@@ -30,6 +30,7 @@ import { useEffect } from 'react'
 import EditSchools from './pages/schools/edit-schools/edit-schools'
 import AllStaffs from './pages/staffs/all-staffs/all-staffs'
 import RolesPage from './pages/staffs/roles/roles'
+import { CaseFormProvider } from './context/CaseFormContext'
 
 function App() {
   const location = useLocation()
@@ -44,7 +45,7 @@ function App() {
       <Routes>
         <Route path="/auth" element={<Authentication />} />
         <Route path='/' element={<CommonLayout />}>
-          <Route path='cases' element={<Outlet />}>
+          <Route path='cases' element={<CaseFormProvider><Outlet /></CaseFormProvider>}>
             <Route index element={<AllCases />} />
             <Route path='add-cases' element={<AddCases />} />
             <Route path='add-suspect' element={<AddSuspectForm />} />

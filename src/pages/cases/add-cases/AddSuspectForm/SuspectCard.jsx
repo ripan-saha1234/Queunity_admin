@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router'
 
-const SuspectCard = ({ suspect, nodelete, noedit, submittedCaseId }) => {
+const SuspectCard = ({ suspect, nodelete, noedit, submittedCaseId, onDelete }) => {
     const navigate = useNavigate()
     const [menuOpen, setMenuOpen] = useState(false)
     const readOnlyActions = nodelete && noedit
@@ -26,6 +26,7 @@ const SuspectCard = ({ suspect, nodelete, noedit, submittedCaseId }) => {
 
     const handleDelete = () => {
         setMenuOpen(false)
+        if (typeof onDelete === 'function') onDelete()
     }
 
     return (

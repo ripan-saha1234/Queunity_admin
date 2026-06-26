@@ -916,6 +916,7 @@ const CommonInput = ({
           required={required}
           style={inputStyle}
           className={`common-input common-input-textarea ${showError ? "error" : ""} ${className}`}
+          {...(value !== undefined && value !== null && onChange ? { value } : {})}
           {...rest}
         />
       ) : (
@@ -931,6 +932,7 @@ const CommonInput = ({
           required={required}
           style={inputStyle}
           className={`common-input ${showError ? "error" : ""} ${className}`}
+          {...(value !== undefined && value !== null && onChange ? { value } : {})}
           {...rest}
         />
       )}

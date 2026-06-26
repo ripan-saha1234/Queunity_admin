@@ -1,7 +1,7 @@
 import React from 'react'
 import CommonInput from '../../../../components/common-input'
 
-const SchoolMateForm = () => {
+const SchoolMateForm = ({ data = {}, setField = () => {} }) => {
   return (
     <>
           <div className="radio_main">
@@ -9,7 +9,7 @@ const SchoolMateForm = () => {
               <CommonInput
                   name="student_name"
                   placeholder="Enter student name"
-                  value=""
+                  onChange={(e) => setField('student_name', e.target.value)}
               />
           </div>
 
@@ -18,8 +18,8 @@ const SchoolMateForm = () => {
               <CommonInput
                   name="student_details"
                   placeholder="Enter student details"
-                  value=""
                   multiline={true}
+                  onChange={(e) => setField('student_details', e.target.value)}
                   style={{
                       height: '90px',
                       resize: 'none'

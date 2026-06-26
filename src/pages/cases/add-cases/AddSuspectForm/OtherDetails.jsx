@@ -2,7 +2,7 @@ import React from 'react'
 import CommonInput from '../../../../components/common-input'
 import icon from '../../../../Assets/regular.svg'
 import { WizardSection } from '../../../../components/WizardSection'
-const OtherDetails = ({ isOpen = false, onToggle = () => { } }) => {
+const OtherDetails = ({ isOpen = false, onToggle = () => { }, data = {}, setField = () => {} }) => {
     return (
         <>
             <div className='other_Head_details_wrapper'>
@@ -35,7 +35,7 @@ const OtherDetails = ({ isOpen = false, onToggle = () => { } }) => {
 
             {isOpen && (
                 <div className='physical_details_wrapper'>
-                    <CommonInput label={'Describe actions, behavior, or anything unusual observed by witnesses or staff.'} multiline placeholder='Enter details' style={{
+                    <CommonInput label={'Describe actions, behavior, or anything unusual observed by witnesses or staff.'} name="other_description" multiline placeholder='Enter details' onChange={(e) => setField('other_description', e.target.value)} style={{
                         height: '80px',
                         resize: 'none'
                     }} />

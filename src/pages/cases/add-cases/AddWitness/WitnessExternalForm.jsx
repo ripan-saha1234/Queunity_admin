@@ -1,9 +1,9 @@
 import React from 'react'
 import CommonInput from '../../../../components/common-input'
-import CommonSelect from '../../../../components/common-select'
 import InputCommon from '../../../../components/input_common'
+import { cityOptions, stateOptions, gradeOptions, genderOptions } from '../options'
 
-const WitnessExternalForm = () => {
+const WitnessExternalForm = ({ data = {}, setField = () => {} }) => {
     return (
         <>
             <div className="radio_main">
@@ -11,7 +11,7 @@ const WitnessExternalForm = () => {
                 <CommonInput
                     name="school_name"
                     placeholder="Enter school name"
-                    value=""
+                    onChange={(e) => setField('school_name', e.target.value)}
                 />
             </div>
 
@@ -25,8 +25,10 @@ const WitnessExternalForm = () => {
                         name="city"
                         type="select"
                         required
+                        value={data.city || ''}
+                        onChange={(e) => setField('city', e.target.value)}
+                        options={cityOptions}
                         placeholder="Select city"
-
                     />
                 </div>
 
@@ -36,6 +38,9 @@ const WitnessExternalForm = () => {
                         name="state"
                         type="select"
                         required
+                        value={data.state || ''}
+                        onChange={(e) => setField('state', e.target.value)}
+                        options={stateOptions}
                         placeholder="Select state"
                     />
                 </div>
@@ -50,8 +55,10 @@ const WitnessExternalForm = () => {
                         name="grade"
                         type="select"
                         required
+                        value={data.grade || ''}
+                        onChange={(e) => setField('grade', e.target.value)}
+                        options={gradeOptions}
                         placeholder="Select grade"
-
                     />
                 </div>
 
@@ -61,6 +68,9 @@ const WitnessExternalForm = () => {
                         name="gender"
                         type="select"
                         required
+                        value={data.gender || ''}
+                        onChange={(e) => setField('gender', e.target.value)}
+                        options={genderOptions}
                         placeholder="Select gender"
                     />
                 </div>
@@ -71,6 +81,8 @@ const WitnessExternalForm = () => {
                         name="age"
                         type="text"
                         required
+                        value={data.age || ''}
+                        onChange={(e) => setField('age', e.target.value)}
                         placeholder="Enter age"
                     />
                 </div>
@@ -82,9 +94,9 @@ const WitnessExternalForm = () => {
                 <CommonInput
                     name="identified_details"
                     placeholder="Enter details"
-                    value=""
                     required
                     multiline={true}
+                    onChange={(e) => setField('identified_details', e.target.value)}
                     style={{
                         height: '90px',
                         resize: 'none'
@@ -97,8 +109,8 @@ const WitnessExternalForm = () => {
                 <CommonInput
                     name="student_details"
                     placeholder="Enter details"
-                    value=""
                     multiline={true}
+                    onChange={(e) => setField('student_details', e.target.value)}
                     style={{
                         height: '90px',
                         resize: 'none'

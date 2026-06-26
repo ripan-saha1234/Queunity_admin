@@ -4,11 +4,51 @@ import { WizardSection } from '../../../../components/WizardSection'
 import CommonInput from '../../../../components/common-input'
 import NewCommonMultiFileUpload from '../../../../components/NewCommonMultiFileUpload'
 import { ChoiceRadio } from '../../../../components/ChoiceRadio'
+import { charityInvolvementTypeOptions } from '../options'
+import { useCaseForm } from '../../../../context/CaseFormContext'
+import { useToast } from '../../../../components/toast/ToastProvider'
 import icon from '../../../../Assets/Capa_1 (1).svg'
 import icon2 from '../../../../Assets/svg2532 (1).svg'
+
+const CHARITY_INVOLVEMENT = [
+    { label: 'Already informed', value: 'already_informed' },
+    { label: 'Inform now', value: 'inform_now' },
+    { label: 'Maybe later', value: 'maybe_later' },
+    { label: 'No', value: 'no' },
+]
+
+const POLICE_INVOLVEMENT = [
+    { label: 'Already reported to police', value: 'already_reported' },
+    { label: 'Maybe later', value: 'maybe_later' },
+    { label: 'No', value: 'not_reported' },
+]
+
 const CharityPoliceForm = () => {
-    const [involveCharity, setinvolveCharity] = useState(null)
-    const [involvePolice, setinvolvePolice] = useState(null)
+    const { caseData, setCharity, setPolice, uploadFile } = useCaseForm()
+    const { showToast } = useToast()
+    const charity = caseData.charity || {}
+    const police = caseData.police || {}
+    const [involveCharity, setinvolveCharity] = useState(charity.involvement || null)
+    const [involvePolice, setinvolvePolice] = useState(
+        police.involvement && police.involvement !== 'not_reported' ? police.involvement : null,
+    )
+    const [uploading, setUploading] = useState(false)
+
+    const handleReportUpload = async (fileList) => {
+        const files = Array.from(fileList || [])
+        if (!files.length) return
+        setUploading(true)
+        try {
+            const urls = await Promise.all(files.map((f) => uploadFile(f)))
+            setPolice({ report_file_urls: [...(police.report_file_urls || []), ...urls] })
+            showToast('Report uploaded', 'success')
+        } catch (err) {
+            showToast(err?.message || 'Report upload failed', 'error')
+        } finally {
+            setUploading(false)
+        }
+    }
+
     return (
         <>
             <div className='charity_police_wrapper'>
@@ -28,42 +68,28 @@ const CharityPoliceForm = () => {
                             justifyContent: 'flex-start',
                             alignItems: 'start'
                         }}>
-                            <ChoiceRadio
-                                name="already_informed"
-                                onChange={(() => setinvolveCharity('already_informed'))}
-                                label="Already informed"
-                                value="already_informed"
-                                checked={involveCharity === 'already_informed'}
-                            />
-                            <ChoiceRadio
-                                name="Inform now"
-                                label="Inform now"
-                                value="inform_now"
-                                onChange={(() => setinvolveCharity('inform_now'))}
-                                checked={involveCharity === 'inform_now'}
-                            />
-
-                            <ChoiceRadio
-                                name="Maybe later"
-                                label="Maybe later"
-                                value="Maybe later"
-                                onChange={(() => setinvolveCharity('maybe'))}
-                                checked={involveCharity === 'maybe'}
-                            />
-
-                            <ChoiceRadio
-                                name="No"
-                                label="No"
-                                value="No"
-                                onChange={(() => setinvolveCharity('no'))}
-                                checked={involveCharity === 'no'}
-                            />
+                            {CHARITY_INVOLVEMENT.map((opt) => (
+                                <ChoiceRadio
+                                    key={opt.value}
+                                    name="charity_involvement"
+                                    onChange={() => {
+                                        setinvolveCharity(opt.value)
+                                        setCharity({ involvement: opt.value })
+                                    }}
+                                    label={opt.label}
+                                    value={opt.value}
+                                    checked={involveCharity === opt.value}
+                                />
+                            ))}
                         </div>
                     </div>
 
                     {involveCharity === 'already_informed' && <div className="radio_main">
                         <label>Charity Name <span>*</span></label>
-                        <CommonInput placeholder='Enter charity name...' />
+                        <CommonInput
+                            placeholder='Enter charity name...'
+                            onChange={(e) => setCharity({ charity_name: e.target.value })}
+                        />
                     </div>}
 
 
@@ -71,46 +97,16 @@ const CharityPoliceForm = () => {
                         <div className="radio_main">
                             <label>Type of charity involvement? <span>*</span></label>
                             <div className="radio_buttons_wrapper" >
-                                <ChoiceRadio
-                                    label="Counseling support"
-                                />
-                                <ChoiceRadio
-                                    label="Crisis intervention"
-                                />
-
-                                <ChoiceRadio
-                                    name="Family support"
-                                    label="Family support"
-                                    value="Family support"
-
-                                />
-
-                                <ChoiceRadio
-                                    name="Mental health"
-                                    label="Mental health"
-                                    value="Mental health"
-
-                                />
-
-                                <ChoiceRadio
-                                    name="Anti-bullying partner
-"
-                                    label="Anti-bullying partner
-"
-                                    value="Anti-bullying partner
-"
-
-                                />
-
-                                <ChoiceRadio
-                                    name="Community support
-"
-                                    label="Community support
-"
-                                    value="Community support
-"
-
-                                />
+                                {charityInvolvementTypeOptions.map((opt) => (
+                                    <ChoiceRadio
+                                        key={opt.value}
+                                        name="charity_involvement_type"
+                                        label={opt.label}
+                                        value={opt.value}
+                                        checked={charity.involvement_type === opt.value}
+                                        onChange={(value) => setCharity({ involvement_type: value })}
+                                    />
+                                ))}
                             </div>
                         </div>
 
@@ -119,7 +115,9 @@ const CharityPoliceForm = () => {
                             <CommonInput style={{
                                 height: '80px',
                                 resize: 'none'
-                            }} multiline placeholder='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation' />
+                            }} multiline placeholder='Enter reason...'
+                                onChange={(e) => setCharity({ reason: e.target.value })}
+                            />
                         </div>
                     </>}
 
@@ -141,55 +139,55 @@ const CharityPoliceForm = () => {
                             justifyContent: 'flex-start',
                             alignItems: 'start'
                         }}>
-                            <ChoiceRadio
-                                name="involvePolice"
-                                label="Already reported to police"
-                                value="already_reported"
-                                onChange={(() => setinvolvePolice('already_reported'))}
-                                checked={involvePolice === 'already_reported'}
-                            />
-                            <ChoiceRadio
-                                name="involvePolice"
-                                label="Maybe later"
-                                value="maybe"
-                                onChange={(() => setinvolvePolice('maybe'))}
-                                checked={involvePolice === 'maybe'}
-                            />
-                            <ChoiceRadio
-                                name="involvePolice"
-                                label="No"
-                                value="no"
-                                onChange={(() => setinvolvePolice('no'))}
-                                checked={involvePolice === 'no'}
-                            />
+                            {POLICE_INVOLVEMENT.map((opt) => (
+                                <ChoiceRadio
+                                    key={opt.value}
+                                    name="police_involvement"
+                                    label={opt.label}
+                                    value={opt.value}
+                                    onChange={() => {
+                                        setinvolvePolice(opt.value)
+                                        setPolice({ involvement: opt.value })
+                                    }}
+                                    checked={involvePolice === opt.value}
+                                />
+                            ))}
                         </div>
                     </div>
 
                     {involvePolice === 'already_reported' && <div className='four_grid_layout'>
                         <div className="radio_main">
                             <label> Police Report Number </label>
-                            <CommonInput placeholder='Enter police report number...' />
+                            <CommonInput placeholder='Enter police report number...'
+                                onChange={(e) => setPolice({ report_number: e.target.value })}
+                            />
                         </div>
 
                         <div className="radio_main">
                             <label> Officer Name </label>
-                            <CommonInput placeholder='Enter officer Name...' />
+                            <CommonInput placeholder='Enter officer Name...'
+                                onChange={(e) => setPolice({ officer_name: e.target.value })}
+                            />
                         </div>
 
                         <div className="radio_main">
                             <label> Station / Department </label>
-                            <CommonInput placeholder='Enter deparment name...' />
+                            <CommonInput placeholder='Enter deparment name...'
+                                onChange={(e) => setPolice({ station_department: e.target.value })}
+                            />
                         </div>
 
                         <div className="radio_main">
                             <label>Date reported </label>
-                            <CommonInput type='date' />
+                            <CommonInput type='date'
+                                onChange={(e) => setPolice({ date_reported: e.target.value })}
+                            />
                         </div>
                     </div>}
 
                     {involvePolice === 'already_reported' && <div className="radio_main">
-                        <label> Upload police report</label>
-                        <NewCommonMultiFileUpload />
+                        <label> Upload police report {uploading && <span>(uploading...)</span>}</label>
+                        <NewCommonMultiFileUpload onChange={(e) => handleReportUpload(e.target.files)} />
                     </div>}
                 </form>
 

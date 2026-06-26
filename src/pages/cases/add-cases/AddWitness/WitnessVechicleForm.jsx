@@ -3,8 +3,9 @@ import CommonInput from '../../../../components/common-input'
 import NewCommonMultiFileUpload from '../../../../components/NewCommonMultiFileUpload.jsx'
 import InputCommon from '../../../../components/input_common.jsx'
 import { WizardSection } from '../../../../components/WizardSection.jsx'
+import { vehicleTypeOptions, directionOptions } from '../options'
 import icon from '../../../../Assets/Frame.svg'
-const VehicleDetails = ({ isOpen = false, onToggle = () => { } }) => {
+const WitnessVechicleForm = ({ isOpen = false, onToggle = () => { }, data = {}, setField = () => {}, onUpload = () => {} }) => {
     const [toggle, settoggle] = useState(false)
 
     return (
@@ -63,12 +64,9 @@ const VehicleDetails = ({ isOpen = false, onToggle = () => { } }) => {
                             type='select'
                             name="vehicle_type"
                             placeholder="Select vechicle type"
-                            value=""
-                            style={{
-                                height: '50px',
-                                borderRadius: '8px',
-                                padding: '0px 10px'
-                            }}
+                            value={data.vehicle_type || ''}
+                            onChange={(e) => setField('vehicle_type', e.target.value)}
+                            options={vehicleTypeOptions}
                         />
                     </div>
                     <div className="radio_main">
@@ -76,7 +74,7 @@ const VehicleDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <CommonInput
                             name="color"
                             placeholder="Blue"
-                            value=""
+                            onChange={(e) => setField('color', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -90,7 +88,7 @@ const VehicleDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <CommonInput
                             name="brand"
                             placeholder="Enter brand name"
-                            value=""
+                            onChange={(e) => setField('brand', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -104,7 +102,7 @@ const VehicleDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <CommonInput
                             name="model"
                             placeholder="Enter vehicle model"
-                            value=""
+                            onChange={(e) => setField('model', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -118,7 +116,7 @@ const VehicleDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <CommonInput
                             name="marking"
                             placeholder="Enter marking"
-                            value=""
+                            onChange={(e) => setField('marking', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -131,7 +129,7 @@ const VehicleDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <label>Damage</label>
                         <CommonInput
                             name="damage"
-                            value=""
+                            onChange={(e) => setField('damage', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -144,8 +142,8 @@ const VehicleDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <label>Registration No</label>
                         <CommonInput
                             name="registration_no"
-                            value=""
                             placeholder='Enter registration no'
+                            onChange={(e) => setField('registration_no', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -157,9 +155,9 @@ const VehicleDetails = ({ isOpen = false, onToggle = () => { } }) => {
                     <div className="radio_main">
                         <label>Additional Info </label>
                         <CommonInput
-                            name="addition_info"
-                            value=""
+                            name="vehicle_additional_info"
                             placeholder='Add additional info'
+                            onChange={(e) => setField('vehicle_additional_info', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -172,14 +170,11 @@ const VehicleDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <label>Direction of travel</label>
                         <InputCommon
                             name="direction"
-                            value=""
                             type='select'
                             placeholder='Select direction'
-                            style={{
-                                height: '50px',
-                                borderRadius: '8px',
-                                padding: '0px 10px'
-                            }}
+                            value={data.direction || ''}
+                            onChange={(e) => setField('direction', e.target.value)}
+                            options={directionOptions}
                         />
                     </div>
 
@@ -187,8 +182,8 @@ const VehicleDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <label>Last seen location </label>
                         <CommonInput
                             name="last_location"
-                            value=""
                             placeholder='Enter last seen location'
+                            onChange={(e) => setField('last_location', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -203,7 +198,7 @@ const VehicleDetails = ({ isOpen = false, onToggle = () => { } }) => {
                 <div className="radio_main" style={{
                     marginTop: '20px'
                 }}>
-                    <NewCommonMultiFileUpload />
+                    <NewCommonMultiFileUpload onChange={(e) => onUpload('image_urls', e.target.files)} />
                 </div>
                     </>
                 )}
@@ -213,4 +208,4 @@ const VehicleDetails = ({ isOpen = false, onToggle = () => { } }) => {
     )
 }
 
-export default VehicleDetails
+export default WitnessVechicleForm

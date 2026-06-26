@@ -2,7 +2,7 @@ import React from 'react'
 import CommonInput from '../../../../components/common-input'
 import { WizardSection } from '../../../../components/WizardSection'
 import icon from '../../../../Assets/regular.svg'
-const OtherWitnessComponent = ({ isOpen = false, onToggle = () => { } }) => {
+const OtherWitnessComponent = ({ isOpen = false, onToggle = () => { }, data = {}, setField = () => {} }) => {
     return (
         <>
             <div className='other_Head_details_wrapper'>
@@ -39,7 +39,7 @@ const OtherWitnessComponent = ({ isOpen = false, onToggle = () => { } }) => {
                     marginBottom: '10px',
                     display: 'block'
                 }}>Behavior Observed</label>
-                <CommonInput label={'Describe actions, behavior, or anything unusual observed by witnesses or staff.'} multiline placeholder='Enter details' style={{
+                <CommonInput label={'Describe actions, behavior, or anything unusual observed by witnesses or staff.'} name="other_description" multiline placeholder='Enter details' onChange={(e) => setField('other_description', e.target.value)} style={{
                     height: '80px',
                     resize: 'none'
                 }} />

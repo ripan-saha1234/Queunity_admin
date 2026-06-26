@@ -3,59 +3,34 @@ import CommonInput from '../../../../components/common-input'
 import { ChoiceRadio } from '../../../../components/ChoiceRadio'
 import { WizardSection } from '../../../../components/WizardSection'
 import InputCommon from '../../../../components/input_common'
+import { genderOptions, suspectTypeOptions } from '../options'
 import icon from '../../../../Assets/svg2292.svg'
-const OtherSuspectForm = () => {
-    const [onSchoolGrounds, setonSchoolGrounds] = useState(true)
+const OtherSuspectForm = ({ data = {}, setField = () => {} }) => {
+    const onSchoolGrounds = data.was_suspect_on_school_ground !== false
+    const setOnSchoolGrounds = (val) => setField('was_suspect_on_school_ground', val)
     return (
         <>
             <div className="radio_main">
                 <label>Organization</label>
                 <CommonInput
-                    name="Organization"
+                    name="organization"
                     placeholder="Enter organization"
-                    value=""
+                    onChange={(e) => setField('organization', e.target.value)}
                 />
             </div>
             <div className="radio_main">
                 <label>Suspect Type <span>*</span></label>
                 <div className="radio_buttons_wrapper">
-                    <ChoiceRadio
-                        name="parent"
-                        label="Parent"
-                        value="parent"
-
-                    />
-                    <ChoiceRadio
-                        name="family_member"
-                        label="Family Member"
-                        value="family_member"
-
-                    />
-
-                    <ChoiceRadio
-                        name="staff"
-                        label="Staff"
-                        value="staff"
-
-                    />
-                    <ChoiceRadio
-                        name="community_parent"
-                        label="Community Parent"
-                        value="community_parent"
-
-                    />
-                    <ChoiceRadio
-                        name="contractor_visitor"
-                        label="Contractor/Visitor"
-                        value="contractor_visitor"
-
-                    />
-
-                    <ChoiceRadio
-                        name="online_person"
-                        label="Online Person"
-                        value="online_person"
-                    />
+                    {suspectTypeOptions.map((opt) => (
+                        <ChoiceRadio
+                            key={opt.value}
+                            name="suspect_type"
+                            label={opt.label}
+                            value={opt.value}
+                            checked={data.suspect_type === opt.value}
+                            onChange={(value) => setField('suspect_type', value)}
+                        />
+                    ))}
                 </div>
             </div>
 
@@ -72,7 +47,7 @@ const OtherSuspectForm = () => {
                         <CommonInput
                             name="suspect_name"
                             placeholder="Enter suspect name"
-                            value=""
+                            onChange={(e) => setField('suspect_name', e.target.value)}
                         />
                     </div>
 
@@ -86,7 +61,7 @@ const OtherSuspectForm = () => {
                                 }}
                                 name="age"
                                 type='number'
-                                value=""
+                                onChange={(e) => setField('age', e.target.value)}
                             />
                         </div>
 
@@ -95,7 +70,9 @@ const OtherSuspectForm = () => {
                             <InputCommon
                                 name="gender"
                                 placeholder="Select gender"
-                                value=""
+                                value={data.gender || ''}
+                                onChange={(e) => setField('gender', e.target.value)}
+                                options={genderOptions}
                                 type='select'
                             />
                         </div>
@@ -108,16 +85,26 @@ const OtherSuspectForm = () => {
                                 }}
                                 name="student_relationship"
                                 placeholder="Enter relationship to student"
-                                value=""
+                                onChange={(e) => setField('student_relationship', e.target.value)}
                             />
                         </div>
                         <div className="radio_main">
                             <label>Contact info</label>
                             <div className='phone_wrapper'>
-                                <select>
-                                    <option>+1</option>
+                                <select
+                                    value={data.contact_country_code || '+1'}
+                                    onChange={(e) => setField('contact_country_code', e.target.value)}
+                                >
+                                    <option value="+1">+1</option>
+                                    <option value="+91">+91</option>
+                                    <option value="+44">+44</option>
                                 </select>
-                                <input type='Enter contat number.' />
+                                <input
+                                    type='tel'
+                                    placeholder='Enter contact number'
+                                    value={data.contact_phone || ''}
+                                    onChange={(e) => setField('contact_phone', e.target.value)}
+                                />
                             </div>
                         </div>
                     </div>
@@ -127,9 +114,9 @@ const OtherSuspectForm = () => {
                         <CommonInput
                             name="know_suspect"
                             placeholder="Enter details"
-                            value=""
                             required
                             multiline={true}
+                            onChange={(e) => setField('know_suspect', e.target.value)}
                             style={{
                                 height: '90px',
                                 resize: 'none'
@@ -141,18 +128,18 @@ const OtherSuspectForm = () => {
                         <label>Was the suspect on school grounds? <span>*</span></label>
                         <div className="radio_buttons_wrapper">
                             <ChoiceRadio
-                                name="yes"
+                                name="was_suspect_on_school_ground"
                                 label="Yes"
                                 value="yes"
                                 checked={onSchoolGrounds}
-                                onChange={(() => setonSchoolGrounds(true))}
+                                onChange={(() => setOnSchoolGrounds(true))}
                             />
                             <ChoiceRadio
-                                name="no"
+                                name="was_suspect_on_school_ground"
                                 label="No"
                                 value="no"
                                 checked={!onSchoolGrounds}
-                                onChange={(() => setonSchoolGrounds(false))}
+                                onChange={(() => setOnSchoolGrounds(false))}
                             />
                         </div>
                     </div>
@@ -162,9 +149,9 @@ const OtherSuspectForm = () => {
                         <CommonInput
                             name="were_seen"
                             placeholder="Enter details"
-                            value=""
                             required
                             multiline={true}
+                            onChange={(e) => setField('were_seen', e.target.value)}
                             style={{
                                 height: '90px',
                                 resize: 'none'

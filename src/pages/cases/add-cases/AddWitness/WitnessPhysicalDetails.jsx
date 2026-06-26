@@ -3,7 +3,7 @@ import CommonInput from '../../../../components/common-input'
 import NewCommonMultiFileUpload from '../../../../components/NewCommonMultiFileUpload.jsx'
 import { WizardSection } from '../../../../components/WizardSection.jsx'
 import icon from '../../../../Assets/Layer_1.svg'
-const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
+const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { }, data = {}, setField = () => {}, onUpload = () => {} }) => {
     const [toggle, settoggle] = useState(false)
 
     return (
@@ -62,7 +62,8 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <CommonInput
                             name="height"
                             placeholder="Enter Height"
-                            value=""
+                            type="number"
+                            onChange={(e) => setField('height', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -75,7 +76,7 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <CommonInput
                             name="build"
                             placeholder="Enter build"
-                            value=""
+                            onChange={(e) => setField('build', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -89,7 +90,7 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <CommonInput
                             name="skin_tone"
                             placeholder="Enter skin tone"
-                            value=""
+                            onChange={(e) => setField('skin_tone', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -103,7 +104,7 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <CommonInput
                             name="clothing_type"
                             placeholder="Enter clothing type"
-                            value=""
+                            onChange={(e) => setField('clothing_type', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -117,7 +118,7 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <CommonInput
                             name="hair"
                             placeholder="Enter hair type"
-                            value=""
+                            onChange={(e) => setField('hair', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -131,7 +132,7 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <CommonInput
                             name="eyes"
                             placeholder="Enter eye color"
-                            value=""
+                            onChange={(e) => setField('eyes', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -144,8 +145,8 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <label>Mouth</label>
                         <CommonInput
                             name="mouth"
-                            value=""
                             placeholder='Lip piercing'
+                            onChange={(e) => setField('mouth', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -158,8 +159,8 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <label>Shoulders</label>
                         <CommonInput
                             name="shoulders"
-                            value=""
                             placeholder='Tattoos'
+                            onChange={(e) => setField('shoulders', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -172,8 +173,8 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <label>Hands and Arms</label>
                         <CommonInput
                             name="hands"
-                            value=""
                             placeholder='Tattoos'
+                            onChange={(e) => setField('hands', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -185,9 +186,9 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                     <div className="radio_main">
                         <label>Torso </label>
                         <CommonInput
-                            name="eyes"
-                            value=""
+                            name="torso"
                             placeholder='Muscular'
+                            onChange={(e) => setField('torso', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -200,8 +201,8 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <label>Legs  </label>
                         <CommonInput
                             name="legs"
-                            value=""
                             placeholder='Tattoos'
+                            onChange={(e) => setField('legs', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -214,8 +215,8 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <label>Feet  </label>
                         <CommonInput
                             name="feet"
-                            value=""
                             placeholder='Boots'
+                            onChange={(e) => setField('feet', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -228,8 +229,8 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <label>Accessories</label>
                         <CommonInput
                             name="accessories"
-                            value=""
                             placeholder='Present of belt'
+                            onChange={(e) => setField('accessories', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -242,8 +243,8 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                         <label>Additional Info</label>
                         <CommonInput
                             name="additional_info"
-                            value=""
                             placeholder='Tattoos'
+                            onChange={(e) => setField('additional_info', e.target.value)}
                             style={{
                                 height: '50px',
                                 borderRadius: '8px',
@@ -256,7 +257,7 @@ const WitnessPhysicalDetails = ({ isOpen = false, onToggle = () => { } }) => {
                 <div className="radio_main" style={{
                     marginTop: '20px'
                 }}>
-                    <NewCommonMultiFileUpload />
+                    <NewCommonMultiFileUpload onChange={(e) => onUpload('photo_urls', e.target.files)} />
                 </div>
                     </>
                 )}

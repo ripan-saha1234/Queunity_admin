@@ -2,8 +2,14 @@ import React from 'react'
 import CommonInput from '../../../../components/common-input'
 import { ChoiceRadio } from '../../../../components/ChoiceRadio'
 import InputCommon from '../../../../components/input_common'
+import {
+    gradeOptions,
+    incidentVisibilityOptions,
+    witnessReliabilityOptions,
+    relationshipToVictimOptions,
+} from '../options'
 
-const WitnessSchoolMateForm = () => {
+const WitnessSchoolMateForm = ({ data = {}, setField = () => {} }) => {
     return (
         <>
             <div className='grid_layout'>
@@ -12,7 +18,7 @@ const WitnessSchoolMateForm = () => {
                     <CommonInput
                         name="student_name"
                         placeholder="Enter student name"
-                        value=""
+                        onChange={(e) => setField('student_name', e.target.value)}
                         style={{
                             height: '45px',
                             resize: 'none'
@@ -24,11 +30,11 @@ const WitnessSchoolMateForm = () => {
                     <label>Grade <span>*</span></label>
                     <InputCommon
                         type='select'
-                        name="student_details"
+                        name="grade"
                         placeholder="Select grade"
-                        value=""
-                        multiline={true}
-                        
+                        value={data.grade || ''}
+                        onChange={(e) => setField('grade', e.target.value)}
+                        options={gradeOptions}
                     />
                 </div>
             </div>
@@ -37,32 +43,16 @@ const WitnessSchoolMateForm = () => {
             <div className="radio_main">
                 <label>Did the witness see the full incident or part of it? <span>*</span></label>
                 <div className="radio_buttons_wrapper">
-                    <ChoiceRadio
-                        name="Entire incident"
-                        label="Entire incident"
-                        value="Entire incident"
-
-                    />
-                    <ChoiceRadio
-                        name="Partially"
-                        label="Partially"
-                        value="Partially"
-
-                    />
-
-                    <ChoiceRadio
-                        name="Only heard about it"
-                        label="Only heard about it"
-                        value="Only heard about it"
-
-                    />
-
-                    <ChoiceRadio
-                        name="Not sure"
-                        label="Not sure"
-                        value="Not sure"
-
-                    />
+                    {incidentVisibilityOptions.map((opt) => (
+                        <ChoiceRadio
+                            key={opt.value}
+                            name="incident_visibility"
+                            label={opt.label}
+                            value={opt.value}
+                            checked={data.incident_visibility === opt.value}
+                            onChange={(value) => setField('incident_visibility', value)}
+                        />
+                    ))}
                 </div>
             </div>
 
@@ -70,41 +60,26 @@ const WitnessSchoolMateForm = () => {
             <div className="radio_main">
                 <label>Witness Reliability <span>*</span></label>
                 <div className="radio_buttons_wrapper">
-                    <ChoiceRadio
-                        name="High"
-                        label="High"
-                        value="High"
-
-                    />
-                    <ChoiceRadio
-                        name="Medium"
-                        label="Medium"
-                        value="Medium"
-
-                    />
-
-                    <ChoiceRadio
-                        name="Low"
-                        label="Low"
-                        value="Low"
-
-                    />
-
-                    <ChoiceRadio
-                        name="Unknown"
-                        label="Unknown"
-                        value="Unknown"
-                    />
+                    {witnessReliabilityOptions.map((opt) => (
+                        <ChoiceRadio
+                            key={opt.value}
+                            name="witness_reliability"
+                            label={opt.label}
+                            value={opt.value}
+                            checked={data.witness_reliability === opt.value}
+                            onChange={(value) => setField('witness_reliability', value)}
+                        />
+                    ))}
                 </div>
             </div>
 
             <div className="radio_main">
                 <label>Describe what the witness said, observed, or reported <span>*</span></label>
-                <InputCommon
-                    name="student_details"
+                <CommonInput
+                    name="observation_description"
                     placeholder="Enter details"
-                    value=""
                     multiline={true}
+                    onChange={(e) => setField('observation_description', e.target.value)}
                     style={{
                         height:'90px',
                         resize:'none'
@@ -115,42 +90,16 @@ const WitnessSchoolMateForm = () => {
             <div className="radio_main">
                 <label>Relationship to the victim <span>*</span></label>
                 <div className="radio_buttons_wrapper">
-                    <ChoiceRadio
-                        name="Classmate"
-                        label="Classmate"
-                        value="Classmate"
-
-                    />
-                    <ChoiceRadio
-                        name="Friend"
-                        label="Friend"
-                        value="Friend"
-
-                    />
-
-                    <ChoiceRadio
-                        name="Team member"
-                        label="Team member"
-                        value="Team member"
-
-                    />
-
-                    <ChoiceRadio
-                        name="Sibling"
-                        label="Sibling"
-                        value="Sibling"
-                    />
-
-                    <ChoiceRadio
-                        name="No relationship"
-                        label="No relationship"
-                        value="No relationship"
-                    />
-                    <ChoiceRadio
-                        name="Unknown"
-                        label="Unknown"
-                        value="Unknown"
-                    />
+                    {relationshipToVictimOptions.map((opt) => (
+                        <ChoiceRadio
+                            key={opt.value}
+                            name="relationship_to_victim"
+                            label={opt.label}
+                            value={opt.value}
+                            checked={data.relationship_to_victim === opt.value}
+                            onChange={(value) => setField('relationship_to_victim', value)}
+                        />
+                    ))}
                 </div>
             </div>
         </>

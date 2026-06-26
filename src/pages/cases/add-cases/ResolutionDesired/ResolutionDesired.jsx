@@ -2,9 +2,36 @@ import React from 'react'
 import './ResolutionDesired.css'
 import { WizardSection } from '../../../../components/WizardSection'
 import { ChoiceRadio } from '../../../../components/ChoiceRadio'
+import { useCaseForm } from '../../../../context/CaseFormContext'
 import icon from '../../../../Assets/Icon (7).svg'
 
+const RESOLUTION_OPTIONS = [
+    {
+        value: 'school_discretion',
+        title: 'School administration may handle it at their discretion.',
+        note: 'Note: Restorative circle or conference',
+    },
+    {
+        value: 'discipline_per_policy',
+        title: 'I want the student disciplined according to the school conduct policy.',
+        note: 'Note: No restorative justice required',
+    },
+    {
+        value: 'class_wide_intervention',
+        title: 'I do not want the student to be disciplined, but I would like a class-wide intervention (without identifying anyone).',
+        note: 'Note: School is doing an announcement to all the students (classroom or entire school)',
+    },
+    {
+        value: 'discipline_and_restorative',
+        title: 'I want the student to be disciplined and have a restorative circle.',
+        note: 'Note: Restorative circle & justice required',
+    },
+]
+
 const ResolutionDesired = () => {
+    const { caseData, setResolution } = useCaseForm()
+    const selected = caseData.resolution_desired
+
     return (
         <div className='resolution_desired_wrapper'>
                 <WizardSection
@@ -22,116 +49,35 @@ const ResolutionDesired = () => {
                         justifyContent: 'flex-start',
                         alignItems: 'start'
                     }}>
-                        <div style={{
-                            display:'flex',
-                            justifyContent:'flex-start',
-                            alignItems:'start',
-                       
-                        }}>
-                            <ChoiceRadio
-                                name="note"
-                              
-                                value="note"
-                            />
-                            <div style={{
-                                display:'flex',
-                                flexDirection:'column',
-                            }}>
-                                <h4 style={{
-                                    color:'rgba(20, 20, 20, 0.8)',
-                                    fontSize:'12px',
-                                    fontWeight:'500',
-                                    marginBottom:'5px'
-                                }}>School administration may handle it at their discretion.</h4>
-                                <small style={{
-                                    color:'rgba(20, 20, 20, 0.8)',
-                                    fontSize:'12px'
-                                }}>Note: Restorative circle or conference</small>
-                            </div>
-                        </div>
-
-                        <div style={{
-                            display: 'flex',
-                            justifyContent: 'flex-start',
-                            alignItems:'start'
-                        }}>
-                            <ChoiceRadio
-                                name="note"
-                              
-                                value="note"
-                            />
-                            <div style={{
+                        {RESOLUTION_OPTIONS.map((opt) => (
+                            <div key={opt.value} style={{
                                 display: 'flex',
-                                flexDirection: 'column',
+                                justifyContent: 'flex-start',
+                                alignItems: 'start',
                             }}>
-                                <h4 style={{
-                                    color: 'rgba(20, 20, 20, 0.8)',
-                                    fontSize: '12px',
-                                    fontWeight:'500',
-                                    marginBottom:'5px'
-                                }}>I want the student disciplined according to the school conduct policy.</h4>
-                                <small style={{
-                                    color: 'rgba(20, 20, 20, 0.8)',
-                                    fontSize: '12px'
-                                }}>Note: No restorative justice required</small>
+                                <ChoiceRadio
+                                    name="resolution_desired"
+                                    value={opt.value}
+                                    checked={selected === opt.value}
+                                    onChange={(value) => setResolution(value)}
+                                />
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                }}>
+                                    <h4 style={{
+                                        color: 'rgba(20, 20, 20, 0.8)',
+                                        fontSize: '12px',
+                                        fontWeight: '500',
+                                        marginBottom: '5px'
+                                    }}>{opt.title}</h4>
+                                    <small style={{
+                                        color: 'rgba(20, 20, 20, 0.8)',
+                                        fontSize: '12px'
+                                    }}>{opt.note}</small>
+                                </div>
                             </div>
-                        </div>
-
-
-                        <div style={{
-                            display: 'flex',
-                            justifyContent: 'flex-start',
-                            alignItems:'start'
-                        }}>
-                            <ChoiceRadio
-                                name="note"
-                              
-                                value="note"
-                            />
-                            <div style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                            }}>
-                                <h4 style={{
-                                    color: 'rgba(20, 20, 20, 0.8)',
-                                    fontSize: '12px',
-                                    fontWeight:'500',
-                                    marginBottom:'5px'
-                                }}>I do not want the student to be disciplined, but I would like a class-wide intervention (without identifying anyone).</h4>
-                                <small style={{
-                                    color: 'rgba(20, 20, 20, 0.8)',
-                                    fontSize: '12px'
-                                }}>Note: School is doing an announcement to all the students (classroom or entire school)</small>
-                            </div>
-                        </div>
-
-
-                        <div style={{
-                            display: 'flex',
-                            justifyContent: 'flex-start',
-                            alignItems:'start'
-                        }}>
-                            <ChoiceRadio
-                                name="note"
-                              
-                                value="note"
-                            />
-                            <div style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                            }}>
-                                <h4 style={{
-                                    color: 'rgba(20, 20, 20, 0.8)',
-                                    fontSize: '12px',
-                                    fontWeight:'500',
-                                    marginBottom:'5px'
-                                }}>I want the student to be disciplined and have a restorative circle.</h4>
-                                <small style={{
-                                    color: 'rgba(20, 20, 20, 0.8)',
-                                    fontSize: '12px'
-                                }}>Note: Restorative circle & justice required</small>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </div>

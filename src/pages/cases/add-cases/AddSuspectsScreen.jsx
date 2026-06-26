@@ -1,55 +1,61 @@
 import { useNavigate } from "react-router";
 import CommonButton from "../../../components/common-button";
 import SuspectCard from "./AddSuspectForm/SuspectCard";
+import { useCaseForm } from "../../../context/CaseFormContext";
+
+const RELATIONSHIP_LABELS = {
+    schoolmate: "Schoolmate",
+    external_student: "External",
+    other: "Other",
+};
+
+function buildSuspectDetails(suspect) {
+    if (suspect.do_you_know_the_suspect) {
+        const type = RELATIONSHIP_LABELS[suspect.suspect_relationship_type] || "Known";
+        const details = [{ label: "Type", value: type }];
+
+        if (suspect.suspect_relationship_type === "schoolmate" && suspect.schoolmate) {
+            details.push({ label: "Student Name", value: suspect.schoolmate.student_name || "-" });
+        } else if (suspect.suspect_relationship_type === "external_student" && suspect.external_student) {
+            details.push({ label: "Student Name", value: suspect.external_student.student_name || "-" });
+            details.push({ label: "School", value: suspect.external_student.school_name || "-" });
+        } else if (suspect.suspect_relationship_type === "other" && suspect.other) {
+            details.push({ label: "Suspect Name", value: suspect.other.suspect_name || "-" });
+            details.push({ label: "Organization", value: suspect.other.organization || "-" });
+        }
+        return details;
+    }
+
+    const details = [];
+    if (suspect.physical_details) {
+        details.push({
+            label: "Physical Details",
+            value: `Height - ${suspect.physical_details.height_cm || "-"}cm | Build - ${suspect.physical_details.build || "-"}`,
+        });
+    }
+    if (suspect.vehicle_details) {
+        details.push({
+            label: "Vehicle Details",
+            value: `Type - ${suspect.vehicle_details.vehicle_type || "-"}, Color - ${suspect.vehicle_details.color || "-"}`,
+        });
+    }
+    if (suspect.other_details?.description) {
+        details.push({ label: "Other Details", value: suspect.other_details.description });
+    }
+    return details;
+}
 
 export function AddSuspectsScreen() {
     const navigate = useNavigate()
-    const suspects = [
-        {
-            id: 1,
-            title: "Suspect #1",
-            status: "Known Suspect",
-            statusClass: "statusKnown_11",
-            details: [
-                { label: "Name", value: "Asasa" },
-                { label: "Type", value: "Schoolmate" },
-                { label: "Student Name", value: "Bidisha Bhowmick – Grade 8 – #ST34522" },
-            ],
-        },
-        {
-            id: 2,
-            title: "Suspect #2",
-            status: "Unknown Suspect",
-            statusClass: "statusUnknown_12",
-            details: [
-                { label: "Physical Details", value: "Height - 140cm | Build - Slim" },
-                { label: "Vehicle Details", value: "Type - Sedan, Color - Dark Blue" },
-                { label: "Other Details", value: "Lorem ipsum dolor sit amet..." },
-            ],
-        },
-        {
-            id: 3,
-            title: "Suspect #3",
-            status: "Known Suspect",
-            statusClass: "statusKnown_11",
-            details: [
-                { label: "Name", value: "Asasa" },
-                { label: "Type", value: "External" },
-                { label: "Student Name", value: "Bidisha Bhowmick – Grade 8 – #ST34522" },
-            ],
-        },
-        {
-            id: 4,
-            title: "Suspect #4",
-            status: "Known Suspect",
-            statusClass: "statusKnown_11",
-            details: [
-                { label: "Name", value: "Asasa" },
-                { label: "Type", value: "Other" },
-                { label: "Student Name", value: "Bidisha Bhowmick – Grade 8 – #ST34522" },
-            ],
-        },
-    ];
+    const { caseData, removeSuspect } = useCaseForm()
+    const suspects = (caseData.suspects || []).map((suspect, index) => ({
+        id: index + 1,
+        title: `Suspect #${index + 1}`,
+        status: suspect.do_you_know_the_suspect ? "Known Suspect" : "Unknown Suspect",
+        statusClass: suspect.do_you_know_the_suspect ? "statusKnown_11" : "statusUnknown_12",
+        details: buildSuspectDetails(suspect),
+    }));
+
     return (
         <div className="add-suspects-screen">
             <div className="add-suspects-card">
@@ -77,8 +83,15 @@ export function AddSuspectsScreen() {
 
             </div>
             <div className="suspect_cards_Wrapper">
-                {suspects?.map((suspect) => {
-                    return <SuspectCard suspect={suspect} />
+                {suspects?.map((suspect, index) => {
+                    return (
+                        <SuspectCard
+                            key={suspect.id}
+                            suspect={suspect}
+                            noedit
+                            onDelete={() => removeSuspect(index)}
+                        />
+                    )
                 })}
             </div>
 

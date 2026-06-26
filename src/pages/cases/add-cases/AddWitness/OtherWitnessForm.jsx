@@ -2,64 +2,32 @@ import CommonInput from '../../../../components/common-input'
 import { ChoiceRadio } from '../../../../components/ChoiceRadio'
 import { WizardSection } from '../../../../components/WizardSection'
 import InputCommon from '../../../../components/input_common'
+import { genderOptions, witnessTypeOptions, presentDuringIncidentOptions } from '../options'
 import icon from '../../../../Assets/svg2292.svg'
-const OtherWitnessForm = () => {
+const OtherWitnessForm = ({ data = {}, setField = () => {} }) => {
     return (
         <>
             <div className="radio_main">
                 <label>Organization</label>
                 <CommonInput
-                    name="Organization"
+                    name="organization"
                     placeholder="Enter organization"
-                    value=""
+                    onChange={(e) => setField('organization', e.target.value)}
                 />
             </div>
             <div className="radio_main">
                 <label>Witness Type <span>*</span></label>
                 <div className="radio_buttons_wrapper">
-                    <ChoiceRadio
-                        name="parent"
-                        label="Parent"
-                        value="parent"
-
-                    />
-                    <ChoiceRadio
-                        name="family_member"
-                        label="Family Member"
-                        value="family_member"
-
-                    />
-
-                    <ChoiceRadio
-                        name="staff"
-                        label="Staff"
-                        value="staff"
-
-                    />
-                    <ChoiceRadio
-                        name="community_parent"
-                        label="Community Parent"
-                        value="community_parent"
-
-                    />
-                    <ChoiceRadio
-                        name="contractor_visitor"
-                        label="Contractor/Visitor"
-                        value="contractor_visitor"
-
-                    />
-
-                    <ChoiceRadio
-                        name="online_person"
-                        label="Online Person"
-                        value="online_person"
-                    />
-
-                    <ChoiceRadio
-                        name="Stranger"
-                        label="Stranger"
-                        value="Stranger"
-                    />
+                    {witnessTypeOptions.map((opt) => (
+                        <ChoiceRadio
+                            key={opt.value}
+                            name="witness_type"
+                            label={opt.label}
+                            value={opt.value}
+                            checked={data.witness_type === opt.value}
+                            onChange={(value) => setField('witness_type', value)}
+                        />
+                    ))}
                 </div>
             </div>
 
@@ -73,9 +41,9 @@ const OtherWitnessForm = () => {
                     <div className="radio_main">
                         <label>Witness Name</label>
                         <CommonInput
-                            name="Witness_name"
+                            name="witness_name"
                             placeholder="Enter Witness name"
-                            value=""
+                            onChange={(e) => setField('witness_name', e.target.value)}
                         />
                     </div>
 
@@ -89,7 +57,7 @@ const OtherWitnessForm = () => {
                                 }}
                                 name="age"
                                 type='number'
-                                value=""
+                                onChange={(e) => setField('age', e.target.value)}
                             />
                         </div>
 
@@ -98,7 +66,9 @@ const OtherWitnessForm = () => {
                             <InputCommon
                                 name="gender"
                                 placeholder="Select gender"
-                                value=""
+                                value={data.gender || ''}
+                                onChange={(e) => setField('gender', e.target.value)}
+                                options={genderOptions}
                                 type='select'
                             />
                         </div>
@@ -111,16 +81,26 @@ const OtherWitnessForm = () => {
                                 }}
                                 name="student_relationship"
                                 placeholder="Enter relationship to student"
-                                value=""
+                                onChange={(e) => setField('student_relationship', e.target.value)}
                             />
                         </div>
                         <div className="radio_main">
                             <label>Contact info</label>
                             <div className='phone_wrapper'>
-                                <select>
-                                    <option>+1</option>
+                                <select
+                                    value={data.contact_country_code || '+1'}
+                                    onChange={(e) => setField('contact_country_code', e.target.value)}
+                                >
+                                    <option value="+1">+1</option>
+                                    <option value="+91">+91</option>
+                                    <option value="+44">+44</option>
                                 </select>
-                                <input type='Enter contat number.' />
+                                <input
+                                    type='tel'
+                                    placeholder='Enter contact number'
+                                    value={data.contact_phone || ''}
+                                    onChange={(e) => setField('contact_phone', e.target.value)}
+                                />
                             </div>
                         </div>
                     </div>
@@ -128,11 +108,11 @@ const OtherWitnessForm = () => {
                     <div className="radio_main">
                         <label>Explain how this witness is connected to the incident <span>*</span></label>
                         <CommonInput
-                            name="know_suspect"
+                            name="connection_to_incident"
                             placeholder="Enter details"
-                            value=""
                             required
                             multiline={true}
+                            onChange={(e) => setField('connection_to_incident', e.target.value)}
                             style={{
                                 height: '80px',
                                 resize: 'none'
@@ -143,36 +123,20 @@ const OtherWitnessForm = () => {
                     <div className="radio_main">
                         <label>Was this witness present during the incident? <span>*</span></label>
                         <div className="radio_buttons_wrapper">
-                            <ChoiceRadio
-                                name="yes"
-                                label="Yes"
-                                value="yes"
-                               
-                            />
-                            <ChoiceRadio
-                                name="Partially"
-                                label="Partially"
-                                value="Partially"
-                               
-                            />
-
-                            <ChoiceRadio
-                                name="no"
-                                label="No"
-                                value="no"
-                               
-                            />
-
-                            <ChoiceRadio
-                                name="Unknown"
-                                label="Unknown"
-                                value="Unknown"
-                               
-                            />
+                            {presentDuringIncidentOptions.map((opt) => (
+                                <ChoiceRadio
+                                    key={opt.value}
+                                    name="present_during_incident"
+                                    label={opt.label}
+                                    value={opt.value}
+                                    checked={data.present_during_incident === opt.value}
+                                    onChange={(value) => setField('present_during_incident', value)}
+                                />
+                            ))}
                         </div>
                     </div>
 
-                
+
                 </form>
             </WizardSection>
         </>

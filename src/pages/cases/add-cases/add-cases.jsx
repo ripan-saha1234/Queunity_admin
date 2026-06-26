@@ -21,12 +21,14 @@ import icon3 from '../../../Assets/Icon (3).svg'
 import icon4 from '../../../Assets/Icon (4).svg'
 import EvidenceForm from "./Evidence/EvidenceForm.jsx";
 import SummaryCaseModal from "../../../Modals/CaseModals/SummaryCaseModal";
+import { useCaseForm } from "../../../context/CaseFormContext";
 
 function AddCases() {
   // Steps are indexed from 0 to 5.
   const stepsCount = 6;
   const location = useLocation();
   const navigate = useNavigate();
+  const { caseData, updateBasic, submitCase, resetDraft } = useCaseForm();
 
   const initialStepIndex = useMemo(() => {
     const params = new URLSearchParams(location.search);
@@ -58,16 +60,17 @@ function AddCases() {
     if (stepIndex !== stepsCount - 1) setSummaryCaseOpen(false);
   }, [stepIndex, stepsCount]);
 
-  const [formData, setFormData] = useState({
-    caseName: "Case 11489",
-    school: "",
+  const [formData, setFormData] = useState(() => ({
+    caseName: caseData.case_name || "",
+    school: caseData.school_id || "",
+    schoolName: caseData.school_id === "other" ? caseData.school_name || "" : "",
     incidentDetails: "",
-    offenceCategory: "verbal_bullying",
-    offenceSubCategory: "teasing",
-    incidentDate: "2026-06-12",
-    incidentTime: "21:30",
-    locationMode: "",
-    locationDetails: {
+    offenceCategory: caseData.offence_category || "",
+    offenceSubCategory: caseData.offence_sub_category || "",
+    incidentDate: caseData.incident_date || "",
+    incidentTime: caseData.incident_time || "",
+    locationMode: caseData.location_mode || "",
+    locationDetails: caseData.location_details || {
       classroom: false,
       cafeteria: false,
       playground: false,
@@ -79,11 +82,11 @@ function AddCases() {
       library: false,
       other: false,
     },
-    description: "",
-    grade: "Grade 8",
-    anonymityLevel: "",
-    privacyLevel: "",
-  });
+    description: caseData.location_other_description || "",
+    grade: caseData.incident_grade || "",
+    anonymityLevel: caseData.anonymity_level || "",
+    privacyLevel: caseData.privacy_level || "",
+  }));
 
   const offenceCategoryOptions = useMemo(
     () => [
@@ -167,10 +170,50 @@ function AddCases() {
     buttons: headerButtons,
   });
 
+  // Keep the shared case-form store in sync with this step's local UI state so
+  // the final payload (and the separate suspect/witness routes) see the data.
+  useEffect(() => {
+    const schoolLabel =
+      schoolOptions.find((opt) => opt.value === formData.school)?.label || "";
+    const normalizedGrade = /^Grade\s+(\d+)/i.test(formData.grade || "")
+      ? `class_${formData.grade.match(/\d+/)[0]}`
+      : formData.grade;
+
+    updateBasic({
+      case_name: formData.caseName,
+      school_id: formData.school,
+      school_name:
+        formData.school === "other" ? formData.schoolName || "" : schoolLabel,
+      offence_category: formData.offenceCategory,
+      offence_sub_category: formData.offenceSubCategory,
+      incident_date: formData.incidentDate,
+      incident_time: formData.incidentTime,
+      location_mode: formData.locationMode,
+      location_details: formData.locationDetails,
+      location_other_description: formData.locationDetails.other
+        ? formData.description
+        : "",
+      incident_grade: normalizedGrade,
+      anonymity_level: formData.anonymityLevel,
+      privacy_level: formData.privacyLevel,
+    });
+    // updateBasic intentionally excluded from deps to avoid an update loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData, schoolOptions]);
+
+  const handleSubmitCase = async () => {
+    const response = await submitCase();
+    resetDraft();
+    return response;
+  };
+
   return (
     <div className="add-cases-page">
       {summaryCaseOpen && (
-        <SummaryCaseModal setsummaryCase={setSummaryCaseOpen} />
+        <SummaryCaseModal
+          setsummaryCase={setSummaryCaseOpen}
+          onSubmit={handleSubmitCase}
+        />
       )}
       <div className="add-cases-form">
         {stepIndex === 0 && (
@@ -323,13 +366,13 @@ function AddCases() {
                 />
                 <InputCommon
                   label="Date"
-                  name="incidentTime"
+                  name="incidentDate"
                   type="date"
-                  value={formData.incidentTime}
+                  value={formData.incidentDate}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      incidentTime: e.target.value,
+                      incidentDate: e.target.value,
                     }))
                   }
                   required
