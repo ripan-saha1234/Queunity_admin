@@ -229,8 +229,8 @@ export function CaseFormProvider({ children }) {
 
   const buildPayload = () => {
     return {
-      case_id: "CASE-11489",
-      case_number: 11489,
+      case_id: "ABC_1234",
+      case_number: "1234",
       case_name: caseData.case_name,
       school_id: caseData.school_id,
       school_name: caseData.school_name,
@@ -255,6 +255,7 @@ export function CaseFormProvider({ children }) {
       created_by: "admin",
       system_info: "Windows 10 / Chrome",
       system_ip: "192.168.1.10",
+      isactive: true
     };
   };
 

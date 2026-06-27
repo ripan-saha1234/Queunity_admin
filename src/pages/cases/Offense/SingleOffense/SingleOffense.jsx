@@ -4,14 +4,17 @@ import CommonTable from '../../../../components/common-table'
 import HeadLinks from '../../../../components/HeadLinks';
 import { useNavigate } from 'react-router-dom';
 import usePageHeader from '../../../../hooks/use-page-header';
+import AddSubCategoryModal from '../../../../Modals/OffenceModals/AddSubCategoryModal';
 const SingleOffense = () => {
     const [search, setSearch] = useState("");
+    const [addSubCategory, setAddSubCategory] = useState(false);
     const navigate = useNavigate();
     const headerButtons = useMemo(
         () => [
             {
                 type: "button",
                 text: "Add Sub-Category",
+                onClick: () => setAddSubCategory(true),
                 backgroundColor: "transparent",
                 textColor: "#141414",
                 borderColor: "#9FC53D",
@@ -90,6 +93,7 @@ const SingleOffense = () => {
     }, [search, tableData])
     return (
         <>
+            {addSubCategory && <AddSubCategoryModal setAddSubCategory={setAddSubCategory} />}
             <div className='offense_wrapper'>
                
                 <CommonTable
