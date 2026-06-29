@@ -1,11 +1,18 @@
 import { useContext, useEffect } from "react";
 import { globalContext } from "../context/context";
 
+// Stable references for omitted props. Without these, a page that does not pass
+// `buttons`/`subTitle` would get a brand-new array/object on every render, which
+// makes the effect below re-run constantly and flood the router-wrapping global
+// context with setState calls (starving react-router v7 navigation transitions).
+const EMPTY_BUTTONS = [];
+const EMPTY_SUBTITLE = {};
+
 function usePageHeader({
   title = "",
   breadcrumbs = [],
-  buttons = [],
-  subTitle = {},
+  buttons = EMPTY_BUTTONS,
+  subTitle = EMPTY_SUBTITLE,
 }) {
   const { setPageTitle, setBreadcrums, setButtonList, setSubTitle } =
     useContext(globalContext);
