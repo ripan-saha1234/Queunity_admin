@@ -11,6 +11,7 @@ const CommonTable = ({
   multipleReturnIntex1 = 0,
   multipleReturnIntex2 = 0,
   specificReturn = '',
+  pagination = null,
   actionButtons = [
     { label: 'Edit', action: 'edit' },
     { label: 'View', action: 'view' },
@@ -19,7 +20,8 @@ const CommonTable = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [actionMenu, setActionMenu] = useState({ isOpen: false, rowIndex: null });
-  const itemsPerPage = 10;
+  const itemsPerPage = pagination?.pageSize ?? 10;
+  const useServerPagination = pagination != null;
   const menuRef = useRef(null);
   const tableRef = useRef(null);
 
@@ -37,21 +39,32 @@ const CommonTable = ({
   }, []);
 
   useEffect(() => {
-    setCurrentPage(1);
-  }, [tableData?.length]);
+    if (!useServerPagination) {
+      setCurrentPage(1);
+    }
+  }, [tableData?.length, useServerPagination]);
 
-  // Pagination calculations
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = tableData?.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = useServerPagination
+    ? tableData
+    : tableData?.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalItems = tableData?.length || 0;
-  const totalPages = totalItems > 0 ? Math.ceil(totalItems / itemsPerPage) : 0;
+  const totalItems = useServerPagination
+    ? (pagination.totalItems ?? 0)
+    : (tableData?.length || 0);
+  const totalPages = useServerPagination
+    ? (pagination.totalPages ?? 0)
+    : (totalItems > 0 ? Math.ceil(totalItems / itemsPerPage) : 0);
+  const activePage = useServerPagination ? pagination.currentPage : currentPage;
 
-  // Function to handle page change
   const handlePageChange = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
+      if (useServerPagination) {
+        pagination.onPageChange(pageNumber);
+      } else {
+        setCurrentPage(pageNumber);
+      }
     }
   };
 
@@ -188,7 +201,7 @@ const CommonTable = ({
       </div>
 
       <Pagination
-        currentPage={currentPage}
+        currentPage={activePage}
         totalPages={totalPages}
         totalItems={totalItems}
         onPageChange={handlePageChange}

@@ -50,3 +50,25 @@ export async function addCase(payload) {
 
   return data;
 }
+
+// GET /get_all_cases_pagination — paginated list for the cases table.
+export async function getAllCasesPagination({ page = 1, pageSize = 10 } = {}) {
+  const params = new URLSearchParams({
+    page: String(page),
+    page_size: String(pageSize),
+  });
+
+  const response = await fetch(`${BASE_URL}/get_all_cases_pagination?${params}`, {
+    method: 'GET',
+    headers: authHeaders(),
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || data.detail || 'Failed to fetch cases');
+  }
+
+  return data;
+}
