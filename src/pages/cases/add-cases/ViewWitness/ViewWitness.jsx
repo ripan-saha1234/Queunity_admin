@@ -1,304 +1,138 @@
-import React, { useMemo } from 'react'
-import '../ViewSuspect/ViewSuspect.css'
-import { WizardSection } from '../../../../components/WizardSection'
-import { useParams } from 'react-router'
-import { useLocation, useNavigate } from 'react-router-dom'
-import usePageHeader from '../../../../hooks/use-page-header'
-import WitnessSchoolMate from './WitnessSchoolMate'
-import WitnessExternal from './WitnessExternal'
-import WitnessOtherDetails from './WitnessOtherDetails'
-import icon from '../../../../Assets/Layer_1.svg'
-import icon2 from '../../../../Assets/Frame.svg'
-import icon3 from '../../../../Assets/regular.svg'
+import { useMemo } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import usePageHeader from '../../../../hooks/use-page-header';
+import usePersonFromCase from '../../../../hooks/use-person-from-case';
+import { WitnessPersonContent } from '../../../../components/case-view/PersonViewSections';
+import '../ViewSuspect/ViewSuspect.css';
+
 const ViewWitness = () => {
-    const { id } = useParams()
-    const navigate = useNavigate()
-    const location = useLocation()
-    const returnStep = useMemo(() => {
-        const step = Number(new URLSearchParams(location.search).get("step"))
-        return Number.isFinite(step) ? step : 2
-    }, [location.search])
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    const searchParams = new URLSearchParams(location.search)
-    const isReadOnlyView = searchParams.get('readonly') === '1'
-    const submittedCaseId = searchParams.get('submittedCaseId')
+  const searchParams = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search],
+  );
+  const returnStep = useMemo(() => {
+    const step = Number(searchParams.get('step'));
+    return Number.isFinite(step) ? step : 2;
+  }, [searchParams]);
 
-    const backToWitnessListLink = submittedCaseId
-        ? `/cases/submitted-witness/${submittedCaseId}`
-        : `/cases/add-cases?step=${returnStep}`
+  const isReadOnlyView = searchParams.get('readonly') === '1';
+  const submittedCaseId = searchParams.get('submittedCaseId');
+  const { person, loading, error, caseTitle } = usePersonFromCase({
+    personType: 'witness',
+    personId: id,
+    submittedCaseId,
+  });
 
-    const backToSuspectListLink = submittedCaseId
-        ? `/cases/submitted-suspect/${submittedCaseId}`
-        : `/cases/add-cases?step=1`
+  const isKnown = person?.do_you_know_the_witness === true;
 
-    const backToViewCasesLink = submittedCaseId
-        ? `/cases/case-submitted/${submittedCaseId}`
-        : '/cases'
-    const viewSuspect = [
-        {
-            title: 'Health',
-            para: '140cm'
-        },
-        {
-            title: 'Build',
-            para: 'Slim'
-        },
-        {
-            title: 'Skin Tone',
-            para: 'Dark'
-        },
-        {
-            title: 'Clothing',
-            para: 'T-shirt & pants'
-        },
-        {
-            title: 'Hair',
-            para: 'Curly'
-        },
-        {
-            title: 'Eyes',
-            para: 'Blue'
-        },
-        {
-            title: 'Mouth',
-            para: 'Lip piercing'
-        },
-        {
-            title: 'Shoulders',
-            para: 'Tattoos'
-        },
-        {
-            title: 'Hands & Arms',
-            para: 'Bracelet on left wrist'
-        },
-        {
-            title: 'Torso',
-            para: 'Wearing blue jacket'
-        },
-        {
-            title: 'Legs',
-            para: 'Black jeans'
-        },
-        {
-            title: 'Feet',
-            para: 'White sneakers'
-        },
-        {
-            title: 'Accessories',
-            para: 'Silver watch, backpack'
-        },
-        {
-            title: 'Additional Info',
-            para: 'Black'
-        },
-    ]
+  const backToWitnessListLink = submittedCaseId
+    ? `/cases/submitted-witness/${submittedCaseId}`
+    : `/cases/add-cases?step=${returnStep}`;
 
-    const vechileDetails = [
-        {
-            title: 'Type',
-            para: 'Sedan'
-        },
-        {
-            title: 'Brand',
-            para: 'Toyota'
-        },
-        {
-            title: 'Model',
-            para: 'Camry 2020'
-        },
-        {
-            title: 'Color',
-            para: 'Dark Blue'
-        },
-        {
-            title: 'Marking',
-            para: 'Dent on rear bumper'
-        },
-        {
-            title: 'Damage',
-            para: 'Scratches on driver side'
-        },
-        {
-            title: 'Registration No.',
-            para: 'ABC-1234'
-        },
-        {
-            title: 'Additional Info',
-            para: 'Tinted windows, roof rack'
-        },
-        {
-            title: 'Direction of travel',
-            para: 'North'
-        },
-    ]
-    const headerButtons = useMemo(() => {
-        if (isReadOnlyView) {
-            return [
-                {
-                    type: 'button',
-                    text: 'Back to view cases',
-                    onClick: () => navigate(backToViewCasesLink),
-                    backgroundColor: '#95C63D',
-                    textColor: '#141414',
-                    borderColor: '#9FC53D',
-                },
-            ]
-        }
+  const backToViewCasesLink = submittedCaseId
+    ? `/cases/case-submitted/${submittedCaseId}`
+    : '/cases';
 
-        return [
-            {
-                type: "button",
-                text: "Back to Witness list",
-                onClick: () => navigate(backToWitnessListLink),
-                backgroundColor: "#95C63D",
-                textColor: "#141414",
-                borderColor: "#9FC53D",
-            },
-            {
-                type: "icon",
-                img: "/head-edit.svg",
-                backgroundColor: "#DBEAFE",
-                onClick: () => { },
-            },
-            {
-                type: "icon",
-                img: "/head-delete.svg",
-                backgroundColor: "#FFE2E2",
-                onClick: () => { },
-            },
+  const headerButtons = useMemo(() => {
+    if (isReadOnlyView) {
+      return [
+        {
+          type: 'button',
+          text: 'Back to view cases',
+          onClick: () => navigate(backToViewCasesLink),
+          backgroundColor: '#95C63D',
+          textColor: '#141414',
+          borderColor: '#9FC53D',
+        },
+      ];
+    }
+
+    return [
+      {
+        type: 'button',
+        text: 'Back to Witness list',
+        onClick: () => navigate(backToWitnessListLink),
+        backgroundColor: '#95C63D',
+        textColor: '#141414',
+        borderColor: '#9FC53D',
+      },
+      {
+        type: 'icon',
+        img: '/head-edit.svg',
+        backgroundColor: '#DBEAFE',
+        onClick: () => {},
+      },
+      {
+        type: 'icon',
+        img: '/head-delete.svg',
+        backgroundColor: '#FFE2E2',
+        onClick: () => {},
+      },
+    ];
+  }, [navigate, isReadOnlyView, backToWitnessListLink, backToViewCasesLink]);
+
+  usePageHeader({
+    title: `View Witness ${id}`,
+    breadcrumbs: submittedCaseId
+      ? [
+          { title: 'Cases', link: '/cases' },
+          { title: caseTitle, link: `/cases/case-submitted/${submittedCaseId}` },
+          { title: 'Witnesses', link: `/cases/submitted-witness/${submittedCaseId}` },
+          { title: `View Witness ${id}`, link: location.pathname + location.search },
         ]
-    }, [navigate, returnStep, isReadOnlyView, backToWitnessListLink, backToViewCasesLink])
-
-    usePageHeader({
-        title: `View Witness ${id}`,
-        breadcrumbs: [
-            { title: "Cases", link: "/cases" },
-            { title: "Add Case", link: "/cases/add-cases" },
-            { title: `View Witness ${id}`, link: `/cases/view-witness/${id}` },
+      : [
+          { title: 'Cases', link: '/cases' },
+          { title: 'Add Case', link: '/cases/add-cases' },
+          { title: `View Witness ${id}`, link: location.pathname + location.search },
         ],
-        buttons: headerButtons,
-    })
+    buttons: headerButtons,
+  });
 
+  if (loading) {
     return (
-        <>
-            <div className='view_suspect_wrapper'>
-                <div className='view_suspect_heading'>
-                    <div className='suspect_name_wrapper'>
-                        <img src='/Container (5).svg' />
-                        <h5>Witness #{id}</h5>
-                    </div>
-                    {id == 2 && <p>Unknown Witness</p>}
-                    {id != 2 && <p style={{
-                        background: 'rgba(0, 166, 62, 1)'
-                    }}>Known Witness</p>}
-                </div>
-                {id == 1 && <WitnessSchoolMate />}
-                {id == 3 && <WitnessExternal />}
-                {id == 4 && <WitnessOtherDetails />}
-                {id == 2 && <>
-                    <div style={{
-                        marginTop: '25px'
-                    }}>
-                        <WizardSection iconBg="linear-gradient(135deg, #FDC700 0%, #CF8A41 100%)
-                                             "
-                            icon={<img src={icon} alt="" />}
-                            title="Physical Details"
-                            subtitle="When & where it happened"></WizardSection>
-                        <div className='physical_details_box_wrapper'>
-                            {viewSuspect?.map((e) => (
-                                <div className='physical_details_box'>
-                                    <p>{e?.title}</p>
-                                    <small>{e?.para}</small>
-                                </div>
-                            ))}
-                        </div>
+      <div className="view_suspect_wrapper">
+        <div className="table1-no-data-container">
+          <p>Loading witness details...</p>
+        </div>
+      </div>
+    );
+  }
 
-                        <div className='photos_heading'>
-                            <img src={'/Icon.svg'} />
-                            <p>Photos (3)</p>
-                        </div>
+  if (error || !person) {
+    return (
+      <div className="view_suspect_wrapper">
+        <div className="table1-no-data-container">
+          <p>{error || 'Witness not found'}</p>
+        </div>
+      </div>
+    );
+  }
 
-                        <div className='photos_wrapper'>
-                            {[1, 2, 3].map(() => (
-                                <div className='photos_div'>
-                                    <img src='/download.svg' style={{
-                                        position: 'absolute',
-                                        top: '10px',
-                                        right: '10px'
-                                    }} />
-                                    <img className='photo_img' src='/94dc08df112e1477ea1563b951d9786788581d54.jpg' />
-                                </div>
-                            ))}
+  return (
+    <div className="view_suspect_wrapper">
+      <div className="view_suspect_heading">
+        <div className="suspect_name_wrapper">
+          <img src="/Container (5).svg" alt="" />
+          <h5>Witness #{id}</h5>
+        </div>
+        <p
+          style={
+            isKnown
+              ? { background: 'rgba(0, 166, 62, 1)' }
+              : undefined
+          }
+        >
+          {isKnown ? 'Known Witness' : 'Unknown Witness'}
+        </p>
+      </div>
 
-                        </div>
-                    </div>
-                    <div style={{
-                        marginTop: '25px'
-                    }}>
-                        <WizardSection iconBg=" linear-gradient(135deg, #5CEFBC 0%, #1AAF67 100%)"
-                            icon={<img src={icon2} alt="" />}
-                            title="Vehicle Details"
-                            subtitle="When & where it happened"></WizardSection>
+      <WitnessPersonContent witness={person} />
+    </div>
+  );
+};
 
-                        <div className='vehicle_details_box_wrapper'>
-                            {viewSuspect?.map((e) => (
-                                <div className='physical_details_box'>
-                                    <p>{e?.title}</p>
-                                    <small>{e?.para}</small>
-                                </div>
-                            ))}
-                            <div className='physical_details_box' style={{
-                                gridColumn: '1/-1',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '5px'
-                            }}>
-                                <p>{'Last seen location'}</p>
-                                <small>{'742 Maple Ridge Lane, Brookfield, WI 53005'}</small>
-                            </div>
-                        </div>
-
-                        <div className='photos_heading'>
-                            <img src={'/Icon.svg'} />
-                            <p>Photos (3)</p>
-                        </div>
-
-                        <div className='photos_wrapper'>
-                            {[1, 2].map(() => (
-                                <div className='photos_div'>
-                                    <img src='/download.svg' style={{
-                                        position: 'absolute',
-                                        top: '10px',
-                                        right: '10px'
-                                    }} />
-                                    <img className='photo_img' src='/c67bcce7f785c689b6d73522681c4db13204eca1.jpg' />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div style={{
-                        marginTop: '25px'
-                    }}>
-                        <WizardSection iconBg="linear-gradient(135deg, #62E2FF 0%, #5D78DA 100%)"
-                            icon={<img src={icon3} alt="" />}
-                            title="Other Details"
-                            subtitle="When & where it happened"></WizardSection>
-
-                        <div className='physical_details_box' style={{
-                            gridColumn: '1/-1',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '5px'
-                        }}>
-                            <p>{'Describe actions, behavior, or anything unusual observed by witnesses or staff.'}</p>
-                            <small>{'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'}</small>
-                        </div>
-                    </div>
-                </>
-                }
-            </div>
-        </>
-    )
-}
-
-export default ViewWitness
+export default ViewWitness;

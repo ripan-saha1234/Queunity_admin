@@ -1,108 +1,95 @@
-import React, { useMemo } from 'react'
-import CommonButton from "../../../../components/common-button.jsx";
+import { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import EvidenceCard from './EvidenceCard.jsx';
-import './Evidence.css'
+import './Evidence.css';
 import { WizardSection } from '../../../../components/WizardSection.jsx';
-import icon from '../../../../Assets/Icon (6).svg'
+import icon from '../../../../Assets/Icon (6).svg';
 import usePageHeader from '../../../../hooks/use-page-header.jsx';
+import useCaseDetails from '../../../../hooks/use-case-details.jsx';
+import { getCaseDisplayTitle, mapEvidenceToCards } from '../../../../utils/caseDisplay';
+
 const AllEvidence = () => {
-    const navigate = useNavigate();
-    const { id } = useParams()
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { caseData, loading, error } = useCaseDetails(id);
 
-    const backToViewCasesLink = id
-        ? `/cases/case-submitted/${id}`
-        : '/cases'
+  const displayTitle = getCaseDisplayTitle(caseData) || id || '';
+  const evidenceData = useMemo(
+    () => mapEvidenceToCards(caseData?.evidence),
+    [caseData?.evidence],
+  );
 
-    const headerButtons = useMemo(
-        () => [
-            {
-                type: 'button',
-                text: 'Back to view cases',
-                onClick: () => navigate(backToViewCasesLink),
-                backgroundColor: '#95C63D',
-                textColor: '#141414',
-                borderColor: '#9FC53D',
-            },
-        ],
-        [navigate, backToViewCasesLink],
-    )
+  const backToViewCasesLink = id ? `/cases/case-submitted/${id}` : '/cases';
 
-    usePageHeader({
-        title: `Evidence`,
-        breadcrumbs: [
-            { title: "Cases", link: "/cases" },
-            { title: "2025AWO77#", link: `/cases/case-submitted/${id}` },
-            { title: "Evidence", link: `/cases/submitted-evidence/${id}` },
-        ],
-        buttons: headerButtons,
-    })
-    const evidenceData = [
-        {
-            id: 1,
-            title: "Evidence #1",
-            img: '/Image (Vehicle 2).png',
-            details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do...'
-        },
-        {
-            id: 2,
-            title: "Evidence #2",
-            img: '/Image (Vehicle 2).png',
-            details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do...'
+  const headerButtons = useMemo(
+    () => [
+      {
+        type: 'button',
+        text: 'Back to view cases',
+        onClick: () => navigate(backToViewCasesLink),
+        backgroundColor: '#95C63D',
+        textColor: '#141414',
+        borderColor: '#9FC53D',
+      },
+    ],
+    [navigate, backToViewCasesLink],
+  );
 
-        },
-        {
-            id: 3,
-            title: "Evidence #3",
-            img: '/Image (Vehicle 2).png',
-            details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do...'
+  usePageHeader({
+    title: 'Evidence',
+    breadcrumbs: [
+      { title: 'Cases', link: '/cases' },
+      { title: displayTitle, link: `/cases/case-submitted/${id}` },
+      { title: 'Evidence', link: `/cases/submitted-evidence/${id}` },
+    ],
+    buttons: headerButtons,
+  });
 
-        },
-        {
-            id: 4,
-            title: "Evidence #4",
-            img: '/Image (Vehicle 2).png',
-            details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do...'
-
-        },
-    ];
+  if (loading) {
     return (
-        <>
-            <div className="add-suspects-screen">
-                <div className="add-suspects-card">
-                    <div className="add-suspects-card-left">
-                        <WizardSection
-                            iconBg="linear-gradient(135deg, #06B6D4 0%, #2563EB 100%)"
-                            icon={<img src={icon} alt="" />}
-                            title="Evidence"
-                            subtitle={`${evidenceData.length} Evidences found`}
-                        >
-                        </WizardSection>
+      <div className="add-suspects-screen">
+        <div className="table1-no-data-container">
+          <p>Loading evidence...</p>
+        </div>
+      </div>
+    );
+  }
 
-                    </div>
+  if (error) {
+    return (
+      <div className="add-suspects-screen">
+        <div className="table1-no-data-container">
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
 
-                    {/* <div className="add-suspects-card-right">
-                        <CommonButton
-                            text="Add Evidence"
-                            img=""
-                            backgroundColor="transparent"
-                            color="#141414"
-                            borderColor="#95C63D"
-                            onClick={() => { navigate('/cases/add-evidence') }}
-                        />
-                    </div> */}
+  return (
+    <div className="add-suspects-screen">
+      <div className="add-suspects-card">
+        <div className="add-suspects-card-left">
+          <WizardSection
+            iconBg="linear-gradient(135deg, #06B6D4 0%, #2563EB 100%)"
+            icon={<img src={icon} alt="" />}
+            title="Evidence"
+            subtitle={`${evidenceData.length} Evidences found`}
+          />
+        </div>
+      </div>
+      <div className="all_evidence_cards_wrapper">
+        {evidenceData.length > 0 ? (
+          evidenceData.map((evidence) => (
+            <EvidenceCard key={evidence.id} evidence={evidence} />
+          ))
+        ) : (
+          <div className="table1-no-data-container">
+            <p>No evidence recorded</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
-
-                </div>
-                <div className="all_evidence_cards_wrapper">
-                    {evidenceData?.map((evidence) => {
-                        return <EvidenceCard evidence={evidence} />
-                    })}
-                </div>
-
-            </div>
-        </>
-    )
-}
-
-export default AllEvidence
+export default AllEvidence;

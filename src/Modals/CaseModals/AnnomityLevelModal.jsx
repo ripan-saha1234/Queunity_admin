@@ -1,25 +1,27 @@
-import React from 'react'
+import React from 'react';
+import { getAnonymityLabel } from '../../utils/caseDisplay';
 
-const AnnomityLevelModal = ({ setmodalIsOpen }) => {
+const AnnomityLevelModal = ({ setmodalIsOpen, value }) => {
   return (
-    <>
-          <div className='modal_wrapper'>
-              <div className='modal_body'>
-                  <div className='modal_head'>
-                      <h5>Anonymity Level</h5>
-                      <i onClick={(() => setmodalIsOpen(''))} class="fa-solid fa-xmark"></i>
-                  </div>
-                  
-                  <p style={{
-                      color:'rgba(20, 20, 20, 0.8)',
-                      marginTop:'15px',
-                      fontWeight:'500'
-                  }}>Complete anonymous</p>
-               
-              </div>
-          </div>
-    </>
-  )
-}
+    <div className="modal_wrapper">
+      <div className="modal_body">
+        <div className="modal_head">
+          <h5>Anonymity Level</h5>
+          <i onClick={() => setmodalIsOpen('')} className="fa-solid fa-xmark" />
+        </div>
 
-export default AnnomityLevelModal
+        <p
+          style={{
+            color: 'rgba(20, 20, 20, 0.8)',
+            marginTop: '15px',
+            fontWeight: '500',
+          }}
+        >
+          {getAnonymityLabel(value)}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default AnnomityLevelModal;

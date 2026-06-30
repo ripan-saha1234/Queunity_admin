@@ -51,7 +51,23 @@ export async function addCase(payload) {
   return data;
 }
 
-// GET /get_all_cases_pagination — paginated list for the cases table.
+// GET /get_allcases/{case_id} — full case details for the submitted case view.
+export async function getCaseById(caseId) {
+  const response = await fetch(`${BASE_URL}/get_allcases/${encodeURIComponent(caseId)}`, {
+    method: 'GET',
+    headers: authHeaders(),
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || data.detail || 'Failed to fetch case details');
+  }
+
+  return data;
+}
+
 export async function getAllCasesPagination({ page = 1, pageSize = 10 } = {}) {
   const params = new URLSearchParams({
     page: String(page),
