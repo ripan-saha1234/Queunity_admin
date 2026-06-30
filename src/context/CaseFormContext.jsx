@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { addCase, uploadImage } from "../api/cases";
+import { generateCaseIdentifiers } from "../utils/randomId";
 
 const DRAFT_KEY = "queunity_add_case_draft_v3";
 
@@ -228,9 +229,11 @@ export function CaseFormProvider({ children }) {
   };
 
   const buildPayload = () => {
+    const { case_id, case_number } = generateCaseIdentifiers();
+
     return {
-      case_id: "ABC_1234",
-      case_number: "1234",
+      case_id,
+      case_number,
       case_name: caseData.case_name,
       school_id: caseData.school_id,
       school_name: caseData.school_name,

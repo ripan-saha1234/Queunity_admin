@@ -1,6 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import usePageHeader from "../../../hooks/use-page-header";
+import { useToast } from "../../../components/toast/ToastProvider";
+import { addSchool, validateSchoolForm } from "../../../api/school";
+import { uploadImage } from "../../../api/cases";
 import InputCommon from "../../../components/input_common";
 import NewCommonMultiFileUpload from "../../../components/NewCommonMultiFileUpload";
 import { WizardSection } from "../../../components/WizardSection";
@@ -11,25 +14,29 @@ import "./add-schools.css";
 
 function AddSchools() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
+  const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
-    schoolName: "Elite High School",
-    schoolType: "primary",
-    schoolCategory: "public",
-    facultyCount: "20",
-    studentCount: "400",
-    country: "us",
-    addressLine1: "1234 Lorem Street",
-    addressLine2: "Card Square",
-    landmark: "Near Lorem Park",
-    city: "Card Square",
-    state: "s1",
-    zip: "78960",
-    principalFirst: "Arpa",
-    principalLast: "Sengupta",
-    principalEmail: "bidishabhowmick@gmail.com",
-    phoneCode: "+1",
-    principalPhone: "923 245 6980",
+    schoolName: "",
+    schoolType: "",
+    schoolCategory: "",
+    facultyCount: "",
+    studentCount: "",
+    country: "",
+    addressLine1: "",
+    addressLine2: "",
+    landmark: "",
+    city: "",
+    state: "",
+    zip: "",
+    principalFirst: "",
+    principalLast: "",
+    principalEmail: "",
+    phoneCode: "",
+    principalPhone: "",
+    logoFile: null,
+    schoolLogoUrl: "",
   });
 
   useEffect(() => {
@@ -60,6 +67,42 @@ function AddSchools() {
     [],
   );
 
+  const handleAddSchool = useCallback(async () => {
+    const validationError = validateSchoolForm(form);
+    if (validationError) {
+      showToast(validationError, "error");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      let schoolLogoUrl = form.schoolLogoUrl || "";
+
+      if (form.logoFile) {
+        schoolLogoUrl = await uploadImage(form.logoFile);
+      }
+
+      const countryLabel =
+        countryOptions.find((opt) => opt.value === form.country)?.label || form.country;
+      const stateLabel =
+        stateOptions.find((opt) => opt.value === form.state)?.label || form.state;
+
+      const response = await addSchool({
+        ...form,
+        schoolLogoUrl,
+        countryLabel,
+        stateLabel,
+      });
+
+      showToast(response?.message || "School added successfully", "success");
+      navigate("/schools");
+    } catch (error) {
+      showToast(error?.message || "Failed to add school", "error");
+    } finally {
+      setSubmitting(false);
+    }
+  }, [form, navigate, showToast, countryOptions, stateOptions]);
+
   const headerButtons = useMemo(
     () => [
       {
@@ -69,19 +112,19 @@ function AddSchools() {
         backgroundColor: "transparent",
         textColor: "#141414",
         borderColor: "transparent",
-      
+        disabled: submitting,
       },
       {
         type: "button",
-        text: "Add",
-        onClick: () => navigate("/schools"),
+        text: submitting ? "Adding..." : "Add",
+        onClick: handleAddSchool,
         backgroundColor: "#95C63D",
         textColor: "#141414",
         borderColor: "#9FC53D",
-        
+        disabled: submitting,
       },
     ],
-    [navigate],
+    [navigate, handleAddSchool, submitting],
   );
 
   usePageHeader({
@@ -114,7 +157,12 @@ function AddSchools() {
 
             <div className="radio_main" style={{ marginTop: 20 }}>
               <label>Upload School Logo</label>
-              <NewCommonMultiFileUpload />
+              <NewCommonMultiFileUpload
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  updateField("logoFile", file);
+                }}
+              />
             </div>
 
             <div>

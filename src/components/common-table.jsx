@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import '../css/common-table.css';
+import Pagination from './pagination';
 
 const CommonTable = ({
   tableData,
@@ -35,13 +36,17 @@ const CommonTable = ({
     };
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [tableData?.length]);
+
   // Pagination calculations
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = tableData?.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(tableData?.length / itemsPerPage);
   const totalItems = tableData?.length || 0;
+  const totalPages = totalItems > 0 ? Math.ceil(totalItems / itemsPerPage) : 0;
 
   // Function to handle page change
   const handlePageChange = (pageNumber) => {
@@ -50,11 +55,6 @@ const CommonTable = ({
     }
   };
 
-  // Calculate the range text (e.g., "1-10 of 25")
-  const startRange = indexOfFirstItem + 1;
-  const endRange = Math.min(indexOfLastItem, totalItems);
-  const rangeText = `${startRange}-${endRange} of ${totalItems}`;
-
   // Toggle action menu with position calculation
   const toggleActionMenu = (rowIndex, event) => {
     event.stopPropagation();
@@ -62,42 +62,6 @@ const CommonTable = ({
       isOpen: prev.rowIndex === rowIndex ? !prev.isOpen : true,
       rowIndex: prev.rowIndex === rowIndex && prev.isOpen ? null : rowIndex
     }));
-  };
-
-  // Generate pagination numbers
-  const getPaginationNumbers = () => {
-    const numbers = [];
-    const maxVisible = 5;
-
-    if (totalPages <= maxVisible) {
-      for (let i = 1; i <= totalPages; i++) {
-        numbers.push(i);
-      }
-    } else {
-      if (currentPage <= 3) {
-        for (let i = 1; i <= 4; i++) {
-          numbers.push(i);
-        }
-        numbers.push('...');
-        numbers.push(totalPages);
-      } else if (currentPage >= totalPages - 2) {
-        numbers.push(1);
-        numbers.push('...');
-        for (let i = totalPages - 3; i <= totalPages; i++) {
-          numbers.push(i);
-        }
-      } else {
-        numbers.push(1);
-        numbers.push('...');
-        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-          numbers.push(i);
-        }
-        numbers.push('...');
-        numbers.push(totalPages);
-      }
-    }
-
-    return numbers;
   };
 
   const renderCellContent = (item, header, rowIndex) => {
@@ -223,44 +187,12 @@ const CommonTable = ({
         )}
       </div>
 
-      {totalPages > 1 && (
-        <div className="modern-pagination">
-          <div className="pagination-controls">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              className="pagination-nav-button"
-              disabled={currentPage === 1}
-            >
-              <svg width="6" height="10" viewBox="0 0 6 10" fill="none">
-                <path d="M5 1L1 5L5 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-
-            <div className="pagination-numbers">
-              {getPaginationNumbers().map((number, index) => (
-                <button
-                  key={index}
-                  onClick={() => typeof number === 'number' ? handlePageChange(number) : null}
-                  className={`pagination-number ${currentPage === number ? 'active' : ''} ${typeof number !== 'number' ? 'ellipsis' : ''}`}
-                  disabled={typeof number !== 'number'}
-                >
-                  {number}
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              className="pagination-nav-button"
-              disabled={currentPage === totalPages}
-            >
-              <svg width="6" height="10" viewBox="0 0 6 10" fill="none">
-                <path d="M1 1L5 5L1 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      )}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={totalItems}
+        onPageChange={handlePageChange}
+      />
 
     </div>
   );
