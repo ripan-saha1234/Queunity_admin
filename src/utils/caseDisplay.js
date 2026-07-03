@@ -93,9 +93,20 @@ export function formatIncidentTime(timeStr) {
   return `${hour12}:${String(minutes).padStart(2, '0')} ${period}`;
 }
 
-export function formatCreatedAt(isoString) {
-  if (!isoString) return { date: '-', time: '-' };
-  const date = new Date(isoString);
+export function formatCreatedAt(value) {
+  if (!value) return { date: '-', time: '-' };
+
+  const trimmed = String(value).trim();
+  const [datePart, timePart] = trimmed.split(/\s+/);
+
+  if (datePart && timePart && /^\d{4}-\d{2}-\d{2}$/.test(datePart)) {
+    return {
+      date: formatIncidentDate(datePart),
+      time: formatIncidentTime(timePart),
+    };
+  }
+
+  const date = new Date(trimmed);
   if (Number.isNaN(date.getTime())) return { date: '-', time: '-' };
 
   const day = String(date.getDate()).padStart(2, '0');

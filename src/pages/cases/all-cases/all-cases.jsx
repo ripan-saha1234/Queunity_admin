@@ -5,32 +5,19 @@ import usePageHeader from "../../../hooks/use-page-header";
 import CommonTable from "../../../components/common-table";
 import { useToast } from "../../../components/toast/ToastProvider";
 import ConfirmDeleteModal from "../../../Modals/StaffModals/ConfirmDeleteModal";
+import { formatCreatedAt } from "../../../utils/caseDisplay";
 import "./all-cases.css";
 
 const PAGE_SIZE = 10;
 
-function formatDate(dateStr) {
-  if (!dateStr?.trim()) return "-";
-  const [year, month, day] = dateStr.split("-");
-  if (!year || !month || !day) return dateStr;
-  return `${day}/${month}/${year}`;
-}
-
-function formatTime(timeStr) {
-  if (!timeStr?.trim()) return "-";
-  const [hours, minutes] = timeStr.split(":").map(Number);
-  if (Number.isNaN(hours) || Number.isNaN(minutes)) return timeStr;
-  const period = hours >= 12 ? "PM" : "AM";
-  const hour12 = hours % 12 || 12;
-  return `${hour12}:${String(minutes).padStart(2, "0")} ${period}`;
-}
-
 function mapCaseToRow(item) {
+  const { date, time } = formatCreatedAt(item.created_at);
+
   return {
     caseId: item.case_id,
     offense: item.offence_category?.trim() || "-",
-    date: formatDate(item.incident_date),
-    time: formatTime(item.incident_time),
+    date,
+    time,
     status: item.status || "-",
   };
 }

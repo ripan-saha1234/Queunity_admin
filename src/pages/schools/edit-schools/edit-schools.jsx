@@ -46,7 +46,11 @@ function EditSchools() {
   const { schoolId } = useParams();
   const { showToast } = useToast();
   const [form, setForm] = useState(EMPTY_FORM);
-  const [schoolMeta, setSchoolMeta] = useState({ created_at: "", isactive: true });
+  const [schoolMeta, setSchoolMeta] = useState({
+    school_id: "",
+    created_at: "",
+    isactive: true,
+  });
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -96,6 +100,7 @@ function EditSchools() {
         if (cancelled) return;
 
         setSchoolMeta({
+          school_id: data.school_id || schoolId,
           created_at: data.created_at || "",
           isactive: data.isactive ?? true,
         });

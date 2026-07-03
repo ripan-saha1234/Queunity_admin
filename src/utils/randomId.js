@@ -83,3 +83,15 @@ export function generateOffenseId() {
   const num = generateRandomNumber(1000, 99999);
   return `OFF-${num}`;
 }
+
+/**
+ * Generates sub_category_id for offense_subcategories payload.
+ * Format: sub-category-110
+ *
+ * Integrated in:
+ * - src/api/offence.js → buildSubCategoryPayload()
+ */
+export function generateSubCategoryId() {
+  const num = generateRandomNumber(100, 99999);
+  return `sub-category-${num}`;
+}

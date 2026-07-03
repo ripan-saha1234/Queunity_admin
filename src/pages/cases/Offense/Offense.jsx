@@ -21,7 +21,7 @@ const Offense = () => {
   const { showToast } = useToast();
   const [search, setSearch] = useState('');
   const [addOffense, setaddOffense] = useState(false);
-  const [editOffense, seteditOffense] = useState(false);
+  const [editOffenseId, setEditOffenseId] = useState('');
   const [page, setPage] = useState(1);
   const [offenses, setOffenses] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -83,6 +83,30 @@ const Offense = () => {
       cancelled = true;
     };
   }, [page, loadOffences]);
+
+  const handleOffenseUpdated = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await loadOffences(page);
+    } catch (err) {
+      showToast(err?.message || 'Failed to refresh offenses', 'error');
+    } finally {
+      setRefreshing(false);
+    }
+  }, [loadOffences, page, showToast]);
+
+  const editOffenseMeta = useMemo(() => {
+    const item = offenses.find((row) => row.offense_id === editOffenseId);
+    if (!item) return null;
+
+    return {
+      offenseName: item.offense_name || '',
+      case_assigned_count: item.case_assigned_count ?? 0,
+      system_info: item.system_info ?? '',
+      created_at: item.created_at,
+      isactive: item.isactive ?? true,
+    };
+  }, [offenses, editOffenseId]);
 
   const handleOffenseAdded = useCallback(async () => {
     setPage(1);
@@ -217,7 +241,14 @@ const Offense = () => {
           onSuccess={handleOffenseAdded}
         />
       )}
-      {editOffense && <EditOffenceModal seteditOffence={seteditOffense} />}
+      {editOffenseId && editOffenseMeta ? (
+        <EditOffenceModal
+          offenseId={editOffenseId}
+          offenseMeta={editOffenseMeta}
+          onClose={() => setEditOffenseId('')}
+          onSuccess={handleOffenseUpdated}
+        />
+      ) : null}
       <div className="offense_wrapper offense_wrapper--relative">
         {loading && offenses.length === 0 ? (
           <div className="table1-no-data-container">
@@ -240,7 +271,7 @@ const Offense = () => {
                   navigate(`/single-offense/${id}`);
                 }
                 if (action === 'edit') {
-                  seteditOffense(true);
+                  setEditOffenseId(id);
                 }
                 if (action === 'delete') {
                   setDeleteOffenseId(id);

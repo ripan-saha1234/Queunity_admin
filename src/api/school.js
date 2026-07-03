@@ -12,7 +12,14 @@ function authHeaders(extra = {}) {
 }
 
 function toApiDateTime(date = new Date()) {
-  return date.toISOString().slice(0, 19);
+  if (date instanceof Date) return date.toISOString();
+  if (typeof date === 'number') return new Date(date).toISOString();
+  if (typeof date === 'string' && date.trim()) {
+    const parsed = new Date(date);
+    if (!Number.isNaN(parsed.getTime())) return parsed.toISOString();
+    return date.trim();
+  }
+  return new Date().toISOString();
 }
 
 // Maps the add-school form state to the POST /add_school payload.
@@ -44,6 +51,7 @@ export function buildSchoolPayload(form) {
     },
     created_at: now,
     updated_at: now,
+    isactive: true,
   };
 }
 
@@ -100,11 +108,20 @@ export function mapApiSchoolToForm(school, { countryOptions = [], stateOptions =
 
 export function buildSchoolUpdatePayload(form, meta = {}) {
   const payload = buildSchoolPayload(form);
+  const now = toApiDateTime();
 
   return {
-    ...payload,
-    created_at: meta.created_at ?? payload.created_at,
-    updated_at: toApiDateTime(),
+    school_id: meta.school_id || '',
+    school_name: payload.school_name,
+    school_logo_url: payload.school_logo_url,
+    school_type: payload.school_type,
+    school_category: payload.school_category,
+    faculty_count: payload.faculty_count,
+    student_count: payload.student_count,
+    address: payload.address,
+    principal: payload.principal,
+    created_at: meta.created_at ? toApiDateTime(meta.created_at) : payload.created_at,
+    updated_at: now,
     isactive: meta.isactive ?? true,
   };
 }
@@ -201,7 +218,10 @@ export async function getSchoolById(schoolId) {
 
 // PUT /update_school/{school_id} — update an existing school.
 export async function updateSchool(schoolId, form, meta = {}) {
-  const payload = buildSchoolUpdatePayload(form, meta);
+  const payload = buildSchoolUpdatePayload(form, {
+    ...meta,
+    school_id: meta.school_id || schoolId,
+  });
 
   const response = await fetch(
     `${BASE_URL}/update_school/${encodeURIComponent(schoolId)}`,
