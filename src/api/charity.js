@@ -57,15 +57,70 @@ export function validateCharityForm(form) {
   if (!form.charityName?.trim()) return 'Charity name is required';
   if (!form.description?.trim()) return 'Description is required';
   if (!form.charityCategory) return 'Charity category is required';
-  if (!form.country) return 'Country is required';
+  if (!form.country && !form.countryLabel?.trim()) return 'Country is required';
   if (!form.addressLine1?.trim()) return 'Address line 1 is required';
   if (!form.city?.trim()) return 'City is required';
-  if (!form.state) return 'State is required';
+  if (!form.state && !form.stateLabel?.trim()) return 'State is required';
   if (!form.zip?.trim()) return 'Zip code is required';
   if (!form.contactFirst?.trim()) return 'Contact first name is required';
   if (!form.contactLast?.trim()) return 'Contact last name is required';
   if (!form.contactEmail?.trim()) return 'Contact email is required';
   return null;
+}
+
+export function mapApiCharityToForm(charity, { countryOptions = [], stateOptions = [] } = {}) {
+  const address = charity.address || {};
+  const contact = charity.contact_person || {};
+
+  const countryMatch = countryOptions.find(
+    (opt) => opt.label === address.country || opt.value === address.country,
+  );
+  const stateMatch = stateOptions.find(
+    (opt) => opt.label === address.state || opt.value === address.state,
+  );
+
+  return {
+    charityName: charity.charity_name || '',
+    charityType: charity.charity_type || 'non_profit',
+    charityCategory: charity.charity_category || '',
+    memberCount: charity.member_count != null ? String(charity.member_count) : '',
+    beneficiaryCount:
+      charity.beneficiary_count != null ? String(charity.beneficiary_count) : '',
+    country: countryMatch?.value || '',
+    countryLabel: address.country || '',
+    addressLine1: address.address_line1 || '',
+    addressLine2: address.address_line2 || '',
+    landmark: address.landmark || '',
+    city: address.city || '',
+    state: stateMatch?.value || '',
+    stateLabel: address.state || '',
+    zip: address.zip || '',
+    contactFirst: contact.first_name || '',
+    contactLast: contact.last_name || '',
+    contactEmail: contact.email || '',
+    phoneCode: contact.phone_code || '',
+    contactPhone: contact.phone || '',
+    description: charity.description || '',
+    logoFile: null,
+    charityLogoUrl: charity.charity_logo_url || '',
+    galleryUrls: charity.gallery_urls || [],
+    documentUrls: charity.document_urls || [],
+    galleryFiles: [],
+    documentFiles: [],
+  };
+}
+
+export function buildCharityUpdatePayload(form, meta = {}) {
+  const payload = buildCharityPayload(form);
+
+  return {
+    ...payload,
+    charity_id: meta.charity_id || payload.charity_id,
+    created_at: meta.created_at ?? payload.created_at,
+    updated_at: toApiDateTime(),
+    created_by: meta.created_by ?? 'admin',
+    isactive: meta.isactive ?? true,
+  };
 }
 
 // POST /add_charity — creates a new charity.
@@ -134,6 +189,66 @@ export async function deleteCharity(charityId) {
       ? data.detail.map((item) => item.msg || item.message).join(', ')
       : data.detail;
     throw new Error(data.message || detail || 'Failed to delete charity');
+  }
+
+  return data;
+}
+
+// GET /get_charity/{charity_id} — single charity details for the view page.
+export async function getCharityById(charityId) {
+  const response = await fetch(
+    `${BASE_URL}/get_charity/${encodeURIComponent(charityId)}`,
+    {
+      method: 'GET',
+      headers: authHeaders(),
+    },
+  );
+
+  const data = await response.json().catch(() => ({}));
+
+  // Backend may return 302 with the charity object still in the body.
+  if (data?.charity_id) {
+    return data;
+  }
+
+  if (!response.ok) {
+    const detail = Array.isArray(data.detail)
+      ? data.detail.map((item) => item.msg || item.message).join(', ')
+      : data.detail;
+    throw new Error(data.message || detail || 'Failed to fetch charity details');
+  }
+
+  return data;
+}
+
+// PUT /update_charity/{charity_id} — update an existing charity.
+export async function updateCharity(charityId, form, meta = {}) {
+  const payload = buildCharityUpdatePayload(form, {
+    ...meta,
+    charity_id: charityId,
+  });
+
+  const response = await fetch(
+    `${BASE_URL}/update_charity/${encodeURIComponent(charityId)}`,
+    {
+      method: 'PUT',
+      headers: authHeaders({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify(payload),
+      credentials: 'include',
+    },
+  );
+
+  const data = await response.json().catch(() => ({}));
+
+  if (data?.charity_id || data?.message) {
+    return data;
+  }
+
+  if (!response.ok) {
+    const detail = Array.isArray(data.detail)
+      ? data.detail.map((item) => item.msg || item.message).join(', ')
+      : data.detail;
+    throw new Error(data.message || detail || 'Failed to update charity');
   }
 
   return data;

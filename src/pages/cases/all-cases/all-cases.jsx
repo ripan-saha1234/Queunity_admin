@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllCasesPagination } from "../../../api/cases";
+import { deleteCase, getAllCasesPagination } from "../../../api/cases";
 import usePageHeader from "../../../hooks/use-page-header";
 import CommonTable from "../../../components/common-table";
+import { useToast } from "../../../components/toast/ToastProvider";
+import ConfirmDeleteModal from "../../../Modals/StaffModals/ConfirmDeleteModal";
 import "./all-cases.css";
 
 const PAGE_SIZE = 10;
@@ -35,6 +37,7 @@ function mapCaseToRow(item) {
 
 function AllCases() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [cases, setCases] = useState([]);
@@ -42,6 +45,8 @@ function AllCases() {
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deleteCaseId, setDeleteCaseId] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   const fetchCases = useCallback(async (pageNumber) => {
     setLoading(true);
@@ -129,6 +134,30 @@ function AllCases() {
     setPage(nextPage);
   }, []);
 
+  const deleteCaseLabel = useMemo(() => {
+    const row = tableData.find((item) => item.caseId === deleteCaseId);
+    return row?.caseId;
+  }, [tableData, deleteCaseId]);
+
+  const handleDeleteConfirm = async () => {
+    const id = deleteCaseId;
+    if (!id || deleting) return;
+
+    setDeleting(true);
+    try {
+      await deleteCase(id);
+      showToast("Case deleted successfully", "success");
+      setDeleteCaseId("");
+
+      const nextPage = cases.length === 1 && page > 1 ? page - 1 : page;
+      await fetchCases(nextPage);
+    } catch (err) {
+      showToast(err?.message || "Failed to delete case", "error");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (error) {
     return (
       <div className="all-cases-page">
@@ -157,6 +186,9 @@ function AllCases() {
             if (action === "edit") {
               navigate(`/cases/edit-cases/${id}`);
             }
+            if (action === "delete") {
+              setDeleteCaseId(id);
+            }
           }}
           pagination={{
             currentPage: page,
@@ -172,6 +204,17 @@ function AllCases() {
           ]}
         />
       )}
+
+      {deleteCaseId ? (
+        <ConfirmDeleteModal
+          title="Delete case"
+          name={deleteCaseLabel}
+          onClose={() => {
+            if (!deleting) setDeleteCaseId("");
+          }}
+          onConfirm={handleDeleteConfirm}
+        />
+      ) : null}
     </div>
   );
 }

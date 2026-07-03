@@ -62,16 +62,16 @@ function App() {
           <Route path='schools' element={<Outlet />}>
             <Route index element={<AllSchools />} />
             <Route path='add-schools' element={<AddSchools />} />
-            <Route path='edit-schools' element={<EditSchools />} />
+            <Route path='edit-schools/:schoolId' element={<EditSchools />} />
             <Route path='details/:id' element={<SchoolsDetails />} />
             <Route path='details/:id/view-cases' element={<ViewCasesSchool />} />
           </Route>
           <Route path='charity' element={<Outlet />}>
             <Route index element={<AllCharity />} />
             <Route path='add-charity' element={<AddCharity />} />
-            <Route path='edit-charity' element={<EditCharity />} />
-            <Route path='details/:id' element={<CharityDetails />} />
+            <Route path='edit-charity/:charityId' element={<EditCharity />} />
             <Route path='details/view-cases-charity' element={<ViewCasesChairty />} />
+            <Route path='details/:id' element={<CharityDetails />} />
           </Route>
           <Route path='staffs' element={<AllStaffs />} />
           <Route path='roles' element={<RolesPage />} />

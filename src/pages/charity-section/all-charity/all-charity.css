@@ -2,6 +2,32 @@
   width: 100%;
 }
 
+.all-charity-page--relative {
+  position: relative;
+}
+
+.all-charity-table-wrap {
+  position: relative;
+  min-height: 240px;
+}
+
+.all-charity-table-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 8px;
+}
+
+.all-charity-table-overlay p {
+  margin: 0;
+  font-size: 14px;
+  color: #5d5d5d;
+}
+
 .all-charity-page .table1-container {
   margin-bottom: 0;
   padding-bottom: 0;

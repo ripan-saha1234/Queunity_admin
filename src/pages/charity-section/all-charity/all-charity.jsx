@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteCharity, listCharities } from "../../../api/charity";
 import CommonTable from "../../../components/common-table";
@@ -8,6 +8,11 @@ import ConfirmDeleteModal from "../../../Modals/StaffModals/ConfirmDeleteModal";
 import "./all-charity.css";
 
 const PAGE_SIZE = 10;
+const RELOAD_DELAY_MS = 200;
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 function formatContactPhone(contact) {
   if (!contact) return "-";
@@ -46,32 +51,56 @@ function AllCharity() {
   const [error, setError] = useState("");
   const [deleteCharityId, setDeleteCharityId] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const isDeletingRef = useRef(false);
+  const pageRef = useRef(page);
 
-  const fetchCharities = useCallback(async (pageNumber) => {
-    setLoading(true);
-    setError("");
-    try {
-      const response = await listCharities({
-        page: pageNumber,
-        pageSize: PAGE_SIZE,
-      });
-      setCharities(response.data ?? []);
-      setTotalItems(response.total ?? 0);
-      setTotalPages(response.pages ?? 0);
-      setPage(response.page ?? pageNumber);
-    } catch (err) {
-      setCharities([]);
-      setTotalItems(0);
-      setTotalPages(0);
-      setError(err.message || "Failed to load charities");
-    } finally {
-      setLoading(false);
-    }
+  pageRef.current = page;
+
+  const applyListResponse = useCallback((response, pageNumber) => {
+    setCharities(response.data ?? []);
+    setTotalItems(response.total ?? 0);
+    setTotalPages(response.pages ?? 0);
+    setPage(response.page ?? pageNumber);
   }, []);
 
+  const loadCharities = useCallback(async (pageNumber) => {
+    const response = await listCharities({
+      page: pageNumber,
+      pageSize: PAGE_SIZE,
+    });
+    applyListResponse(response, pageNumber);
+    return response.data ?? [];
+  }, [applyListResponse]);
+
   useEffect(() => {
-    fetchCharities(page);
-  }, [page, fetchCharities]);
+    if (isDeletingRef.current) return;
+
+    let cancelled = false;
+
+    const run = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        await loadCharities(page);
+      } catch (err) {
+        if (!cancelled) {
+          setCharities([]);
+          setTotalItems(0);
+          setTotalPages(0);
+          setError(err.message || "Failed to load charities");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [page, loadCharities]);
 
   const headerButtons = useMemo(
     () => [
@@ -145,19 +174,37 @@ function AllCharity() {
     if (!id || deleting) return;
 
     setDeleting(true);
+    isDeletingRef.current = true;
+
     try {
-      const response = await deleteCharity(id);
-      showToast(response?.message || "Charity deleted successfully", "success");
+      await deleteCharity(id);
+      showToast("Charity deleted successfully", "success");
       setDeleteCharityId("");
 
-      if (charities.length === 1 && page > 1) {
-        setPage(page - 1);
-      } else {
-        fetchCharities(page);
+      const currentPage = pageRef.current;
+      const nextPage =
+        charities.length === 1 && currentPage > 1 ? currentPage - 1 : currentPage;
+
+      setRefreshing(true);
+      setCharities((prev) => prev.filter((item) => item.charity_id !== id));
+      setTotalItems((prev) => Math.max(0, prev - 1));
+
+      await delay(RELOAD_DELAY_MS);
+
+      let rows = await loadCharities(nextPage);
+      if (rows.some((item) => item.charity_id === id)) {
+        await delay(400);
+        rows = await loadCharities(nextPage);
+      }
+
+      if (rows.some((item) => item.charity_id === id)) {
+        setCharities((prev) => prev.filter((item) => item.charity_id !== id));
       }
     } catch (err) {
       showToast(err?.message || "Failed to delete charity", "error");
     } finally {
+      isDeletingRef.current = false;
+      setRefreshing(false);
       setDeleting(false);
     }
   };
@@ -173,35 +220,43 @@ function AllCharity() {
   }
 
   return (
-    <div className="all-charity-page">
+    <div className="all-charity-page all-charity-page--relative">
       {loading && charities.length === 0 ? (
         <div className="table1-no-data-container">
           <p>Loading charities...</p>
         </div>
       ) : (
-        <CommonTable
-          tableData={tableData}
-          headers={tableHeaders}
-          index={0}
-          specificReturn="charityId"
-          handleActionClick={(action, id) => {
-            if (action === "view") navigate(`/charity/details/${id}`);
-            if (action === "edit") navigate("/charity/edit-charity");
-            if (action === "delete") setDeleteCharityId(id);
-          }}
-          pagination={{
-            currentPage: page,
-            totalPages,
-            totalItems,
-            pageSize: PAGE_SIZE,
-            onPageChange: handlePageChange,
-          }}
-          actionButtons={[
-            { label: "Edit", action: "edit" },
-            { label: "View", action: "view" },
-            { label: "Delete", action: "delete" },
-          ]}
-        />
+        <div className="all-charity-table-wrap">
+          {refreshing ? (
+            <div className="all-charity-table-overlay">
+              <p>Refreshing charities...</p>
+            </div>
+          ) : null}
+          <CommonTable
+            key={`charity-table-${page}-${totalItems}-${charities.length}`}
+            tableData={tableData}
+            headers={tableHeaders}
+            index={0}
+            specificReturn="charityId"
+            handleActionClick={(action, id) => {
+              if (action === "view") navigate(`/charity/details/${id}`);
+              if (action === "edit") navigate(`/charity/edit-charity/${id}`);
+              if (action === "delete") setDeleteCharityId(id);
+            }}
+            pagination={{
+              currentPage: page,
+              totalPages,
+              totalItems,
+              pageSize: PAGE_SIZE,
+              onPageChange: handlePageChange,
+            }}
+            actionButtons={[
+              { label: "Edit", action: "edit" },
+              { label: "View", action: "view" },
+              { label: "Delete", action: "delete" },
+            ]}
+          />
+        </div>
       )}
 
       {deleteCharityId ? (

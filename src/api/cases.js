@@ -109,3 +109,26 @@ export async function updateCaseByCaseId(caseId, payload) {
 
   return data;
 }
+
+// DELETE /delete_case/{case_id}
+export async function deleteCase(caseId) {
+  const response = await fetch(
+    `${BASE_URL}/delete_case/${encodeURIComponent(caseId)}`,
+    {
+      method: 'DELETE',
+      headers: authHeaders(),
+      credentials: 'include',
+    },
+  );
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const detail = Array.isArray(data.detail)
+      ? data.detail.map((item) => item.msg || item.message).join(', ')
+      : data.detail;
+    throw new Error(data.message || detail || 'Failed to delete case');
+  }
+
+  return data;
+}

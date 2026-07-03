@@ -71,3 +71,15 @@ export function generateCharityId() {
   const num = generateRandomNumber(10000, 99999);
   return `CHR${num}`;
 }
+
+/**
+ * Generates offense_id for add_offence payload.
+ * Format: OFF-48291 (same pattern as case_id).
+ *
+ * Integrated in:
+ * - src/api/offence.js → buildOffencePayload()
+ */
+export function generateOffenseId() {
+  const num = generateRandomNumber(1000, 99999);
+  return `OFF-${num}`;
+}

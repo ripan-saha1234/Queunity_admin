@@ -10,6 +10,30 @@
     position: relative;
     overflow: hidden;
 }
+
+.file_upload_wrapper--has-preview {
+    height: auto;
+    min-height: 140px;
+    padding: 12px;
+    overflow: visible;
+}
+
+.preview_container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.file_upload_preview_image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    margin: 0;
+}
 .file_upload_wrapper input{
     position: absolute;
     top: 0;

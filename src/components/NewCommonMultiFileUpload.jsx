@@ -1,48 +1,72 @@
-import React, { useState } from 'react'
-import '../css/CommonFileUpload.css'
-const NewCommonMultiFileUpload = ({ onChange }) => {
-    const [previews, setPreviews] = useState([])
-    const handleChange = (e) => {
-        const files = Array.from(e.target.files)
+import { useMemo, useState } from "react";
+import "../css/CommonFileUpload.css";
 
-        const imageUrls = files.map(file => URL.createObjectURL(file))
-
-        setPreviews(imageUrls)
-
-        if (onChange) onChange(e)
-    }
-    return (
-        <>
-            <div className='file_upload_wrapper'>
-                {previews.length > 0 ? (
-                    <div className="preview_container">
-                        {previews.map((src, index) => (
-                            <img
-                                key={index}
-                                src={src}
-                                alt="preview"
-                                style={{
-                                    width: '100px',
-                                    height: '100px',
-                                    objectFit: 'cover',
-                                    margin: '5px'
-                                }}
-                            />
-                        ))}
-                    </div>
-                ) : (
-                    <>
-                        <img src="/document-upload.png" alt="upload" />
-                        <h2>
-                            <span>Choose file</span> to upload <br />pdf, png, jpeg, jpg
-                        </h2>
-                    </>
-                )}
-
-                <input type='file' multiple onChange={handleChange} />
-            </div>
-        </>
-    )
+function isImageSource(value) {
+  if (!value) return false;
+  if (typeof value === "string") {
+    return /\.(png|jpe?g|gif|webp|bmp|svg)($|\?)/i.test(value);
+  }
+  return value.type?.startsWith("image/");
 }
 
-export default NewCommonMultiFileUpload
+const NewCommonMultiFileUpload = ({ onChange, existingUrls = [] }) => {
+  const [filePreviews, setFilePreviews] = useState([]);
+
+  const handleChange = (e) => {
+    const files = Array.from(e.target.files || []);
+    const previews = files.map((file) => ({
+      key: `${file.name}-${file.lastModified}-${file.size}`,
+      src: isImageSource(file) ? URL.createObjectURL(file) : "/document1.svg",
+      alt: file.name,
+    }));
+
+    setFilePreviews(previews);
+    if (onChange) onChange(e);
+  };
+
+  const existingPreviews = useMemo(
+    () =>
+      (existingUrls || []).map((url, index) => ({
+        key: `existing-${url}-${index}`,
+        src: isImageSource(url) ? url : "/document1.svg",
+        alt: `Uploaded file ${index + 1}`,
+      })),
+    [existingUrls],
+  );
+
+  const allPreviews = [...existingPreviews, ...filePreviews];
+  const hasPreviews = allPreviews.length > 0;
+
+  return (
+    <div
+      className={`file_upload_wrapper${
+        hasPreviews ? " file_upload_wrapper--has-preview" : ""
+      }`}
+    >
+      {hasPreviews ? (
+        <div className="preview_container">
+          {allPreviews.map((preview) => (
+            <img
+              key={preview.key}
+              src={preview.src}
+              alt={preview.alt}
+              className="file_upload_preview_image"
+            />
+          ))}
+        </div>
+      ) : (
+        <>
+          <img src="/document-upload.png" alt="upload" />
+          <h2>
+            <span>Choose file</span> to upload <br />
+            pdf, png, jpeg, jpg
+          </h2>
+        </>
+      )}
+
+      <input type="file" multiple onChange={handleChange} />
+    </div>
+  );
+};
+
+export default NewCommonMultiFileUpload;

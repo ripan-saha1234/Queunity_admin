@@ -1,12 +1,107 @@
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getSchoolById } from "../../../api/school";
 import usePageHeader from "../../../hooks/use-page-header";
 import "./schools-details.css";
 import CommonButton from "../../../components/common-button";
 
+const SCHOOL_TYPE_LABELS = {
+  primary: "Primary",
+  middle: "Middle",
+  high: "High",
+  k12: "K-12",
+};
+
+const SCHOOL_CATEGORY_LABELS = {
+  public: "Public",
+  private: "Private",
+  charter: "Charter",
+};
+
+function formatSchoolType(value) {
+  if (!value) return "-";
+  return SCHOOL_TYPE_LABELS[value] || value;
+}
+
+function formatSchoolCategory(value) {
+  if (!value) return "-";
+  return SCHOOL_CATEGORY_LABELS[value] || value;
+}
+
+function formatAddress(address) {
+  if (!address) return "-";
+  const parts = [
+    address.address_line1,
+    address.address_line2,
+    address.landmark,
+    address.city,
+    address.state,
+    address.zip,
+    address.country,
+  ].filter(Boolean);
+  return parts.join(", ") || "-";
+}
+
+function formatPrincipalPhone(principal) {
+  if (!principal) return "-";
+  const parts = [principal.phone_code, principal.phone].filter(Boolean);
+  return parts.join(" ").trim() || "-";
+}
+
+function mapSchoolToDetailCards(school) {
+  const principal = school.principal || {};
+
+  return [
+    { label: "School ID:", value: school.school_id ? `#${school.school_id}` : "-" },
+    { label: "School Type", value: formatSchoolType(school.school_type) },
+    { label: "School Category", value: formatSchoolCategory(school.school_category) },
+    {
+      label: "Number of Faculty Members",
+      value: school.faculty_count != null ? String(school.faculty_count) : "-",
+    },
+    {
+      label: "Number of students:",
+      value: school.student_count != null ? String(school.student_count) : "-",
+    },
+    { label: "Country", value: school.address?.country || "-" },
+    { label: "Address", value: formatAddress(school.address) },
+    { label: "Phone number", value: formatPrincipalPhone(principal) },
+    { label: "Email", value: principal.email || "-" },
+  ];
+}
+
 function SchoolsDetails() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [school, setSchool] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const fetchSchool = useCallback(async () => {
+    if (!id) {
+      setError("School ID is missing");
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    try {
+      const data = await getSchoolById(id);
+      setSchool(data);
+    } catch (err) {
+      setSchool(null);
+      setError(err.message || "Failed to load school details");
+    } finally {
+      setLoading(false);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    fetchSchool();
+  }, [fetchSchool]);
+
+  const schoolName = school?.school_name || "School Details";
 
   const headerButtons = useMemo(
     () => [
@@ -21,7 +116,7 @@ function SchoolsDetails() {
       {
         type: "button",
         text: "Edit",
-        onClick: () => navigate("/schools/edit-schools"),
+        onClick: () => navigate(`/schools/edit-schools/${id}`),
         backgroundColor: "#95C63D",
         textColor: "#141414",
         borderColor: "#9FC53D",
@@ -31,28 +126,18 @@ function SchoolsDetails() {
   );
 
   usePageHeader({
-    title: "Elite High School",
+    title: schoolName,
     breadcrumbs: [
       { title: "Schools", link: "/schools" },
-      { title: "Elite High School", link: `/schools/details/${id || "1"}` },
+      { title: schoolName, link: `/schools/details/${id || ""}` },
     ],
     buttons: headerButtons,
   });
 
-  const detailCards = [
-    { label: "School ID:", value: "#SC1236" },
-    { label: "School Type", value: "Primary" },
-    { label: "School Category", value: "Public" },
-    { label: "Number of Faculty Members", value: "20" },
-    { label: "Number of students:", value: "400" },
-    { label: "Country", value: "United States" },
-    {
-      label: "Address",
-      value: "Office 149, 450 South Brand Brooklyn San Diego County, CA 91905, USA",
-    },
-    { label: "Phone number", value: "+1 929 329 36456" },
-    { label: "Email", value: "bidishabh@gmail.com" },
-  ];
+  const detailCards = useMemo(
+    () => (school ? mapSchoolToDetailCards(school) : []),
+    [school],
+  );
 
   const caseCards = [
     { label: "TOTAL CASES", value: "2,847" },
@@ -61,13 +146,36 @@ function SchoolsDetails() {
     { label: "PENDING REVIEW", value: "134" },
   ];
 
+  if (loading) {
+    return (
+      <div className="schools-details-page">
+        <div className="table1-no-data-container">
+          <p>Loading school details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="schools-details-page">
+        <div className="table1-no-data-container">
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="schools-details-page">
       <div className="schools-details-hero">
         <div className="schools-details-logo-box">
-          <img src="/school-detail-img.svg" alt="School logo" />
+          <img
+            src={school?.school_logo_url || "/school-detail-img.svg"}
+            alt="School logo"
+          />
         </div>
-        <h2>Elite High School</h2>
+        <h2>{schoolName}</h2>
       </div>
 
       <section className="schools-details-section">

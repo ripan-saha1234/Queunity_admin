@@ -8,6 +8,11 @@ import ConfirmDeleteModal from "../../../Modals/StaffModals/ConfirmDeleteModal";
 import "./all-schools.css";
 
 const PAGE_SIZE = 10;
+const RELOAD_DELAY_MS = 600;
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 function formatPrincipalPhone(principal) {
   if (!principal) return "-";
@@ -46,10 +51,13 @@ function AllSchools() {
   const [error, setError] = useState("");
   const [deleteSchoolId, setDeleteSchoolId] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const fetchSchools = useCallback(async (pageNumber) => {
-    setLoading(true);
-    setError("");
+  const fetchSchools = useCallback(async (pageNumber, { silent = false } = {}) => {
+    if (!silent) {
+      setLoading(true);
+      setError("");
+    }
     try {
       const response = await listSchools({
         page: pageNumber,
@@ -60,12 +68,14 @@ function AllSchools() {
       setTotalPages(response.pages ?? 0);
       setPage(response.page ?? pageNumber);
     } catch (err) {
-      setSchools([]);
-      setTotalItems(0);
-      setTotalPages(0);
-      setError(err.message || "Failed to load schools");
+      if (!silent) {
+        setSchools([]);
+        setTotalItems(0);
+        setTotalPages(0);
+        setError(err.message || "Failed to load schools");
+      }
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   }, []);
 
@@ -150,14 +160,14 @@ function AllSchools() {
       showToast(response?.message || "School deleted successfully", "success");
       setDeleteSchoolId("");
 
-      if (schools.length === 1 && page > 1) {
-        setPage(page - 1);
-      } else {
-        fetchSchools(page);
-      }
+      const nextPage = schools.length === 1 && page > 1 ? page - 1 : page;
+      setRefreshing(true);
+      await delay(RELOAD_DELAY_MS);
+      await fetchSchools(nextPage, { silent: true });
     } catch (err) {
       showToast(err?.message || "Failed to delete school", "error");
     } finally {
+      setRefreshing(false);
       setDeleting(false);
     }
   };
@@ -178,6 +188,10 @@ function AllSchools() {
         <div className="table1-no-data-container">
           <p>Loading schools...</p>
         </div>
+      ) : refreshing ? (
+        <div className="table1-no-data-container">
+          <p>Refreshing schools...</p>
+        </div>
       ) : (
         <CommonTable
           tableData={tableData}
@@ -189,7 +203,7 @@ function AllSchools() {
               navigate(`/schools/details/${id}`);
             }
             if (action === "edit") {
-              navigate(`/schools/edit-schools`);
+              navigate(`/schools/edit-schools/${id}`);
             }
             if (action === "delete") {
               setDeleteSchoolId(id);
