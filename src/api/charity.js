@@ -1,6 +1,7 @@
 import { getToken } from './token';
+import { generateCharityId } from '../utils/randomId';
 
-const BASE_URL = import.meta.env.VITE_SCHOOL_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function authHeaders(extra = {}) {
   const token = getToken();
@@ -15,17 +16,18 @@ function toApiDateTime(date = new Date()) {
   return date.toISOString().slice(0, 19);
 }
 
-// Maps the add-school form state to the POST /add_school payload.
-export function buildSchoolPayload(form) {
+export function buildCharityPayload(form) {
   const now = toApiDateTime();
 
   return {
-    school_name: form.schoolName?.trim() || '',
-    school_logo_url: form.schoolLogoUrl || '',
-    school_type: form.schoolType || '',
-    school_category: form.schoolCategory || '',
-    faculty_count: form.facultyCount ? Number(form.facultyCount) : 0,
-    student_count: form.studentCount ? Number(form.studentCount) : 0,
+    charity_id: generateCharityId(),
+    charity_name: form.charityName?.trim() || '',
+    charity_logo_url: form.charityLogoUrl || '',
+    description: form.description?.trim() || '',
+    charity_type: form.charityType || 'non_profit',
+    charity_category: form.charityCategory || '',
+    member_count: form.memberCount ? Number(form.memberCount) : 0,
+    beneficiary_count: form.beneficiaryCount ? Number(form.beneficiaryCount) : 0,
     address: {
       country: form.countryLabel || form.country || '',
       address_line1: form.addressLine1?.trim() || '',
@@ -35,41 +37,46 @@ export function buildSchoolPayload(form) {
       state: form.stateLabel || form.state || '',
       zip: form.zip?.trim() || '',
     },
-    principal: {
-      first_name: form.principalFirst?.trim() || '',
-      last_name: form.principalLast?.trim() || '',
-      email: form.principalEmail?.trim() || '',
+    contact_person: {
+      first_name: form.contactFirst?.trim() || '',
+      last_name: form.contactLast?.trim() || '',
+      email: form.contactEmail?.trim() || '',
       phone_code: form.phoneCode || '',
-      phone: form.principalPhone?.trim() || '',
+      phone: form.contactPhone?.trim() || '',
     },
+    gallery_urls: form.galleryUrls || [],
+    document_urls: form.documentUrls || [],
     created_at: now,
     updated_at: now,
+    created_by: 'admin',
+    isactive: true,
   };
 }
 
-export function validateSchoolForm(form) {
-  if (!form.schoolName?.trim()) return 'School name is required';
-  if (!form.schoolType) return 'School type is required';
-  if (!form.schoolCategory) return 'School category is required';
+export function validateCharityForm(form) {
+  if (!form.charityName?.trim()) return 'Charity name is required';
+  if (!form.description?.trim()) return 'Description is required';
+  if (!form.charityCategory) return 'Charity category is required';
   if (!form.country) return 'Country is required';
   if (!form.addressLine1?.trim()) return 'Address line 1 is required';
   if (!form.city?.trim()) return 'City is required';
   if (!form.state) return 'State is required';
   if (!form.zip?.trim()) return 'Zip code is required';
-  if (!form.principalFirst?.trim()) return 'Principal first name is required';
-  if (!form.principalLast?.trim()) return 'Principal last name is required';
-  if (!form.principalEmail?.trim()) return 'Principal email is required';
+  if (!form.contactFirst?.trim()) return 'Contact first name is required';
+  if (!form.contactLast?.trim()) return 'Contact last name is required';
+  if (!form.contactEmail?.trim()) return 'Contact email is required';
   return null;
 }
 
-// POST /add_school — creates a new school.
-export async function addSchool(form) {
-  const payload = buildSchoolPayload(form);
+// POST /add_charity — creates a new charity.
+export async function addCharity(form) {
+  const payload = buildCharityPayload(form);
 
-  const response = await fetch(`${BASE_URL}/add_school`, {
+  const response = await fetch(`${BASE_URL}/add_charity`, {
     method: 'POST',
     headers: authHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(payload),
+    credentials: 'include',
   });
 
   const data = await response.json().catch(() => ({}));
@@ -78,22 +85,23 @@ export async function addSchool(form) {
     const detail = Array.isArray(data.detail)
       ? data.detail.map((item) => item.msg || item.message).join(', ')
       : data.detail;
-    throw new Error(data.message || detail || 'Failed to add school');
+    throw new Error(data.message || detail || 'Failed to add charity');
   }
 
   return data;
 }
 
-// GET /list_schools — paginated school list for the schools table.
-export async function listSchools({ page = 1, pageSize = 10 } = {}) {
+// GET /list_charities — paginated charity list for the charity table.
+export async function listCharities({ page = 1, pageSize = 10 } = {}) {
   const params = new URLSearchParams({
     page: String(page),
     page_size: String(pageSize),
   });
 
-  const response = await fetch(`${BASE_URL}/list_schools?${params}`, {
+  const response = await fetch(`${BASE_URL}/list_charities?${params}`, {
     method: 'GET',
     headers: authHeaders(),
+    credentials: 'include',
   });
 
   const data = await response.json().catch(() => ({}));
@@ -102,19 +110,20 @@ export async function listSchools({ page = 1, pageSize = 10 } = {}) {
     const detail = Array.isArray(data.detail)
       ? data.detail.map((item) => item.msg || item.message).join(', ')
       : data.detail;
-    throw new Error(data.message || detail || 'Failed to fetch schools');
+    throw new Error(data.message || detail || 'Failed to fetch charities');
   }
 
   return data;
 }
 
-// DELETE /delete_school/{school_id}
-export async function deleteSchool(schoolId) {
+// DELETE /delete_charity/{charity_id}
+export async function deleteCharity(charityId) {
   const response = await fetch(
-    `${BASE_URL}/delete_school/${encodeURIComponent(schoolId)}`,
+    `${BASE_URL}/delete_charity/${encodeURIComponent(charityId)}`,
     {
       method: 'DELETE',
       headers: authHeaders(),
+      credentials: 'include',
     },
   );
 
@@ -124,7 +133,7 @@ export async function deleteSchool(schoolId) {
     const detail = Array.isArray(data.detail)
       ? data.detail.map((item) => item.msg || item.message).join(', ')
       : data.detail;
-    throw new Error(data.message || detail || 'Failed to delete school');
+    throw new Error(data.message || detail || 'Failed to delete charity');
   }
 
   return data;

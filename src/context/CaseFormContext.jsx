@@ -1,6 +1,10 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { addCase, uploadImage } from "../api/cases";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { addCase, updateCaseByCaseId, uploadImage } from "../api/cases";
 import { generateCaseIdentifiers } from "../utils/randomId";
+import {
+  mapApiCaseToCaseData,
+  mapApiCaseToEditMeta,
+} from "../utils/caseFormMapper";
 
 const DRAFT_KEY = "queunity_add_case_draft_v3";
 
@@ -156,14 +160,17 @@ const CaseFormContext = createContext(null);
 
 export function CaseFormProvider({ children }) {
   const [caseData, setCaseData] = useState(loadDraft);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editMeta, setEditMeta] = useState(null);
 
   useEffect(() => {
+    if (isEditing) return;
     try {
       localStorage.setItem(DRAFT_KEY, JSON.stringify(caseData));
     } catch {
       // ignore persistence errors (e.g. storage full / private mode)
     }
-  }, [caseData]);
+  }, [caseData, isEditing]);
 
   const updateBasic = (patch) => {
     setCaseData((prev) => {
@@ -216,11 +223,29 @@ export function CaseFormProvider({ children }) {
 
   const resetDraft = () => {
     setCaseData({ ...emptyCaseData });
+    setIsEditing(false);
+    setEditMeta(null);
     try {
       localStorage.removeItem(DRAFT_KEY);
     } catch {
       // ignore
     }
+  };
+
+  const loadCaseForEdit = useCallback((apiCase) => {
+    setIsEditing(true);
+    setEditMeta(mapApiCaseToEditMeta(apiCase));
+    setCaseData(mapApiCaseToCaseData(apiCase));
+    try {
+      localStorage.removeItem(DRAFT_KEY);
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const exitEditMode = () => {
+    setIsEditing(false);
+    setEditMeta(null);
   };
 
   // Upload a single file and return its hosted URL.
@@ -229,11 +254,18 @@ export function CaseFormProvider({ children }) {
   };
 
   const buildPayload = () => {
-    const { case_id, case_number } = generateCaseIdentifiers();
+    const identifiers =
+      isEditing && editMeta?.case_id
+        ? {
+            case_id: editMeta.case_id,
+            case_number: editMeta.case_number,
+          }
+        : generateCaseIdentifiers();
+
+    const now = new Date().toISOString();
 
     return {
-      case_id,
-      case_number,
+      ...identifiers,
       case_name: caseData.case_name,
       school_id: caseData.school_id,
       school_name: caseData.school_name,
@@ -254,22 +286,28 @@ export function CaseFormProvider({ children }) {
       police: caseData.police,
       resolution_desired: caseData.resolution_desired,
       image_details: deriveImageDetails(caseData),
-      created_at: new Date().toISOString(),
-      created_by: "admin",
+      created_at: isEditing && editMeta?.created_at ? editMeta.created_at : now,
+      updated_at: now,
+      created_by: isEditing && editMeta?.created_by ? editMeta.created_by : "admin",
       system_info: "Windows 10 / Chrome",
       system_ip: "192.168.1.10",
-      isactive: true
+      isactive: isEditing && editMeta ? editMeta.isactive : true,
     };
   };
 
   const submitCase = async () => {
     const payload = buildPayload();
+    if (isEditing && editMeta?.case_id) {
+      return updateCaseByCaseId(editMeta.case_id, payload);
+    }
     return addCase(payload);
   };
 
   const value = useMemo(
     () => ({
       caseData,
+      isEditing,
+      editMeta,
       updateBasic,
       addSuspect,
       removeSuspect,
@@ -280,11 +318,13 @@ export function CaseFormProvider({ children }) {
       setPolice,
       setResolution,
       resetDraft,
+      loadCaseForEdit,
+      exitEditMode,
       uploadFile,
       buildPayload,
       submitCase,
     }),
-    [caseData],
+    [caseData, isEditing, editMeta, loadCaseForEdit],
   );
 
   return (

@@ -1,6 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import usePageHeader from "../../../hooks/use-page-header";
+import { useToast } from "../../../components/toast/ToastProvider";
+import { addCharity, validateCharityForm } from "../../../api/charity";
+import { uploadImage } from "../../../api/cases";
 import InputCommon from "../../../components/input_common";
 import NewCommonMultiFileUpload from "../../../components/NewCommonMultiFileUpload";
 import { WizardSection } from "../../../components/WizardSection";
@@ -9,28 +12,39 @@ import { ChoiceRadio } from "../../../components/ChoiceRadio";
 import "../../cases/add-cases/add-cases.css";
 import "./add-charity.css";
 
+async function uploadFiles(files) {
+  const list = Array.from(files || []);
+  if (!list.length) return [];
+  return Promise.all(list.map((file) => uploadImage(file)));
+}
+
 function AddCharity() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
+  const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
-    charityName: "Hope Foundation",
+    charityName: "",
     charityType: "non_profit",
-    charityCategory: "public",
-    memberCount: "20",
-    beneficiaryCount: "400",
-    country: "us",
-    addressLine1: "1234 Lorem Street",
-    addressLine2: "Card Square",
-    landmark: "Near Lorem Park",
-    city: "Card Square",
-    state: "s1",
-    zip: "78960",
-    contactFirst: "Arpa",
-    contactLast: "Sengupta",
-    contactEmail: "bidishabhowmick@gmail.com",
+    charityCategory: "",
+    memberCount: "",
+    beneficiaryCount: "",
+    country: "",
+    addressLine1: "",
+    addressLine2: "",
+    landmark: "",
+    city: "",
+    state: "",
+    zip: "",
+    contactFirst: "",
+    contactLast: "",
+    contactEmail: "",
     phoneCode: "+1",
-    contactPhone: "923 245 6980",
-    description: "Hope Foundation is a non-profit organization that provides help to the needy and the poor.",
+    contactPhone: "",
+    description: "",
+    logoFile: null,
+    galleryFiles: [],
+    documentFiles: [],
   });
 
   useEffect(() => {
@@ -56,6 +70,46 @@ function AddCharity() {
     [],
   );
 
+  const handleAddCharity = useCallback(async () => {
+    const validationError = validateCharityForm(form);
+    if (validationError) {
+      showToast(validationError, "error");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      let charityLogoUrl = "";
+      if (form.logoFile) {
+        charityLogoUrl = await uploadImage(form.logoFile);
+      }
+
+      const galleryUrls = await uploadFiles(form.galleryFiles);
+      const documentUrls = await uploadFiles(form.documentFiles);
+
+      const countryLabel =
+        countryOptions.find((opt) => opt.value === form.country)?.label || form.country;
+      const stateLabel =
+        stateOptions.find((opt) => opt.value === form.state)?.label || form.state;
+
+      const response = await addCharity({
+        ...form,
+        charityLogoUrl,
+        galleryUrls,
+        documentUrls,
+        countryLabel,
+        stateLabel,
+      });
+
+      showToast(response?.message || "Charity added successfully", "success");
+      navigate("/charity");
+    } catch (error) {
+      showToast(error?.message || "Failed to add charity", "error");
+    } finally {
+      setSubmitting(false);
+    }
+  }, [form, navigate, showToast, countryOptions, stateOptions]);
+
   const headerButtons = useMemo(
     () => [
       {
@@ -65,17 +119,19 @@ function AddCharity() {
         backgroundColor: "transparent",
         textColor: "#141414",
         borderColor: "transparent",
+        disabled: submitting,
       },
       {
         type: "button",
-        text: "Add",
-        onClick: () => navigate("/charity"),
+        text: submitting ? "Adding..." : "Add",
+        onClick: handleAddCharity,
         backgroundColor: "#95C63D",
         textColor: "#141414",
         borderColor: "#9FC53D",
+        disabled: submitting,
       },
     ],
-    [navigate],
+    [navigate, handleAddCharity, submitting],
   );
 
   usePageHeader({
@@ -106,7 +162,12 @@ function AddCharity() {
 
             <div className="charity-radio-main" style={{ marginTop: 20 }}>
               <label>Upload Charity Logo</label>
-              <NewCommonMultiFileUpload />
+              <NewCommonMultiFileUpload
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  updateField("logoFile", file);
+                }}
+              />
             </div>
 
             <div className="add-charity-description-field">
@@ -116,7 +177,7 @@ function AddCharity() {
                 className="add-charity-description-textarea"
                 required
                 value={form.description}
-                placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation"
+                placeholder="Describe the charity mission and work"
                 onChange={(e) => updateField("description", e.target.value)}
               />
             </div>
@@ -132,10 +193,14 @@ function AddCharity() {
           </WizardSection>
           <div className="charity-radio-main" style={{ marginTop: 20 }}>
               <label>Gallery</label>
-              <NewCommonMultiFileUpload />
+              <NewCommonMultiFileUpload
+                onChange={(e) => {
+                  updateField("galleryFiles", Array.from(e.target.files || []));
+                }}
+              />
             </div>
 
-          
+
         </div>
 
         <div className="add-charity-col-right">
@@ -180,7 +245,11 @@ function AddCharity() {
             </div>
             <div className="charity-radio-main" style={{ marginTop: 20 }}>
               <label>Upload Document (Certificate / Registration)</label>
-              <NewCommonMultiFileUpload />
+              <NewCommonMultiFileUpload
+                onChange={(e) => {
+                  updateField("documentFiles", Array.from(e.target.files || []));
+                }}
+              />
             </div>
           </div>
         </div>

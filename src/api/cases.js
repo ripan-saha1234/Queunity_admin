@@ -88,3 +88,24 @@ export async function getAllCasesPagination({ page = 1, pageSize = 10 } = {}) {
 
   return data;
 }
+
+// PUT /update_caseby_case_id/{case_id} — update an existing case.
+export async function updateCaseByCaseId(caseId, payload) {
+  const response = await fetch(
+    `${BASE_URL}/update_caseby_case_id/${encodeURIComponent(caseId)}`,
+    {
+      method: 'PUT',
+      headers: authHeaders({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify(payload),
+      credentials: 'include',
+    },
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || data.detail || 'Failed to update case');
+  }
+
+  return data;
+}

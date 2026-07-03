@@ -1,146 +1,77 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { deleteSchool, listSchools } from "../../../api/school";
 import CommonTable from "../../../components/common-table";
 import usePageHeader from "../../../hooks/use-page-header";
+import { useToast } from "../../../components/toast/ToastProvider";
 import ConfirmDeleteModal from "../../../Modals/StaffModals/ConfirmDeleteModal";
 import "./all-schools.css";
 
-const INITIAL_SCHOOLS = [
-      {
-        schoolId: "SC456666",
-        companyName: {
-          name: "Elite High School",
-          id: "#SC456666",
-          image: "/table-img1.svg",
-        },
-        principalName: "Bidisha Bhowmick",
-        email: "bidishabhowmick@gmail.com",
-        phone: "+1 1234567890",
-      },
-      {
-        schoolId: "SC456667",
-        companyName: {
-          name: "Prism Dynamics School",
-          id: "#SC456667",
-          image: "/table-img2.svg",
-        },
-        principalName: "Somali Goswami",
-        email: "somaligoswami@gmail.com",
-        phone: "+1 1234567890",
-      },
-      {
-        schoolId: "SC456668",
-        companyName: {
-          name: "Elite High School",
-          id: "#SC456668",
-          image: "/table-img1.svg",
-        },
-        principalName: "Bidisha Bhowmick",
-        email: "bidishabhowmick@gmail.com",
-        phone: "+1 1234567890",
-      },
-      {
-        schoolId: "SC456669",
-        companyName: {
-          name: "Prism Dynamics School",
-          id: "#SC456669",
-          image: "/table-img2.svg",
-        },
-        principalName: "Somali Goswami",
-        email: "somaligoswami@gmail.com",
-        phone: "+1 1234567890",
-      },
-      {
-        schoolId: "SC456670",
-        companyName: {
-          name: "Elite High School",
-          id: "#SC456670",
-          image: "/table-img1.svg",
-        },
-        principalName: "Bidisha Bhowmick",
-        email: "bidishabhowmick@gmail.com",
-        phone: "+1 1234567890",
-      },
-      {
-        schoolId: "SC456671",
-        companyName: {
-          name: "Prism Dynamics School",
-          id: "#SC456671",
-          image: "/table-img2.svg",
-        },
-        principalName: "Somali Goswami",
-        email: "somaligoswami@gmail.com",
-        phone: "+1 1234567890",
-      },
-      {
-        schoolId: "SC456672",
-        companyName: {
-          name: "Elite High School",
-          id: "#SC456672",
-          image: "/table-img1.svg",
-        },
-        principalName: "Bidisha Bhowmick",
-        email: "bidishabhowmick@gmail.com",
-        phone: "+1 1234567890",
-      },
-      {
-        schoolId: "SC456673",
-        companyName: {
-          name: "Prism Dynamics School",
-          id: "#SC456673",
-          image: "/table-img2.svg",
-        },
-        principalName: "Somali Goswami",
-        email: "somaligoswami@gmail.com",
-        phone: "+1 1234567890",
-      },
-      {
-        schoolId: "SC456674",
-        companyName: {
-          name: "Elite High School",
-          id: "#SC456674",
-          image: "/table-img1.svg",
-        },
-        principalName: "Bidisha Bhowmick",
-        email: "bidishabhowmick@gmail.com",
-        phone: "+1 1234567890",
-      },
-      {
-        schoolId: "SC456675",
-        companyName: {
-          name: "Prism Dynamics School",
-          id: "#SC456675",
-          image: "/table-img2.svg",
-        },
-        principalName: "Somali Goswami",
-        email: "somaligoswami@gmail.com",
-        phone: "+1 1234567890",
-      },
-];
+const PAGE_SIZE = 10;
+
+function formatPrincipalPhone(principal) {
+  if (!principal) return "-";
+  const parts = [principal.phone_code, principal.phone].filter(Boolean);
+  return parts.join(" ").trim() || "-";
+}
+
+function mapSchoolToRow(item) {
+  const principal = item.principal || {};
+  const principalName = [principal.first_name, principal.last_name]
+    .filter(Boolean)
+    .join(" ");
+
+  return {
+    schoolId: item.school_id,
+    companyName: {
+      name: item.school_name || "-",
+      id: item.school_id ? `#${String(item.school_id).slice(0, 8)}` : "",
+      image: item.school_logo_url || "/table-img1.svg",
+    },
+    principalName: principalName || "-",
+    email: principal.email || "-",
+    phone: formatPrincipalPhone(principal),
+  };
+}
 
 function AllSchools() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [search, setSearch] = useState("");
-  const [schoolsList, setSchoolsList] = useState(INITIAL_SCHOOLS);
+  const [page, setPage] = useState(1);
+  const [schools, setSchools] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [deleteSchoolId, setDeleteSchoolId] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
-  const filteredSchools = useMemo(() => {
-    if (!search.trim()) return schoolsList;
+  const fetchSchools = useCallback(async (pageNumber) => {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await listSchools({
+        page: pageNumber,
+        pageSize: PAGE_SIZE,
+      });
+      setSchools(response.data ?? []);
+      setTotalItems(response.total ?? 0);
+      setTotalPages(response.pages ?? 0);
+      setPage(response.page ?? pageNumber);
+    } catch (err) {
+      setSchools([]);
+      setTotalItems(0);
+      setTotalPages(0);
+      setError(err.message || "Failed to load schools");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-    const query = search.trim().toLowerCase();
-    return schoolsList.filter((school) => {
-      const schoolName = school.companyName?.name?.toLowerCase() || "";
-      const principalName = school.principalName?.toLowerCase() || "";
-      const email = school.email?.toLowerCase() || "";
-      const phone = school.phone?.toLowerCase() || "";
-      return (
-        schoolName.includes(query) ||
-        principalName.includes(query) ||
-        email.includes(query) ||
-        phone.includes(query)
-      );
-    });
-  }, [search, schoolsList]);
+  useEffect(() => {
+    fetchSchools(page);
+  }, [page, fetchSchools]);
 
   const headerButtons = useMemo(
     () => [
@@ -185,40 +116,108 @@ function AllSchools() {
     [],
   );
 
+  const tableData = useMemo(() => {
+    const rows = schools.map(mapSchoolToRow);
+    if (!search.trim()) return rows;
+
+    const query = search.trim().toLowerCase();
+    return rows.filter(
+      (row) =>
+        row.companyName?.name?.toLowerCase().includes(query) ||
+        row.principalName.toLowerCase().includes(query) ||
+        row.email.toLowerCase().includes(query) ||
+        row.phone.toLowerCase().includes(query) ||
+        String(row.schoolId).toLowerCase().includes(query),
+    );
+  }, [schools, search]);
+
+  const handlePageChange = useCallback((nextPage) => {
+    setPage(nextPage);
+  }, []);
+
+  const deleteSchoolName = useMemo(() => {
+    const row = tableData.find((item) => item.schoolId === deleteSchoolId);
+    return row?.companyName?.name;
+  }, [tableData, deleteSchoolId]);
+
+  const handleDeleteConfirm = async () => {
+    const id = deleteSchoolId;
+    if (!id || deleting) return;
+
+    setDeleting(true);
+    try {
+      const response = await deleteSchool(id);
+      showToast(response?.message || "School deleted successfully", "success");
+      setDeleteSchoolId("");
+
+      if (schools.length === 1 && page > 1) {
+        setPage(page - 1);
+      } else {
+        fetchSchools(page);
+      }
+    } catch (err) {
+      showToast(err?.message || "Failed to delete school", "error");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  if (error) {
+    return (
+      <div className="all-schools-page">
+        <div className="table1-no-data-container">
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="all-schools-page">
-      <CommonTable
-        tableData={filteredSchools}
-        headers={tableHeaders}
-        index={0}
-        specificReturn="schoolId"
-        handleActionClick={(action, id) => {
-          if (action === "view") {
-            navigate(`/schools/details/${id}`);
-          }
-          if (action === "edit") {
-            navigate(`/schools/edit-schools`);
-          }
-          if (action === "delete") {
-            setDeleteSchoolId(id);
-          }
-        }}
-        actionButtons={[
-          { label: "Edit", action: "edit" },
-          { label: "View", action: "view" },
-          { label: "Delete", action: "delete" },
-        ]}
-      />
+      {loading && schools.length === 0 ? (
+        <div className="table1-no-data-container">
+          <p>Loading schools...</p>
+        </div>
+      ) : (
+        <CommonTable
+          tableData={tableData}
+          headers={tableHeaders}
+          index={0}
+          specificReturn="schoolId"
+          handleActionClick={(action, id) => {
+            if (action === "view") {
+              navigate(`/schools/details/${id}`);
+            }
+            if (action === "edit") {
+              navigate(`/schools/edit-schools`);
+            }
+            if (action === "delete") {
+              setDeleteSchoolId(id);
+            }
+          }}
+          pagination={{
+            currentPage: page,
+            totalPages,
+            totalItems,
+            pageSize: PAGE_SIZE,
+            onPageChange: handlePageChange,
+          }}
+          actionButtons={[
+            { label: "Edit", action: "edit" },
+            { label: "View", action: "view" },
+            { label: "Delete", action: "delete" },
+          ]}
+        />
+      )}
 
       {deleteSchoolId ? (
         <ConfirmDeleteModal
           title="Delete school"
-          name={schoolsList.find((item) => item.schoolId === deleteSchoolId)?.companyName?.name}
-          onClose={() => setDeleteSchoolId("")}
-          onConfirm={() => {
-            const id = deleteSchoolId;
-            setSchoolsList((prev) => prev.filter((item) => item.schoolId !== id));
+          name={deleteSchoolName}
+          onClose={() => {
+            if (!deleting) setDeleteSchoolId("");
           }}
+          onConfirm={handleDeleteConfirm}
         />
       ) : null}
     </div>

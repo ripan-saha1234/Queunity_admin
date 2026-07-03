@@ -2,6 +2,8 @@ import { useMemo } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import usePageHeader from '../../../../hooks/use-page-header';
 import usePersonFromCase from '../../../../hooks/use-person-from-case';
+import { useCaseForm } from '../../../../context/CaseFormContext';
+import { getCaseWizardPath } from '../../../../utils/caseRoutes';
 import { WitnessPersonContent } from '../../../../components/case-view/PersonViewSections';
 import '../ViewSuspect/ViewSuspect.css';
 
@@ -29,9 +31,12 @@ const ViewWitness = () => {
 
   const isKnown = person?.do_you_know_the_witness === true;
 
+  const { isEditing, editMeta } = useCaseForm();
+  const editCaseId = isEditing ? editMeta?.case_id : null;
+
   const backToWitnessListLink = submittedCaseId
     ? `/cases/submitted-witness/${submittedCaseId}`
-    : `/cases/add-cases?step=${returnStep}`;
+    : getCaseWizardPath(returnStep, editCaseId);
 
   const backToViewCasesLink = submittedCaseId
     ? `/cases/case-submitted/${submittedCaseId}`

@@ -10,10 +10,13 @@ import OtherWitnessForm from "./OtherWitnessForm"
 import WitnessOtherDetailsForm from "./WitnessOtherDetailsForm"
 import { useCaseForm } from "../../../../context/CaseFormContext"
 import { useToast } from "../../../../components/toast/ToastProvider"
+import { getCaseWizardPath } from "../../../../utils/caseRoutes"
 
 const AddWitnessForm = () => {
     const navigate = useNavigate()
-    const { addWitness, uploadFile } = useCaseForm()
+    const { addWitness, uploadFile, isEditing, editMeta } = useCaseForm()
+    const editCaseId = isEditing ? editMeta?.case_id : null
+    const witnessListPath = getCaseWizardPath(2, editCaseId)
     const { showToast } = useToast()
     const [relationship, setrelationShip] = useState('')
     const [witnessKnown, setwitnessKnown] = useState(null)
@@ -134,7 +137,7 @@ const AddWitnessForm = () => {
         }
         addWitness(buildWitness())
         showToast('Witness added', 'success')
-        navigate('/cases/add-cases?step=2')
+        navigate(witnessListPath)
     }
 
     const headerButtons = useMemo(() => ([
@@ -145,7 +148,7 @@ const AddWitnessForm = () => {
             nextDisabled: false,
             prevText: "Back to Witness List",
             nextText: "Add Witness",
-            onPrev: () => navigate("/cases/add-cases?step=2"),
+            onPrev: () => navigate(witnessListPath),
             onNext: handleAddWitness,
         },
     // eslint-disable-next-line react-hooks/exhaustive-deps

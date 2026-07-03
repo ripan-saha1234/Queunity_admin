@@ -26,7 +26,7 @@ const suspectName = (suspect) => {
     return 'Unknown'
 }
 
-const SummaryCaseModal = ({ setsummaryCase, onSubmit }) => {
+const SummaryCaseModal = ({ setsummaryCase, onSubmit, isEditMode = false }) => {
     const navigate = useNavigate()
     const { showToast } = useToast()
     const { caseData } = useCaseForm()
@@ -62,11 +62,15 @@ const SummaryCaseModal = ({ setsummaryCase, onSubmit }) => {
         try {
             setSubmitting(true)
             const response = await onSubmit()
-            showToast(response?.message || 'Case added successfully', 'success')
+            showToast(
+                response?.message ||
+                    (isEditMode ? 'Case updated successfully' : 'Case added successfully'),
+                'success',
+            )
             setsummaryCase(false)
             navigate('/cases')
         } catch (error) {
-            showToast(error?.message || 'Failed to add case', 'error')
+            showToast(error?.message || (isEditMode ? 'Failed to update case' : 'Failed to add case'), 'error')
             setSubmitting(false)
         }
     }
@@ -92,7 +96,11 @@ const SummaryCaseModal = ({ setsummaryCase, onSubmit }) => {
                             <strong>{summary.resolution}</strong>
                         </ul>
 
-                        <strong>Are you sure you want to submit this case?</strong>
+                        <strong>
+                            {isEditMode
+                                ? 'Are you sure you want to update this case?'
+                                : 'Are you sure you want to submit this case?'}
+                        </strong>
                     </div>
                     <div style={{
                         marginLeft: 'auto',
@@ -102,7 +110,7 @@ const SummaryCaseModal = ({ setsummaryCase, onSubmit }) => {
                         gap: '15px'
                     }}>
                         <CommonButton onClick={(() => setsummaryCase(false))} text='Cancel' backgroundColor={'transparent'} borderColor={'transparent'} />
-                        <CommonButton onClick={handleConfirm} disabled={submitting} text={submitting ? 'Submitting...' : 'Yes'} backgroundColor={'var(--primary-color)'} borderColor={'transparent'} />
+                        <CommonButton onClick={handleConfirm} disabled={submitting} text={submitting ? (isEditMode ? 'Updating...' : 'Submitting...') : 'Yes'} backgroundColor={'var(--primary-color)'} borderColor={'transparent'} />
                     </div>
                 </div>
             </div>

@@ -154,6 +154,9 @@ function AllCases() {
             if (action === "view") {
               navigate(`/cases/case-submitted/${id}`);
             }
+            if (action === "edit") {
+              navigate(`/cases/edit-cases/${id}`);
+            }
           }}
           pagination={{
             currentPage: page,

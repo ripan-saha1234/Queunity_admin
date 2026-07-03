@@ -48,6 +48,7 @@ function App() {
           <Route path='cases' element={<CaseFormProvider><Outlet /></CaseFormProvider>}>
             <Route index element={<AllCases />} />
             <Route path='add-cases' element={<AddCases />} />
+            <Route path='edit-cases/:caseId' element={<AddCases />} />
             <Route path='add-suspect' element={<AddSuspectForm />} />
             <Route path='view-suspect/:id' element={<ViewSuspect />} />
             <Route path='add-witness' element={<AddWitnessForm />} />

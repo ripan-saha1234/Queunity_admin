@@ -11,10 +11,13 @@ import OtherDetailsForm from "./OtherDetailsForm"
 import icon from '../../../../Assets/Capa_1.svg'
 import { useCaseForm } from "../../../../context/CaseFormContext"
 import { useToast } from "../../../../components/toast/ToastProvider"
+import { getCaseWizardPath } from "../../../../utils/caseRoutes"
 
 const AddSuspectForm = () => {
     const navigate = useNavigate()
-    const { addSuspect, uploadFile } = useCaseForm()
+    const { addSuspect, uploadFile, isEditing, editMeta } = useCaseForm()
+    const editCaseId = isEditing ? editMeta?.case_id : null
+    const suspectListPath = getCaseWizardPath(1, editCaseId)
     const { showToast } = useToast()
     const [relationship, setrelationShip] = useState('')
     const [suspectKnown, setsuspectKnown] = useState(null)
@@ -132,7 +135,7 @@ const AddSuspectForm = () => {
         }
         addSuspect(buildSuspect())
         showToast('Suspect added', 'success')
-        navigate('/cases/add-cases?step=1')
+        navigate(suspectListPath)
     }
 
     const headerButtons = useMemo(() => ([
@@ -143,7 +146,7 @@ const AddSuspectForm = () => {
             nextDisabled: false,
             prevText: "Back to Suspect List",
             nextText: "Add Suspect",
-            onPrev: () => navigate("/cases/add-cases?step=1"),
+            onPrev: () => navigate(suspectListPath),
             onNext: handleAddSuspect,
         },
     // eslint-disable-next-line react-hooks/exhaustive-deps

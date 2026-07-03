@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import usePageHeader from "../../../hooks/use-page-header";
+import { getCaseById } from "../../../api/cases";
+import { mapApiCaseToStepFormData } from "../../../utils/caseFormMapper";
+import { getCaseWizardPath } from "../../../utils/caseRoutes";
 import CommonInput from "../../../components/common-input";
 import CommonSelect from "../../../components/common-select";
 import CommonButton from "../../../components/common-button";
@@ -28,7 +31,20 @@ function AddCases() {
   const stepsCount = 6;
   const location = useLocation();
   const navigate = useNavigate();
-  const { caseData, updateBasic, submitCase, resetDraft } = useCaseForm();
+  const { caseId } = useParams();
+  const isEditMode = Boolean(caseId);
+  const {
+    caseData,
+    updateBasic,
+    submitCase,
+    resetDraft,
+    loadCaseForEdit,
+    isEditing,
+    editMeta,
+  } = useCaseForm();
+
+  const [loadingCase, setLoadingCase] = useState(isEditMode);
+  const [loadError, setLoadError] = useState("");
 
   const initialStepIndex = useMemo(() => {
     const params = new URLSearchParams(location.search);
@@ -61,6 +77,7 @@ function AddCases() {
   }, [stepIndex, stepsCount]);
 
   const [formData, setFormData] = useState(() => ({
+    caseId: caseData.case_id || "",
     caseName: caseData.case_name || "",
     school: caseData.school_id || "",
     schoolName: caseData.school_id === "other" ? caseData.school_name || "" : "",
@@ -87,6 +104,34 @@ function AddCases() {
     anonymityLevel: caseData.anonymity_level || "",
     privacyLevel: caseData.privacy_level || "",
   }));
+
+  useEffect(() => {
+    if (!caseId) return undefined;
+
+    let active = true;
+    setLoadingCase(true);
+    setLoadError("");
+
+    getCaseById(caseId)
+      .then((data) => {
+        if (!active) return;
+        loadCaseForEdit(data);
+        setFormData(mapApiCaseToStepFormData(data));
+      })
+      .catch((err) => {
+        if (!active) return;
+        setLoadError(err?.message || "Failed to load case for editing");
+      })
+      .finally(() => {
+        if (active) setLoadingCase(false);
+      });
+
+    return () => {
+      active = false;
+    };
+    // Fetch once per caseId only — do not add loadCaseForEdit (causes infinite loop).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [caseId]);
 
   const offenceCategoryOptions = useMemo(
     () => [
@@ -148,9 +193,9 @@ function AddCases() {
         prevDisabled: stepIndex === 0,
         nextDisabled: false,
         prevText: isLastStep ? "Previous" : undefined,
-        nextText: isLastStep ? "Submit" : undefined,
+        nextText: isLastStep ? (isEditMode ? "Update" : "Submit") : undefined,
         onPrev: () => {
-          if (isLastStep) navigate("/cases/add-cases?step=4");
+          if (isLastStep) navigate(getCaseWizardPath(4, caseId));
           else setStepIndex((s) => Math.max(0, s - 1));
         },
         onNext: () => {
@@ -159,13 +204,18 @@ function AddCases() {
         },
       },
     ];
-  }, [progress, stepIndex, stepsCount, navigate]);
+  }, [progress, stepIndex, stepsCount, navigate, caseId, isEditMode]);
+
+  const pageTitle = isEditMode ? "Edit Case" : "Add Case";
+  const formPath = isEditMode
+    ? `/cases/edit-cases/${caseId}`
+    : "/cases/add-cases";
 
   usePageHeader({
-    title: "Add Case",
+    title: pageTitle,
     breadcrumbs: [
       { title: "Cases", link: "/cases" },
-      { title: "Add Case", link: "/cases/add-cases" },
+      { title: pageTitle, link: formPath },
     ],
     buttons: headerButtons,
   });
@@ -207,12 +257,33 @@ function AddCases() {
     return response;
   };
 
+  if (loadingCase) {
+    return (
+      <div className="add-cases-page">
+        <div className="table1-no-data-container">
+          <p>Loading case...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="add-cases-page">
+        <div className="table1-no-data-container">
+          <p>{loadError}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="add-cases-page">
       {summaryCaseOpen && (
         <SummaryCaseModal
           setsummaryCase={setSummaryCaseOpen}
           onSubmit={handleSubmitCase}
+          isEditMode={isEditMode || isEditing}
         />
       )}
       <div className="add-cases-form">
@@ -227,7 +298,7 @@ function AddCases() {
               <CommonInput
                 label="Case ID"
                 name="caseId"
-                value={formData.caseId}
+                value={formData.caseId || editMeta?.case_id || caseId || ""}
                 disabled={true}
                 placeholder="Case ID"
                 onChange={(e) =>

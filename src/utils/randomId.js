@@ -59,3 +59,15 @@ export function generateCaseIdentifiers() {
     case_number,
   };
 }
+
+/**
+ * Generates a unique charity_id for add_charity payload.
+ * Format: CHR10015 (prefix + 5-digit number).
+ *
+ * Currently integrated in:
+ * - src/api/charity.js → buildCharityPayload()
+ */
+export function generateCharityId() {
+  const num = generateRandomNumber(10000, 99999);
+  return `CHR${num}`;
+}
