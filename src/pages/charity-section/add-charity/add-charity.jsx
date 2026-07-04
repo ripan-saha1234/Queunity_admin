@@ -102,7 +102,7 @@ function AddCharity() {
       });
 
       showToast(response?.message || "Charity added successfully", "success");
-      navigate("/charity");
+      navigate("/charity", { state: { refreshCharities: true } });
     } catch (error) {
       showToast(error?.message || "Failed to add charity", "error");
     } finally {

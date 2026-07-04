@@ -24,8 +24,8 @@ const AddOffenceModal = ({ setaddOffense, onSuccess }) => {
     try {
       const response = await addOffence({ offenseName });
       showToast(response?.message || "Offense added successfully", "success");
-      onSuccess?.();
       setaddOffense(false);
+      await onSuccess?.();
     } catch (err) {
       showToast(err?.message || "Failed to add offense", "error");
     } finally {

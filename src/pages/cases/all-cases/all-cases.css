@@ -1,0 +1,29 @@
+.all-cases-page {
+  width: 100%;
+}
+
+.all-cases-page--relative {
+  position: relative;
+}
+
+.all-cases-table-wrap {
+  position: relative;
+  min-height: 240px;
+}
+
+.all-cases-table-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 8px;
+}
+
+.all-cases-table-overlay p {
+  margin: 0;
+  font-size: 14px;
+  color: #5d5d5d;
+}

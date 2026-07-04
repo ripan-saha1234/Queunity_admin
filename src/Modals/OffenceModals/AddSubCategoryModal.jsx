@@ -29,8 +29,8 @@ const AddSubCategoryModal = ({ setAddSubCategory, offenseId, onSuccess }) => {
     try {
       const response = await addSubCategory(offenseId, { subCategoryName });
       showToast(response?.message || 'Sub-category added successfully', 'success');
-      onSuccess?.();
       setAddSubCategory(false);
+      await onSuccess?.();
     } catch (err) {
       showToast(err?.message || 'Failed to add sub-category', 'error');
     } finally {

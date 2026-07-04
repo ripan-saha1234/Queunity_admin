@@ -32,6 +32,7 @@ const Offense = () => {
   const [deleting, setDeleting] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const isDeletingRef = useRef(false);
+  const isRefreshingRef = useRef(false);
   const pageRef = useRef(page);
 
   pageRef.current = page;
@@ -44,36 +45,44 @@ const Offense = () => {
   }, []);
 
   const loadOffences = useCallback(
-    async (pageNumber) => {
-      const response = await listOffences({
-        page: pageNumber,
-        pageSize: PAGE_SIZE,
-      });
-      applyListResponse(response, pageNumber);
-      return response.data ?? [];
+    async (pageNumber, { silent = false } = {}) => {
+      if (!silent) {
+        setLoading(true);
+        setError('');
+      }
+      try {
+        const response = await listOffences({
+          page: pageNumber,
+          pageSize: PAGE_SIZE,
+        });
+        applyListResponse(response, pageNumber);
+        return response.data ?? [];
+      } catch (err) {
+        if (!silent) {
+          setOffenses([]);
+          setTotalItems(0);
+          setTotalPages(0);
+          setError(err.message || 'Failed to load offenses');
+        } else {
+          throw err;
+        }
+      } finally {
+        if (!silent) setLoading(false);
+      }
     },
     [applyListResponse],
   );
 
   useEffect(() => {
-    if (isDeletingRef.current) return;
+    if (isDeletingRef.current || isRefreshingRef.current) return;
 
     let cancelled = false;
 
     const run = async () => {
-      setLoading(true);
-      setError('');
       try {
         await loadOffences(page);
-      } catch (err) {
-        if (!cancelled) {
-          setOffenses([]);
-          setTotalItems(0);
-          setTotalPages(0);
-          setError(err.message || 'Failed to load offenses');
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
+      } catch {
+        if (cancelled) return;
       }
     };
 
@@ -84,16 +93,28 @@ const Offense = () => {
     };
   }, [page, loadOffences]);
 
+  const refreshOffences = useCallback(
+    async (pageNumber) => {
+      isRefreshingRef.current = true;
+      setRefreshing(true);
+      setPage(pageNumber);
+
+      try {
+        await delay(RELOAD_DELAY_MS);
+        await loadOffences(pageNumber, { silent: true });
+      } catch (err) {
+        showToast(err?.message || 'Failed to refresh offenses', 'error');
+      } finally {
+        isRefreshingRef.current = false;
+        setRefreshing(false);
+      }
+    },
+    [loadOffences, showToast],
+  );
+
   const handleOffenseUpdated = useCallback(async () => {
-    setRefreshing(true);
-    try {
-      await loadOffences(page);
-    } catch (err) {
-      showToast(err?.message || 'Failed to refresh offenses', 'error');
-    } finally {
-      setRefreshing(false);
-    }
-  }, [loadOffences, page, showToast]);
+    await refreshOffences(page);
+  }, [refreshOffences, page]);
 
   const editOffenseMeta = useMemo(() => {
     const item = offenses.find((row) => row.offense_id === editOffenseId);
@@ -109,16 +130,8 @@ const Offense = () => {
   }, [offenses, editOffenseId]);
 
   const handleOffenseAdded = useCallback(async () => {
-    setPage(1);
-    setRefreshing(true);
-    try {
-      await loadOffences(1);
-    } catch (err) {
-      showToast(err?.message || 'Failed to refresh offenses', 'error');
-    } finally {
-      setRefreshing(false);
-    }
-  }, [loadOffences, showToast]);
+    await refreshOffences(1);
+  }, [refreshOffences]);
 
   const headerButtons = useMemo(
     () => [
@@ -205,10 +218,10 @@ const Offense = () => {
 
       await delay(RELOAD_DELAY_MS);
 
-      let rows = await loadOffences(nextPage);
+      let rows = await loadOffences(nextPage, { silent: true });
       if (rows.some((item) => item.offense_id === id)) {
         await delay(400);
-        rows = await loadOffences(nextPage);
+        rows = await loadOffences(nextPage, { silent: true });
       }
 
       if (rows.some((item) => item.offense_id === id)) {

@@ -4,6 +4,33 @@
     align-items: center;
     margin-bottom: 20px;
 }
+
+.offense_wrapper--relative {
+    position: relative;
+}
+
+.offense-table-wrap {
+    position: relative;
+    min-height: 240px;
+}
+
+.offense-table-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 8px;
+}
+
+.offense-table-overlay p {
+    margin: 0;
+    font-size: 14px;
+    color: #5d5d5d;
+}
+
 .offense_Head h2{
     font-size: 30px;
 }

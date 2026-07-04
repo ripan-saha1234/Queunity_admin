@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { deleteCharity, listCharities } from "../../../api/charity";
 import CommonTable from "../../../components/common-table";
 import usePageHeader from "../../../hooks/use-page-header";
@@ -41,6 +41,7 @@ function mapCharityToRow(item) {
 
 function AllCharity() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { showToast } = useToast();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -53,6 +54,7 @@ function AllCharity() {
   const [deleting, setDeleting] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const isDeletingRef = useRef(false);
+  const isRefreshingRef = useRef(false);
   const pageRef = useRef(page);
 
   pageRef.current = page;
@@ -64,34 +66,78 @@ function AllCharity() {
     setPage(response.page ?? pageNumber);
   }, []);
 
-  const loadCharities = useCallback(async (pageNumber) => {
-    const response = await listCharities({
-      page: pageNumber,
-      pageSize: PAGE_SIZE,
-    });
-    applyListResponse(response, pageNumber);
-    return response.data ?? [];
-  }, [applyListResponse]);
-
-  useEffect(() => {
-    if (isDeletingRef.current) return;
-
-    let cancelled = false;
-
-    const run = async () => {
-      setLoading(true);
-      setError("");
+  const loadCharities = useCallback(
+    async (pageNumber, { silent = false } = {}) => {
+      if (!silent) {
+        setLoading(true);
+        setError("");
+      }
       try {
-        await loadCharities(page);
+        const response = await listCharities({
+          page: pageNumber,
+          pageSize: PAGE_SIZE,
+        });
+        applyListResponse(response, pageNumber);
+        return response.data ?? [];
       } catch (err) {
-        if (!cancelled) {
+        if (!silent) {
           setCharities([]);
           setTotalItems(0);
           setTotalPages(0);
           setError(err.message || "Failed to load charities");
+        } else {
+          throw err;
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!silent) setLoading(false);
+      }
+    },
+    [applyListResponse],
+  );
+
+  useEffect(() => {
+    if (!location.state?.refreshCharities) return;
+
+    let cancelled = false;
+
+    const run = async () => {
+      isRefreshingRef.current = true;
+      setRefreshing(true);
+      setPage(1);
+
+      try {
+        await delay(RELOAD_DELAY_MS);
+        await loadCharities(1, { silent: true });
+      } catch (err) {
+        if (!cancelled) {
+          showToast(err?.message || "Failed to refresh charities", "error");
+        }
+      } finally {
+        if (!cancelled) {
+          isRefreshingRef.current = false;
+          setRefreshing(false);
+          navigate("/charity", { replace: true, state: {} });
+        }
+      }
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [location.state?.refreshCharities, loadCharities, navigate, showToast]);
+
+  useEffect(() => {
+    if (isDeletingRef.current || isRefreshingRef.current) return;
+
+    let cancelled = false;
+
+    const run = async () => {
+      try {
+        await loadCharities(page);
+      } catch {
+        if (cancelled) return;
       }
     };
 
@@ -185,16 +231,18 @@ function AllCharity() {
       const nextPage =
         charities.length === 1 && currentPage > 1 ? currentPage - 1 : currentPage;
 
-      setRefreshing(true);
       setCharities((prev) => prev.filter((item) => item.charity_id !== id));
       setTotalItems((prev) => Math.max(0, prev - 1));
 
+      isRefreshingRef.current = true;
+      setRefreshing(true);
+
       await delay(RELOAD_DELAY_MS);
 
-      let rows = await loadCharities(nextPage);
+      let rows = await loadCharities(nextPage, { silent: true });
       if (rows.some((item) => item.charity_id === id)) {
         await delay(400);
-        rows = await loadCharities(nextPage);
+        rows = await loadCharities(nextPage, { silent: true });
       }
 
       if (rows.some((item) => item.charity_id === id)) {
@@ -204,6 +252,7 @@ function AllCharity() {
       showToast(err?.message || "Failed to delete charity", "error");
     } finally {
       isDeletingRef.current = false;
+      isRefreshingRef.current = false;
       setRefreshing(false);
       setDeleting(false);
     }

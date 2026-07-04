@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { deleteCase, getAllCasesPagination } from "../../../api/cases";
 import usePageHeader from "../../../hooks/use-page-header";
 import CommonTable from "../../../components/common-table";
@@ -24,6 +24,7 @@ function mapCaseToRow(item) {
 
 function AllCases() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { showToast } = useToast();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -34,10 +35,14 @@ function AllCases() {
   const [error, setError] = useState("");
   const [deleteCaseId, setDeleteCaseId] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const skipPageLoadRef = useRef(false);
 
-  const fetchCases = useCallback(async (pageNumber) => {
-    setLoading(true);
-    setError("");
+  const loadCases = useCallback(async (pageNumber, { silent = false } = {}) => {
+    if (!silent) {
+      setLoading(true);
+      setError("");
+    }
     try {
       const response = await getAllCasesPagination({
         page: pageNumber,
@@ -48,18 +53,69 @@ function AllCases() {
       setTotalPages(response.pages ?? 0);
       setPage(response.page ?? pageNumber);
     } catch (err) {
-      setCases([]);
-      setTotalItems(0);
-      setTotalPages(0);
-      setError(err.message || "Failed to load cases");
+      if (!silent) {
+        setCases([]);
+        setTotalItems(0);
+        setTotalPages(0);
+        setError(err.message || "Failed to load cases");
+      } else {
+        throw err;
+      }
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchCases(page);
-  }, [page, fetchCases]);
+    if (!location.state?.refreshCases) return;
+
+    skipPageLoadRef.current = true;
+    let cancelled = false;
+
+    const run = async () => {
+      setRefreshing(true);
+      setPage(1);
+      try {
+        await loadCases(1, { silent: true });
+      } catch (err) {
+        if (!cancelled) {
+          showToast(err?.message || "Failed to refresh cases", "error");
+        }
+      } finally {
+        if (!cancelled) {
+          setRefreshing(false);
+          skipPageLoadRef.current = false;
+          navigate("/cases", { replace: true, state: {} });
+        }
+      }
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [location.state?.refreshCases, loadCases, navigate, showToast]);
+
+  useEffect(() => {
+    if (skipPageLoadRef.current) return;
+
+    let cancelled = false;
+
+    const run = async () => {
+      try {
+        await loadCases(page);
+      } finally {
+        if (cancelled) return;
+      }
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [page, loadCases]);
 
   const headerButtons = useMemo(
     () => [
@@ -137,10 +193,12 @@ function AllCases() {
       setDeleteCaseId("");
 
       const nextPage = cases.length === 1 && page > 1 ? page - 1 : page;
-      await fetchCases(nextPage);
+      setRefreshing(true);
+      await loadCases(nextPage, { silent: true });
     } catch (err) {
       showToast(err?.message || "Failed to delete case", "error");
     } finally {
+      setRefreshing(false);
       setDeleting(false);
     }
   };
@@ -156,40 +214,48 @@ function AllCases() {
   }
 
   return (
-    <div className="all-cases-page">
+    <div className="all-cases-page all-cases-page--relative">
       {loading && cases.length === 0 ? (
         <div className="table1-no-data-container">
           <p>Loading cases...</p>
         </div>
       ) : (
-        <CommonTable
-          tableData={tableData}
-          headers={tableHeaders}
-          specificReturn="caseId"
-          handleActionClick={(action, id) => {
-            if (action === "view") {
-              navigate(`/cases/case-submitted/${id}`);
-            }
-            if (action === "edit") {
-              navigate(`/cases/edit-cases/${id}`);
-            }
-            if (action === "delete") {
-              setDeleteCaseId(id);
-            }
-          }}
-          pagination={{
-            currentPage: page,
-            totalPages,
-            totalItems,
-            pageSize: PAGE_SIZE,
-            onPageChange: handlePageChange,
-          }}
-          actionButtons={[
-            { label: "Edit", action: "edit" },
-            { label: "View", action: "view" },
-            { label: "Delete", action: "delete" },
-          ]}
-        />
+        <div className="all-cases-table-wrap">
+          {refreshing ? (
+            <div className="all-cases-table-overlay">
+              <p>Refreshing cases...</p>
+            </div>
+          ) : null}
+          <CommonTable
+            key={`cases-table-${page}-${totalItems}-${cases.length}`}
+            tableData={tableData}
+            headers={tableHeaders}
+            specificReturn="caseId"
+            handleActionClick={(action, id) => {
+              if (action === "view") {
+                navigate(`/cases/case-submitted/${id}`);
+              }
+              if (action === "edit") {
+                navigate(`/cases/edit-cases/${id}`);
+              }
+              if (action === "delete") {
+                setDeleteCaseId(id);
+              }
+            }}
+            pagination={{
+              currentPage: page,
+              totalPages,
+              totalItems,
+              pageSize: PAGE_SIZE,
+              onPageChange: handlePageChange,
+            }}
+            actionButtons={[
+              { label: "Edit", action: "edit" },
+              { label: "View", action: "view" },
+              { label: "Delete", action: "delete" },
+            ]}
+          />
+        </div>
       )}
 
       {deleteCaseId ? (

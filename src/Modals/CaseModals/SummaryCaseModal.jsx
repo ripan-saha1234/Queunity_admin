@@ -68,7 +68,7 @@ const SummaryCaseModal = ({ setsummaryCase, onSubmit, isEditMode = false }) => {
                 'success',
             )
             setsummaryCase(false)
-            navigate('/cases')
+            navigate('/cases', { state: { refreshCases: true } })
         } catch (error) {
             showToast(error?.message || (isEditMode ? 'Failed to update case' : 'Failed to add case'), 'error')
             setSubmitting(false)
