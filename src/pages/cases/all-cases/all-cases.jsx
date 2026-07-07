@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { deleteCase, getAllCasesPagination } from "../../../api/cases";
 import usePageHeader from "../../../hooks/use-page-header";
 import CommonTable from "../../../components/common-table";
+import CommonLoader from "../../../components/common-loader";
 import { useToast } from "../../../components/toast/ToastProvider";
 import ConfirmDeleteModal from "../../../Modals/StaffModals/ConfirmDeleteModal";
 import { formatCreatedAt } from "../../../utils/caseDisplay";
@@ -223,12 +224,12 @@ function AllCases() {
   return (
     <div className="all-cases-page">
       {loading && cases.length === 0 ? (
-        <div className="table1-no-data-container">
-          <p>Loading cases...</p>
+        <div className="table1-no-data-container table-loader-container">
+          <CommonLoader text="Loading cases..." />
         </div>
       ) : refreshing ? (
-        <div className="table1-no-data-container">
-          <p>Refreshing cases...</p>
+        <div className="table1-no-data-container table-loader-container">
+          <CommonLoader text="Refreshing cases..." />
         </div>
       ) : (
         <CommonTable

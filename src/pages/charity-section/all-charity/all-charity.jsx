@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { deleteCharity, listCharities } from "../../../api/charity";
 import CommonTable from "../../../components/common-table";
+import CommonLoader from "../../../components/common-loader";
 import usePageHeader from "../../../hooks/use-page-header";
 import { useToast } from "../../../components/toast/ToastProvider";
 import ConfirmDeleteModal from "../../../Modals/StaffModals/ConfirmDeleteModal";
@@ -56,18 +57,26 @@ function AllCharity() {
   const isDeletingRef = useRef(false);
   const isRefreshingRef = useRef(false);
   const pageRef = useRef(page);
+  const charitiesRef = useRef(charities);
 
   pageRef.current = page;
+  charitiesRef.current = charities;
 
-  const applyListResponse = useCallback((response, pageNumber) => {
-    setCharities(response.data ?? []);
-    setTotalItems(response.total ?? 0);
+  const applyListResponse = useCallback((response, pageNumber, excludeCharityId = null) => {
+    let rows = response.data ?? response.items ?? [];
+    if (excludeCharityId != null) {
+      const excludeId = String(excludeCharityId);
+      rows = rows.filter((item) => String(item.charity_id) !== excludeId);
+    }
+    setCharities(rows);
+    setTotalItems(response.total ?? rows.length);
     setTotalPages(response.pages ?? 0);
     setPage(response.page ?? pageNumber);
+    return rows;
   }, []);
 
   const loadCharities = useCallback(
-    async (pageNumber, { silent = false } = {}) => {
+    async (pageNumber, { silent = false, excludeCharityId = null } = {}) => {
       if (!silent) {
         setLoading(true);
         setError("");
@@ -77,8 +86,7 @@ function AllCharity() {
           page: pageNumber,
           pageSize: PAGE_SIZE,
         });
-        applyListResponse(response, pageNumber);
-        return response.data ?? [];
+        return applyListResponse(response, pageNumber, excludeCharityId);
       } catch (err) {
         if (!silent) {
           setCharities([]);
@@ -94,39 +102,6 @@ function AllCharity() {
     },
     [applyListResponse],
   );
-
-  useEffect(() => {
-    if (!location.state?.refreshCharities) return;
-
-    let cancelled = false;
-
-    const run = async () => {
-      isRefreshingRef.current = true;
-      setRefreshing(true);
-      setPage(1);
-
-      try {
-        await delay(RELOAD_DELAY_MS);
-        await loadCharities(1, { silent: true });
-      } catch (err) {
-        if (!cancelled) {
-          showToast(err?.message || "Failed to refresh charities", "error");
-        }
-      } finally {
-        if (!cancelled) {
-          isRefreshingRef.current = false;
-          setRefreshing(false);
-          navigate("/charity", { replace: true, state: {} });
-        }
-      }
-    };
-
-    run();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [location.state?.refreshCharities, loadCharities, navigate, showToast]);
 
   useEffect(() => {
     if (isDeletingRef.current || isRefreshingRef.current) return;
@@ -147,6 +122,47 @@ function AllCharity() {
       cancelled = true;
     };
   }, [page, loadCharities]);
+
+  const refreshCharities = useCallback(
+    async (pageNumber) => {
+      isRefreshingRef.current = true;
+      setRefreshing(true);
+      setPage(pageNumber);
+
+      try {
+        await delay(RELOAD_DELAY_MS);
+        await loadCharities(pageNumber, { silent: true });
+      } catch (err) {
+        showToast(err?.message || "Failed to refresh charities", "error");
+      } finally {
+        isRefreshingRef.current = false;
+        setRefreshing(false);
+      }
+    },
+    [loadCharities, showToast],
+  );
+
+  useEffect(() => {
+    if (!location.state?.refreshCharities) return;
+
+    let cancelled = false;
+
+    const run = async () => {
+      try {
+        await refreshCharities(1);
+      } finally {
+        if (!cancelled) {
+          navigate("/charity", { replace: true, state: {} });
+        }
+      }
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [location.state?.refreshCharities, refreshCharities, navigate]);
 
   const headerButtons = useMemo(
     () => [
@@ -223,36 +239,48 @@ function AllCharity() {
     isDeletingRef.current = true;
 
     try {
-      await deleteCharity(id);
-      showToast("Charity deleted successfully", "success");
+      const response = await deleteCharity(id);
+      showToast(response?.message || "Charity deleted successfully", "success");
       setDeleteCharityId("");
 
       const currentPage = pageRef.current;
+      const charityCount = charitiesRef.current.length;
       const nextPage =
-        charities.length === 1 && currentPage > 1 ? currentPage - 1 : currentPage;
+        charityCount === 1 && currentPage > 1 ? currentPage - 1 : currentPage;
 
-      setCharities((prev) => prev.filter((item) => item.charity_id !== id));
+      setRefreshing(true);
+      setCharities((prev) =>
+        prev.filter((item) => String(item.charity_id) !== String(id)),
+      );
       setTotalItems((prev) => Math.max(0, prev - 1));
 
-      isRefreshingRef.current = true;
-      setRefreshing(true);
+      try {
+        await delay(RELOAD_DELAY_MS);
 
-      await delay(RELOAD_DELAY_MS);
+        let rows = await loadCharities(nextPage, {
+          silent: true,
+          excludeCharityId: id,
+        });
+        if (rows.some((item) => String(item.charity_id) === String(id))) {
+          await delay(400);
+          rows = await loadCharities(nextPage, {
+            silent: true,
+            excludeCharityId: id,
+          });
+        }
 
-      let rows = await loadCharities(nextPage, { silent: true });
-      if (rows.some((item) => item.charity_id === id)) {
-        await delay(400);
-        rows = await loadCharities(nextPage, { silent: true });
-      }
-
-      if (rows.some((item) => item.charity_id === id)) {
-        setCharities((prev) => prev.filter((item) => item.charity_id !== id));
+        if (rows.some((item) => String(item.charity_id) === String(id))) {
+          setCharities((prev) =>
+            prev.filter((item) => String(item.charity_id) !== String(id)),
+          );
+        }
+      } catch (err) {
+        showToast(err?.message || "Failed to refresh charities", "error");
       }
     } catch (err) {
       showToast(err?.message || "Failed to delete charity", "error");
     } finally {
       isDeletingRef.current = false;
-      isRefreshingRef.current = false;
       setRefreshing(false);
       setDeleting(false);
     }
@@ -271,14 +299,14 @@ function AllCharity() {
   return (
     <div className="all-charity-page all-charity-page--relative">
       {loading && charities.length === 0 ? (
-        <div className="table1-no-data-container">
-          <p>Loading charities...</p>
+        <div className="table1-no-data-container table-loader-container">
+          <CommonLoader text="Loading charities..." />
         </div>
       ) : (
         <div className="all-charity-table-wrap">
           {refreshing ? (
             <div className="all-charity-table-overlay">
-              <p>Refreshing charities...</p>
+              <CommonLoader text="Refreshing charities..." size={16} />
             </div>
           ) : null}
           <CommonTable

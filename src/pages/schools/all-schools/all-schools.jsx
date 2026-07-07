@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteSchool, listSchools } from "../../../api/school";
 import CommonTable from "../../../components/common-table";
+import CommonLoader from "../../../components/common-loader";
 import usePageHeader from "../../../hooks/use-page-header";
 import { useToast } from "../../../components/toast/ToastProvider";
 import ConfirmDeleteModal from "../../../Modals/StaffModals/ConfirmDeleteModal";
@@ -185,12 +186,12 @@ function AllSchools() {
   return (
     <div className="all-schools-page">
       {loading && schools.length === 0 ? (
-        <div className="table1-no-data-container">
-          <p>Loading schools...</p>
+        <div className="table1-no-data-container table-loader-container">
+          <CommonLoader text="Loading schools..." />
         </div>
       ) : refreshing ? (
-        <div className="table1-no-data-container">
-          <p>Refreshing schools...</p>
+        <div className="table1-no-data-container table-loader-container">
+          <CommonLoader text="Refreshing schools..." />
         </div>
       ) : (
         <CommonTable

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Offense.css';
 import CommonTable from '../../../components/common-table';
+import CommonLoader from '../../../components/common-loader';
 import AddOffenceModal from '../../../Modals/CaseModals/AddOffenceModal';
 import EditOffenceModal from '../../../Modals/CaseModals/EditOffenceModal';
 import usePageHeader from '../../../hooks/use-page-header.jsx';
@@ -264,14 +265,14 @@ const Offense = () => {
       ) : null}
       <div className="offense_wrapper offense_wrapper--relative">
         {loading && offenses.length === 0 ? (
-          <div className="table1-no-data-container">
-            <p>Loading offenses...</p>
+          <div className="table1-no-data-container table-loader-container">
+            <CommonLoader text="Loading offenses..." />
           </div>
         ) : (
           <div className="offense-table-wrap">
             {refreshing ? (
               <div className="offense-table-overlay">
-                <p>Refreshing offenses...</p>
+                <CommonLoader text="Refreshing offenses..." size={16} />
               </div>
             ) : null}
             <CommonTable

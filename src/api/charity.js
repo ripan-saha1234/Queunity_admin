@@ -146,6 +146,53 @@ export async function addCharity(form) {
   return data;
 }
 
+function getCharityRowId(item) {
+  return String(item?.charity_id ?? item?.id ?? '');
+}
+
+function normalizeCharityListItem(item) {
+  if (!item) return item;
+
+  const charityId = getCharityRowId(item);
+  if (item.contact_person) {
+    return { ...item, charity_id: item.charity_id ?? charityId };
+  }
+
+  const contactParts = (item.contact_name || '').trim().split(/\s+/);
+  const firstName = contactParts[0] || '';
+  const lastName = contactParts.slice(1).join(' ');
+
+  return {
+    ...item,
+    charity_id: charityId,
+    charity_name: item.charity_name || item.name || '-',
+    charity_logo_url: item.charity_logo_url || item.logo_url || '',
+    contact_person: {
+      first_name: firstName,
+      last_name: lastName,
+      email: item.email || item.contact_email || '',
+      phone_code: item.phone_code || '',
+      phone: item.phone || '',
+    },
+  };
+}
+
+export function normalizeCharityListResponse(data) {
+  const rows = (data.data ?? data.items ?? []).map(normalizeCharityListItem);
+  const activeRows = rows.filter((item) => item.isactive !== false);
+
+  return {
+    data: activeRows,
+    total: data.total ?? activeRows.length,
+    pages:
+      data.pages ??
+      (data.page_size
+        ? Math.ceil((data.total ?? activeRows.length) / data.page_size)
+        : 0),
+    page: data.page ?? 1,
+  };
+}
+
 // GET /list_charities — paginated charity list for the charity table.
 export async function listCharities({ page = 1, pageSize = 10 } = {}) {
   const params = new URLSearchParams({
@@ -161,6 +208,10 @@ export async function listCharities({ page = 1, pageSize = 10 } = {}) {
 
   const data = await response.json().catch(() => ({}));
 
+  if ((data.data ?? data.items) != null || data.total != null) {
+    return normalizeCharityListResponse(data);
+  }
+
   if (!response.ok) {
     const detail = Array.isArray(data.detail)
       ? data.detail.map((item) => item.msg || item.message).join(', ')
@@ -168,7 +219,7 @@ export async function listCharities({ page = 1, pageSize = 10 } = {}) {
     throw new Error(data.message || detail || 'Failed to fetch charities');
   }
 
-  return data;
+  return normalizeCharityListResponse(data);
 }
 
 // DELETE /delete_charity/{charity_id}
@@ -183,6 +234,11 @@ export async function deleteCharity(charityId) {
   );
 
   const data = await response.json().catch(() => ({}));
+
+  // Backend may return success in the body even when status is not 200.
+  if (data?.message || data?.charity_id) {
+    return data;
+  }
 
   if (!response.ok) {
     const detail = Array.isArray(data.detail)

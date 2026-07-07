@@ -242,6 +242,13 @@
   border: 1px solid #E0E0E0;
 }
 
+.table1-no-data-container.table-loader-container {
+  min-height: 240px;
+  height: auto;
+  background-color: transparent;
+  border: none;
+}
+
 .table1-no-data-container p {
   font-size: 14px;
   font-weight: 400;

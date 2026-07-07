@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../Offense.css';
 import CommonTable from '../../../../components/common-table';
+import CommonLoader from '../../../../components/common-loader';
 import usePageHeader from '../../../../hooks/use-page-header';
 import { useToast } from '../../../../components/toast/ToastProvider';
 import AddSubCategoryModal from '../../../../Modals/OffenceModals/AddSubCategoryModal';
@@ -183,14 +184,14 @@ const SingleOffense = () => {
       )}
       <div className="offense_wrapper offense_wrapper--relative">
         {loading && subCategories.length === 0 ? (
-          <div className="table1-no-data-container">
-            <p>Loading sub-categories...</p>
+          <div className="table1-no-data-container table-loader-container">
+            <CommonLoader text="Loading sub-categories..." />
           </div>
         ) : (
           <div className="offense-table-wrap">
             {refreshing ? (
               <div className="offense-table-overlay">
-                <p>Refreshing sub-categories...</p>
+                <CommonLoader text="Refreshing sub-categories..." size={16} />
               </div>
             ) : null}
             <CommonTable

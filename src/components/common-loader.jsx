@@ -1,22 +1,12 @@
-import { GridLoader } from "react-spinners";
+import './common-loader.css';
 
-function CommonLoader({ text = 'Loading...' ,size = 20}) {
+function CommonLoader({ text = 'Loading...', size = 20 }) {
+  const compact = size <= 16;
+
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '10px',
-      height: '100%',
-      width: '100%',
-    }}>
-      <GridLoader
-        color="#006D70"
-        loading={true}
-        size={size}
-      />
-      <p style={{ fontSize: '24px', fontWeight: '500' }}>{text}</p>
+    <div className={`common-loader${compact ? ' common-loader--compact' : ''}`}>
+      <div className="common-loader__spinner" aria-hidden="true" />
+      {text ? <p className="common-loader__text">{text}</p> : null}
     </div>
   );
 }

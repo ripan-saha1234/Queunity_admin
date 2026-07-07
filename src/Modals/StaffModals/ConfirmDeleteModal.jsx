@@ -42,7 +42,6 @@ function ConfirmDeleteModal({ title = "Delete", name, onClose, onConfirm }) {
             borderColor="#9FC53D"
             onClick={async () => {
               await onConfirm?.();
-              onClose();
             }}
           />
         </div>
