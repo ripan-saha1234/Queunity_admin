@@ -9,6 +9,11 @@ import { formatCreatedAt } from "../../../utils/caseDisplay";
 import "./all-cases.css";
 
 const PAGE_SIZE = 10;
+const RELOAD_DELAY_MS = 600;
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 function mapCaseToRow(item) {
   const { date, time } = formatCreatedAt(item.created_at);
@@ -76,6 +81,7 @@ function AllCases() {
       setRefreshing(true);
       setPage(1);
       try {
+        await delay(RELOAD_DELAY_MS);
         await loadCases(1, { silent: true });
       } catch (err) {
         if (!cancelled) {
@@ -194,6 +200,7 @@ function AllCases() {
 
       const nextPage = cases.length === 1 && page > 1 ? page - 1 : page;
       setRefreshing(true);
+      await delay(RELOAD_DELAY_MS);
       await loadCases(nextPage, { silent: true });
     } catch (err) {
       showToast(err?.message || "Failed to delete case", "error");
@@ -214,48 +221,45 @@ function AllCases() {
   }
 
   return (
-    <div className="all-cases-page all-cases-page--relative">
+    <div className="all-cases-page">
       {loading && cases.length === 0 ? (
         <div className="table1-no-data-container">
           <p>Loading cases...</p>
         </div>
-      ) : (
-        <div className="all-cases-table-wrap">
-          {refreshing ? (
-            <div className="all-cases-table-overlay">
-              <p>Refreshing cases...</p>
-            </div>
-          ) : null}
-          <CommonTable
-            key={`cases-table-${page}-${totalItems}-${cases.length}`}
-            tableData={tableData}
-            headers={tableHeaders}
-            specificReturn="caseId"
-            handleActionClick={(action, id) => {
-              if (action === "view") {
-                navigate(`/cases/case-submitted/${id}`);
-              }
-              if (action === "edit") {
-                navigate(`/cases/edit-cases/${id}`);
-              }
-              if (action === "delete") {
-                setDeleteCaseId(id);
-              }
-            }}
-            pagination={{
-              currentPage: page,
-              totalPages,
-              totalItems,
-              pageSize: PAGE_SIZE,
-              onPageChange: handlePageChange,
-            }}
-            actionButtons={[
-              { label: "Edit", action: "edit" },
-              { label: "View", action: "view" },
-              { label: "Delete", action: "delete" },
-            ]}
-          />
+      ) : refreshing ? (
+        <div className="table1-no-data-container">
+          <p>Refreshing cases...</p>
         </div>
+      ) : (
+        <CommonTable
+          key={`cases-table-${page}-${totalItems}-${cases.length}`}
+          tableData={tableData}
+          headers={tableHeaders}
+          specificReturn="caseId"
+          handleActionClick={(action, id) => {
+            if (action === "view") {
+              navigate(`/cases/case-submitted/${id}`);
+            }
+            if (action === "edit") {
+              navigate(`/cases/edit-cases/${id}`);
+            }
+            if (action === "delete") {
+              setDeleteCaseId(id);
+            }
+          }}
+          pagination={{
+            currentPage: page,
+            totalPages,
+            totalItems,
+            pageSize: PAGE_SIZE,
+            onPageChange: handlePageChange,
+          }}
+          actionButtons={[
+            { label: "Edit", action: "edit" },
+            { label: "View", action: "view" },
+            { label: "Delete", action: "delete" },
+          ]}
+        />
       )}
 
       {deleteCaseId ? (
