@@ -1,17 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../Modals.css";
 import "./add-staff-modal.css";
 import CommonButton from "../../components/common-button";
 import InputCommon from "../../components/input_common";
 import NewCommonMultiFileUpload from "../../components/NewCommonMultiFileUpload";
+import { useToast } from "../../components/toast/ToastProvider";
+import { uploadImage } from "../../api/cases";
+import { listRoles, mapRoleToRow } from "../../api/roles";
+import { addStaff, validateStaffForm } from "../../api/staff";
 
 const MAX_BYTES = 200 * 1024;
-
-const roleOptions = [
-  { label: "Role 1", value: "role1" },
-  { label: "Role 2", value: "role2" },
-  { label: "Role 3", value: "role3" },
-];
 
 const phoneCodeOptions = [
   { label: "+1", value: "+1" },
@@ -19,17 +17,50 @@ const phoneCodeOptions = [
   { label: "+91", value: "+91" },
 ];
 
-function AddStaffModal({ onClose, onAdd }) {
+function AddStaffModal({ onClose, onSuccess }) {
+  const { showToast } = useToast();
   const [form, setForm] = useState({
-    firstName: "Bidisha",
-    lastName: "Bhowmick",
-    email: "bidishabhowmick@gmail.com",
+    firstName: "",
+    lastName: "",
+    email: "",
     phoneCode: "+1",
-    phone: "923 245 6980",
-    role: "role1",
+    phone: "",
+    role: "",
   });
+  const [roleOptions, setRoleOptions] = useState([]);
   const [imageFiles, setImageFiles] = useState([]);
   const [imageError, setImageError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadRoles = async () => {
+      try {
+        const response = await listRoles({ page: 1, pageSize: 100 });
+        if (cancelled) return;
+        const options = (response.data ?? []).map((item) => {
+          const row = mapRoleToRow(item);
+          return { label: row.role, value: row.roleId };
+        });
+        setRoleOptions(options);
+        setForm((prev) => ({
+          ...prev,
+          role: prev.role || options[0]?.value || "",
+        }));
+      } catch (err) {
+        if (!cancelled) {
+          showToast(err?.message || "Failed to load roles", "error");
+        }
+      }
+    };
+
+    loadRoles();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [showToast]);
 
   const updateField = (name, value) => {
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -57,15 +88,37 @@ function AddStaffModal({ onClose, onAdd }) {
     setImageFiles(files);
   };
 
-  const handleAdd = () => {
-    if (onAdd) {
-      onAdd({ ...form, imageFiles });
+  const handleClose = () => {
+    if (!submitting) onClose?.();
+  };
+
+  const handleAdd = async () => {
+    const validationError = validateStaffForm(form);
+    if (validationError) {
+      showToast(validationError, "error");
+      return;
     }
-    onClose();
+
+    setSubmitting(true);
+    try {
+      let photoUrl = "";
+      if (imageFiles[0]) {
+        photoUrl = await uploadImage(imageFiles[0]);
+      }
+
+      const response = await addStaff({ ...form, photoUrl });
+      showToast(response?.message || "Staff added successfully", "success");
+      await onSuccess?.();
+      onClose?.();
+    } catch (err) {
+      showToast(err?.message || "Failed to add staff", "error");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <div className="modal_wrapper" role="presentation" onClick={onClose}>
+    <div className="modal_wrapper" role="presentation" onClick={handleClose}>
       <div
         className="modal_body add-staff-modal"
         role="dialog"
@@ -78,7 +131,7 @@ function AddStaffModal({ onClose, onAdd }) {
             type="button"
             className="add-evidence-modal__close"
             aria-label="Close"
-            onClick={onClose}
+            onClick={handleClose}
           >
             <i className="fa-solid fa-xmark" />
           </button>
@@ -92,6 +145,7 @@ function AddStaffModal({ onClose, onAdd }) {
             required
             value={form.firstName}
             placeholder="Bidisha"
+            disabled={submitting}
             onChange={(e) => updateField("firstName", e.target.value)}
           />
           <InputCommon
@@ -101,6 +155,7 @@ function AddStaffModal({ onClose, onAdd }) {
             required
             value={form.lastName}
             placeholder="Bhowmick"
+            disabled={submitting}
             onChange={(e) => updateField("lastName", e.target.value)}
           />
         </div>
@@ -113,6 +168,7 @@ function AddStaffModal({ onClose, onAdd }) {
             required
             value={form.email}
             placeholder="bidishabhowmick@gmail.com"
+            disabled={submitting}
             onChange={(e) => updateField("email", e.target.value)}
           />
           <div className="add-staff-modal__phone-field">
@@ -125,6 +181,7 @@ function AddStaffModal({ onClose, onAdd }) {
                   name="phoneCode"
                   type="select"
                   value={form.phoneCode}
+                  disabled={submitting}
                   onChange={(e) => updateField("phoneCode", e.target.value)}
                   options={phoneCodeOptions}
                   placeholder="+1"
@@ -136,6 +193,7 @@ function AddStaffModal({ onClose, onAdd }) {
                   type="text"
                   value={form.phone}
                   placeholder="923 245 6980"
+                  disabled={submitting}
                   onChange={(e) => updateField("phone", e.target.value)}
                 />
               </div>
@@ -150,6 +208,7 @@ function AddStaffModal({ onClose, onAdd }) {
             type="select"
             required
             value={form.role}
+            disabled={submitting}
             onChange={(e) => updateField("role", e.target.value)}
             options={roleOptions}
             placeholder="Select role"
@@ -158,7 +217,10 @@ function AddStaffModal({ onClose, onAdd }) {
 
         <div className="radio_main add-staff-modal__file-upload">
           <label className="add-staff-modal__upload-label">Upload Image</label>
-          <NewCommonMultiFileUpload onChange={handleMultiFileChange} />
+          <NewCommonMultiFileUpload
+            removable
+            onChange={handleMultiFileChange}
+          />
           {imageError ? (
             <p className="add-staff-modal__image-error" role="alert">
               {imageError}
@@ -168,10 +230,11 @@ function AddStaffModal({ onClose, onAdd }) {
 
         <div className="add-evidence-modal__footer">
           <CommonButton
-            text="Add"
+            text={submitting ? "Adding..." : "Add"}
             backgroundColor="#95C63D"
             color="#141414"
             borderColor="#9FC53D"
+            disabled={submitting}
             onClick={handleAdd}
           />
         </div>

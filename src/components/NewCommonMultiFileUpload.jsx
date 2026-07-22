@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "../css/CommonFileUpload.css";
 
 function isImageSource(value) {
@@ -9,19 +9,61 @@ function isImageSource(value) {
   return value.type?.startsWith("image/");
 }
 
-const NewCommonMultiFileUpload = ({ onChange, existingUrls = [] }) => {
+const NewCommonMultiFileUpload = ({
+  onChange,
+  existingUrls = [],
+  removable = false,
+  onRemoveExisting,
+}) => {
+  const inputRef = useRef(null);
   const [filePreviews, setFilePreviews] = useState([]);
+
+  useEffect(() => {
+    return () => {
+      filePreviews.forEach((preview) => {
+        if (preview.src?.startsWith("blob:")) {
+          URL.revokeObjectURL(preview.src);
+        }
+      });
+    };
+  }, [filePreviews]);
 
   const handleChange = (e) => {
     const files = Array.from(e.target.files || []);
-    const previews = files.map((file) => ({
-      key: `${file.name}-${file.lastModified}-${file.size}`,
-      src: isImageSource(file) ? URL.createObjectURL(file) : "/document1.svg",
-      alt: file.name,
-    }));
-
-    setFilePreviews(previews);
+    setFilePreviews((prev) => {
+      prev.forEach((preview) => {
+        if (preview.src?.startsWith("blob:")) {
+          URL.revokeObjectURL(preview.src);
+        }
+      });
+      return files.map((file) => ({
+        key: `${file.name}-${file.lastModified}-${file.size}`,
+        src: isImageSource(file) ? URL.createObjectURL(file) : "/document1.svg",
+        alt: file.name,
+        type: "new",
+      }));
+    });
     if (onChange) onChange(e);
+  };
+
+  const handleRemoveNew = (key) => {
+    setFilePreviews((prev) => {
+      const removed = prev.find((preview) => preview.key === key);
+      if (removed?.src?.startsWith("blob:")) {
+        URL.revokeObjectURL(removed.src);
+      }
+      return prev.filter((preview) => preview.key !== key);
+    });
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+    if (onChange) {
+      onChange({ target: { files: [] } });
+    }
+  };
+
+  const handleRemoveExisting = (url) => {
+    onRemoveExisting?.(url);
   };
 
   const existingPreviews = useMemo(
@@ -30,6 +72,8 @@ const NewCommonMultiFileUpload = ({ onChange, existingUrls = [] }) => {
         key: `existing-${url}-${index}`,
         src: isImageSource(url) ? url : "/document1.svg",
         alt: `Uploaded file ${index + 1}`,
+        type: "existing",
+        url,
       })),
     [existingUrls],
   );
@@ -46,12 +90,30 @@ const NewCommonMultiFileUpload = ({ onChange, existingUrls = [] }) => {
       {hasPreviews ? (
         <div className="preview_container">
           {allPreviews.map((preview) => (
-            <img
-              key={preview.key}
-              src={preview.src}
-              alt={preview.alt}
-              className="file_upload_preview_image"
-            />
+            <div key={preview.key} className="file_upload_preview_item">
+              <img
+                src={preview.src}
+                alt={preview.alt}
+                className="file_upload_preview_image"
+              />
+              {removable ? (
+                <button
+                  type="button"
+                  className="file_upload_preview_remove"
+                  aria-label="Remove image"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (preview.type === "existing") {
+                      handleRemoveExisting(preview.url);
+                    } else {
+                      handleRemoveNew(preview.key);
+                    }
+                  }}
+                >
+                  <i className="fa-solid fa-xmark" />
+                </button>
+              ) : null}
+            </div>
           ))}
         </div>
       ) : (
@@ -64,7 +126,7 @@ const NewCommonMultiFileUpload = ({ onChange, existingUrls = [] }) => {
         </>
       )}
 
-      <input type="file" multiple onChange={handleChange} />
+      <input ref={inputRef} type="file" multiple onChange={handleChange} />
     </div>
   );
 };

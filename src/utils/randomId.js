@@ -95,3 +95,15 @@ export function generateSubCategoryId() {
   const num = generateRandomNumber(100, 99999);
   return `sub-category-${num}`;
 }
+
+/**
+ * Generates role_id for add_roles payload.
+ * Format: ROLE002 / ROLE48291 (prefix + digits).
+ *
+ * Integrated in:
+ * - src/api/roles.js → buildRolePayload()
+ */
+export function generateRoleId() {
+  const num = generateRandomNumber(100, 99999);
+  return `ROLE${String(num).padStart(3, '0')}`;
+}

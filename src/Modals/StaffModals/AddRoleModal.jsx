@@ -3,13 +3,9 @@ import "../Modals.css";
 import "./role-modal.css";
 import CommonButton from "../../components/common-button";
 import CommonSelect from "../../components/common-select";
-
-const roleOptions = [
-  { label: "Role 1", value: "Role 1" },
-  { label: "Role 2", value: "Role 2" },
-  { label: "Role 3", value: "Role 3" },
-  { label: "Role 4", value: "Role 4" },
-];
+import InputCommon from "../../components/input_common";
+import { useToast } from "../../components/toast/ToastProvider";
+import { addRole, validateRoleForm } from "../../api/roles";
 
 const moduleOptions = [
   { label: "Schools", value: "Schools" },
@@ -26,9 +22,11 @@ const newPermission = () => ({
   delete: false,
 });
 
-function AddRoleModal({ onClose, onAdd }) {
-  const [roleName, setRoleName] = useState("Role 1");
+function AddRoleModal({ onClose, onSuccess }) {
+  const { showToast } = useToast();
+  const [roleName, setRoleName] = useState("");
   const [permissionRows, setPermissionRows] = useState([newPermission()]);
+  const [submitting, setSubmitting] = useState(false);
 
   const updatePermission = (index, key, value) => {
     setPermissionRows((prev) =>
@@ -40,25 +38,50 @@ function AddRoleModal({ onClose, onAdd }) {
     setPermissionRows((prev) => (prev.length === 1 ? prev : prev.filter((_, idx) => idx !== index)));
   };
 
+  const handleClose = () => {
+    if (!submitting) onClose?.();
+  };
+
+  const handleAdd = async () => {
+    const form = { roleName, permissionRows };
+    const validationError = validateRoleForm(form);
+    if (validationError) {
+      showToast(validationError, "error");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const response = await addRole(form);
+      showToast(response?.message || "Role added successfully", "success");
+      onClose?.();
+      await onSuccess?.();
+    } catch (err) {
+      showToast(err?.message || "Failed to add role", "error");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <div className="modal_wrapper" role="presentation" onClick={onClose}>
+    <div className="modal_wrapper" role="presentation" onClick={handleClose}>
       <div className="modal_body role-modal" role="dialog" onClick={(e) => e.stopPropagation()}>
         <div className="modal_head">
           <h5>Add Role</h5>
-          <button type="button" className="add-evidence-modal__close" aria-label="Close" onClick={onClose}>
+          <button type="button" className="add-evidence-modal__close" aria-label="Close" onClick={handleClose}>
             <i className="fa-solid fa-xmark" />
           </button>
         </div>
 
-        <CommonSelect
+        <InputCommon
           label="Role Name"
           name="roleName"
+          type="text"
           required
           value={roleName}
+          placeholder="Enter role name"
+          disabled={submitting}
           onChange={(e) => setRoleName(e.target.value)}
-          options={roleOptions}
-          placeholder="Select role"
-          searchPlaceholder="Search role..."
         />
 
         <div className="role-modal__permission-wrap">
@@ -77,7 +100,12 @@ function AddRoleModal({ onClose, onAdd }) {
                   searchPlaceholder="Search module..."
                 />
               </div>
-              <button type="button" className="role-modal__remove-btn" onClick={() => removePermission(index)}>
+              <button
+                type="button"
+                className="role-modal__remove-btn"
+                disabled={submitting}
+                onClick={() => removePermission(index)}
+              >
                 <i className="fa-solid fa-xmark" />
               </button>
               <div className="role-modal__checks">
@@ -86,6 +114,7 @@ function AddRoleModal({ onClose, onAdd }) {
                     <input
                       type="checkbox"
                       checked={!!row[item]}
+                      disabled={submitting}
                       onChange={(e) => updatePermission(index, item, e.target.checked)}
                     />
                     <span>{item[0].toUpperCase() + item.slice(1)}</span>
@@ -97,6 +126,7 @@ function AddRoleModal({ onClose, onAdd }) {
           <button
             type="button"
             className="role-modal__add-permission"
+            disabled={submitting}
             onClick={() => setPermissionRows((prev) => [...prev, newPermission()])}
           >
             Add Permission
@@ -105,14 +135,12 @@ function AddRoleModal({ onClose, onAdd }) {
 
         <div className="add-evidence-modal__footer">
           <CommonButton
-            text="Add"
+            text={submitting ? "Adding..." : "Add"}
             backgroundColor="#95C63D"
             color="#141414"
             borderColor="#9FC53D"
-            onClick={() => {
-              onAdd?.({ roleName, permissionRows });
-              onClose();
-            }}
+            disabled={submitting}
+            onClick={handleAdd}
           />
         </div>
       </div>

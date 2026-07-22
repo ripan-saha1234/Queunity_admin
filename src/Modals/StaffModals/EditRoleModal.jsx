@@ -1,15 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import "../Modals.css";
 import "./role-modal.css";
 import CommonButton from "../../components/common-button";
 import CommonSelect from "../../components/common-select";
-
-const roleOptions = [
-  { label: "Role 1", value: "Role 1" },
-  { label: "Role 2", value: "Role 2" },
-  { label: "Role 3", value: "Role 3" },
-  { label: "Role 4", value: "Role 4" },
-];
+import InputCommon from "../../components/input_common";
+import { useToast } from "../../components/toast/ToastProvider";
+import { updateRole, validateRoleForm } from "../../api/roles";
 
 const moduleOptions = [
   { label: "Schools", value: "Schools" },
@@ -26,20 +22,31 @@ const newPermission = () => ({
   delete: false,
 });
 
-function EditRoleModal({ initialRole, onClose, onSave }) {
-  const defaults = useMemo(
-    () => ({
-      roleName: initialRole?.role || "Role 1",
-      permissionRows:
-        initialRole?.permissionRows && initialRole.permissionRows.length > 0
-          ? initialRole.permissionRows
-          : [newPermission()],
-    }),
-    [initialRole],
-  );
+function withCurrentOption(options, currentValue) {
+  if (!currentValue) return options;
+  if (options.some((opt) => opt.value === currentValue)) return options;
+  return [{ label: currentValue, value: currentValue }, ...options];
+}
 
-  const [roleName, setRoleName] = useState(defaults.roleName);
-  const [permissionRows, setPermissionRows] = useState(defaults.permissionRows);
+function EditRoleModal({ initialRole, onClose, onSuccess }) {
+  const { showToast } = useToast();
+  const roleId = initialRole?.roleId || initialRole?.role_id || "";
+  const [roleName, setRoleName] = useState(initialRole?.role || "");
+  const [permissionRows, setPermissionRows] = useState(
+    initialRole?.permissionRows?.length > 0
+      ? initialRole.permissionRows
+      : [newPermission()],
+  );
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    setRoleName(initialRole?.role || "");
+    setPermissionRows(
+      initialRole?.permissionRows?.length > 0
+        ? initialRole.permissionRows
+        : [newPermission()],
+    );
+  }, [initialRole]);
 
   const updatePermission = (index, key, value) => {
     setPermissionRows((prev) =>
@@ -51,25 +58,62 @@ function EditRoleModal({ initialRole, onClose, onSave }) {
     setPermissionRows((prev) => (prev.length === 1 ? prev : prev.filter((_, idx) => idx !== index)));
   };
 
+  const handleClose = () => {
+    if (!submitting) onClose?.();
+  };
+
+  const handleSave = async () => {
+    if (!roleId) {
+      showToast("Role ID is missing", "error");
+      return;
+    }
+
+    const form = { roleName, permissionRows };
+    const validationError = validateRoleForm(form);
+    if (validationError) {
+      showToast(validationError, "error");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const response = await updateRole(
+        roleId,
+        form,
+        {
+          role_id: roleId,
+          isactive: initialRole?.isactive ?? true,
+        },
+      );
+      showToast(response?.message || "Role updated successfully", "success");
+      onClose?.();
+      await onSuccess?.();
+    } catch (err) {
+      showToast(err?.message || "Failed to update role", "error");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <div className="modal_wrapper" role="presentation" onClick={onClose}>
+    <div className="modal_wrapper" role="presentation" onClick={handleClose}>
       <div className="modal_body role-modal" role="dialog" onClick={(e) => e.stopPropagation()}>
         <div className="modal_head">
           <h5>Edit Role</h5>
-          <button type="button" className="add-evidence-modal__close" aria-label="Close" onClick={onClose}>
+          <button type="button" className="add-evidence-modal__close" aria-label="Close" onClick={handleClose}>
             <i className="fa-solid fa-xmark" />
           </button>
         </div>
 
-        <CommonSelect
+        <InputCommon
           label="Role Name"
           name="roleName"
+          type="text"
           required
           value={roleName}
+          placeholder="Enter role name"
+          disabled={submitting}
           onChange={(e) => setRoleName(e.target.value)}
-          options={roleOptions}
-          placeholder="Select role"
-          searchPlaceholder="Search role..."
         />
 
         <div className="role-modal__permission-wrap">
@@ -83,12 +127,17 @@ function EditRoleModal({ initialRole, onClose, onSave }) {
                   name={`module-${index}`}
                   value={row.module}
                   onChange={(e) => updatePermission(index, "module", e.target.value)}
-                  options={moduleOptions}
+                  options={withCurrentOption(moduleOptions, row.module)}
                   placeholder="Select module"
                   searchPlaceholder="Search module..."
                 />
               </div>
-              <button type="button" className="role-modal__remove-btn" onClick={() => removePermission(index)}>
+              <button
+                type="button"
+                className="role-modal__remove-btn"
+                disabled={submitting}
+                onClick={() => removePermission(index)}
+              >
                 <i className="fa-solid fa-xmark" />
               </button>
               <div className="role-modal__checks">
@@ -97,6 +146,7 @@ function EditRoleModal({ initialRole, onClose, onSave }) {
                     <input
                       type="checkbox"
                       checked={!!row[item]}
+                      disabled={submitting}
                       onChange={(e) => updatePermission(index, item, e.target.checked)}
                     />
                     <span>{item[0].toUpperCase() + item.slice(1)}</span>
@@ -108,6 +158,7 @@ function EditRoleModal({ initialRole, onClose, onSave }) {
           <button
             type="button"
             className="role-modal__add-permission"
+            disabled={submitting}
             onClick={() => setPermissionRows((prev) => [...prev, newPermission()])}
           >
             Add Permission
@@ -116,14 +167,12 @@ function EditRoleModal({ initialRole, onClose, onSave }) {
 
         <div className="add-evidence-modal__footer">
           <CommonButton
-            text="Save"
+            text={submitting ? "Saving..." : "Save"}
             backgroundColor="#95C63D"
             color="#141414"
             borderColor="#9FC53D"
-            onClick={() => {
-              onSave?.({ roleName, permissionRows });
-              onClose();
-            }}
+            disabled={submitting}
+            onClick={handleSave}
           />
         </div>
       </div>

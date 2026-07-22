@@ -2,6 +2,32 @@
   width: 100%;
 }
 
+.all-staffs-page--relative {
+  position: relative;
+}
+
+.all-staffs-table-wrap {
+  position: relative;
+  min-height: 240px;
+}
+
+.all-staffs-table-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 8px;
+}
+
+.all-staffs-table-overlay p {
+  margin: 0;
+  font-size: 14px;
+  color: #5d5d5d;
+}
+
 .all-staffs-page .table1-container {
   margin-bottom: 0;
   padding-bottom: 0;
