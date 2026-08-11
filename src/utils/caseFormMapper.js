@@ -64,23 +64,16 @@ export function mapApiCaseToCaseData(api = {}) {
   };
 }
 
-const SCHOOL_OPTION_VALUES = new Set([
-  'green_valley_public_school',
-  'sunrise_international_school',
-  'oxford_senior_secondary_school',
-  'other',
-]);
-
 /** Maps API case into step-0 local form fields used by add-cases.jsx. */
 export function mapApiCaseToStepFormData(api = {}) {
   const schoolId = api.school_id || '';
-  const schoolInList = SCHOOL_OPTION_VALUES.has(schoolId);
+  const isOther = schoolId === 'other';
 
   return {
     caseId: api.case_id || '',
     caseName: api.case_name || '',
-    school: schoolInList ? schoolId : schoolId ? 'other' : '',
-    schoolName: schoolInList ? '' : api.school_name || '',
+    school: schoolId,
+    schoolName: isOther ? api.school_name || '' : '',
     incidentDetails: '',
     offenceCategory: api.offence_category || '',
     offenceSubCategory: api.offence_sub_category || '',

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import usePageHeader from "../../../hooks/use-page-header";
 import { getCaseById } from "../../../api/cases";
+import { listSchools } from "../../../api/school";
 import { mapApiCaseToStepFormData } from "../../../utils/caseFormMapper";
 import { getCaseWizardPath } from "../../../utils/caseRoutes";
 import CommonInput from "../../../components/common-input";
@@ -25,6 +26,7 @@ import icon4 from '../../../Assets/Icon (4).svg'
 import EvidenceForm from "./Evidence/EvidenceForm.jsx";
 import SummaryCaseModal from "../../../Modals/CaseModals/SummaryCaseModal";
 import { useCaseForm } from "../../../context/CaseFormContext";
+import { useToast } from "../../../components/toast/ToastProvider";
 
 function AddCases() {
   // Steps are indexed from 0 to 5.
@@ -33,6 +35,7 @@ function AddCases() {
   const navigate = useNavigate();
   const { caseId } = useParams();
   const isEditMode = Boolean(caseId);
+  const { showToast } = useToast();
   const {
     caseData,
     updateBasic,
@@ -141,15 +144,54 @@ function AddCases() {
     [],
   );
 
-  const schoolOptions = useMemo(
-    () => [
-      { label: "Green Valley Public School", value: "green_valley_public_school" },
-      { label: "Sunrise International School", value: "sunrise_international_school" },
-      { label: "Oxford Senior Secondary School", value: "oxford_senior_secondary_school" },
-      { label: "Other", value: "other" },
-    ],
-    [],
-  );
+  const [schoolList, setSchoolList] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadSchools = async () => {
+      try {
+        const response = await listSchools({ page: 1, pageSize: 100 });
+        if (cancelled) return;
+        const items = response.data ?? response.items ?? [];
+        setSchoolList(
+          items
+            .filter((item) => item.school_id && item.school_name)
+            .map((item) => ({
+              label: item.school_name,
+              value: item.school_id,
+            })),
+        );
+      } catch (err) {
+        if (!cancelled) {
+          showToast(err?.message || "Failed to load schools", "error");
+        }
+      }
+    };
+
+    loadSchools();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [showToast]);
+
+  const schoolOptions = useMemo(() => {
+    const options = [...schoolList];
+    const selectedId = formData.school;
+    if (
+      selectedId &&
+      selectedId !== "other" &&
+      !options.some((opt) => opt.value === selectedId)
+    ) {
+      options.unshift({
+        label: caseData.school_name || selectedId,
+        value: selectedId,
+      });
+    }
+    options.push({ label: "Other", value: "other" });
+    return options;
+  }, [schoolList, formData.school, caseData.school_name]);
 
   const offenceSubCategoryOptions = useMemo(
     () => [
@@ -223,17 +265,21 @@ function AddCases() {
   // Keep the shared case-form store in sync with this step's local UI state so
   // the final payload (and the separate suspect/witness routes) see the data.
   useEffect(() => {
-    const schoolLabel =
-      schoolOptions.find((opt) => opt.value === formData.school)?.label || "";
+    const selectedSchool = schoolOptions.find(
+      (opt) => opt.value === formData.school,
+    );
+    const schoolName =
+      formData.school === "other"
+        ? formData.schoolName || ""
+        : selectedSchool?.label || "";
     const normalizedGrade = /^Grade\s+(\d+)/i.test(formData.grade || "")
       ? `class_${formData.grade.match(/\d+/)[0]}`
       : formData.grade;
 
     updateBasic({
       case_name: formData.caseName,
-      school_id: formData.school,
-      school_name:
-        formData.school === "other" ? formData.schoolName || "" : schoolLabel,
+      school_id: formData.school === "other" ? "other" : formData.school || "",
+      school_name: schoolName,
       offence_category: formData.offenceCategory,
       offence_sub_category: formData.offenceSubCategory,
       incident_date: formData.incidentDate,
@@ -319,9 +365,14 @@ function AddCases() {
                 label="Select School"
                 name="school"
                 value={formData.school}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, school: e.target.value }))
-                }
+                onChange={(e) => {
+                  const nextSchool = e.target.value;
+                  setFormData((prev) => ({
+                    ...prev,
+                    school: nextSchool,
+                    schoolName: nextSchool === "other" ? prev.schoolName : "",
+                  }));
+                }}
                 options={schoolOptions}
                 placeholder="Select school"
                 searchPlaceholder="Search school..."
